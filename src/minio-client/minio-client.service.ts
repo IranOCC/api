@@ -59,7 +59,7 @@ export class MinioClientService {
     );
 
     return {
-      url: `${process.env.STORAGE_BASE_URL}/${process.env.MINIO_BUCKET_NAME}/${fileName}`,
+      url: `${process.env.STORAGE_BASE_URL}${process.env.MINIO_BUCKET_NAME}/${fileName}`,
     };
   }
 
