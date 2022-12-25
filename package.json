@@ -1,10 +1,10 @@
 {
-  "name": "api",
-  "version": "0.0.1",
+  "name": "iranocc-api",
+  "version": "1.0.0",
   "description": "",
-  "author": "",
+  "author": "@rasoul707",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -24,6 +24,7 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/swagger": "^6.1.4",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
