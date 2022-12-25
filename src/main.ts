@@ -10,7 +10,6 @@ async function bootstrap() {
     .setDescription('The API of iranocc.com')
     .setVersion('1.0')
     .addTag('iranocc')
-    .setBasePath('https://apidev.iranocc.com/')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
