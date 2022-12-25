@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Get,
   UseInterceptors,
   UploadedFile,
 } from '@nestjs/common';
@@ -15,7 +16,11 @@ export class ImageUploadController {
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   async uploadImage(@UploadedFile() image: BufferedFile) {
-    // return image;
     return await this.imageUploadService.uploadImage(image);
+  }
+
+  @Get()
+  async getList() {
+    return await this.imageUploadService.listAllBuckets();
   }
 }

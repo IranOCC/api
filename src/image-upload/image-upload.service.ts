@@ -8,10 +8,13 @@ export class ImageUploadService {
 
   async uploadImage(image: BufferedFile) {
     const uploaded_image = await this.minioClientService.upload(image);
-
     return {
-      image_url: uploaded_image.url,
-      message: 'Image upload successful',
+      image_url: uploaded_image,
+      message: 'Image upload successful!!!',
     };
+  }
+
+  async listAllBuckets() {
+    return await this.minioClientService.listAllBuckets();
   }
 }

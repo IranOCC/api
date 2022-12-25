@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { MinioService } from 'nestjs-minio-client';
-import { BufferedFile } from './file.model';
+import { AppMimeType, BufferedFile } from './file.model';
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -21,7 +21,9 @@ export class MinioClientService {
     file: BufferedFile,
     bucketName: string = this.bucketName,
   ) {
-    if (!(file.mimetype.includes('jpeg') || file.mimetype.includes('png'))) {
+    if (
+      !(file?.mimetype?.includes('jpeg') || file?.mimetype?.includes('png'))
+    ) {
       throw new HttpException(
         'File type not supported',
         HttpStatus.BAD_REQUEST,
@@ -43,33 +45,50 @@ export class MinioClientService {
     // We need to append the extension at the end otherwise Minio will save it as a generic file
     const fileName = hashedFileName + extension;
 
-    this.client.putObject(
-      bucketName,
-      fileName,
-      file.buffer,
-      metaData,
-      function (err, res) {
-        if (err) {
-          throw new HttpException(
-            'Error uploading file',
-            HttpStatus.BAD_REQUEST,
-          );
-        }
-      },
-    );
-
-    return {
-      url: `${process.env.STORAGE_BASE_URL}${process.env.MINIO_BUCKET_NAME}/${fileName}`,
-    };
+    return await this.uuu(bucketName, fileName, file, metaData);
   }
 
-  async delete(objetName: string, bucketName: string = this.bucketName) {
-    this.client.removeObject(bucketName, objetName, function (err, res) {
-      if (err)
-        throw new HttpException(
-          'An error occurred when deleting!',
-          HttpStatus.BAD_REQUEST,
-        );
+  async uuu(
+    bucketName: string,
+    fileName: string,
+    file: BufferedFile,
+    metaData: { 'Content-Type': AppMimeType },
+  ) {
+    return new Promise((resolve, reject) => {
+      this.client.putObject(
+        bucketName,
+        fileName,
+        file.buffer,
+        metaData,
+        function (err: any, res: any) {
+          if (err) {
+            throw new HttpException(
+              'Error uploading file',
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+          return resolve({
+            url: `${process.env.STORAGE_BASE_URL}${process.env.MINIO_BUCKET_NAME}/${fileName}`,
+          });
+        },
+      );
     });
   }
+
+  async listAllBuckets() {
+    return this.client.listBuckets();
+  }
+
+  // async delete(objetName: string, bucketName: string = this.bucketName) {
+  //   this.client.removeObject(
+  //     bucketName,
+  //     objetName,
+  //     function (err: any, res: any) {
+  //     if (err)
+  //       throw new HttpException(
+  //         'An error occurred when deleting!',
+  //         HttpStatus.BAD_REQUEST,
+  //       );
+  //   });
+  // }
 }
