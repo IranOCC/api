@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { MinioService } from 'nestjs-minio-client';
-import { AppMimeType, BufferedFile } from './file.model';
+import { BufferedFile } from './file.model';
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -11,24 +11,19 @@ export class MinioClientService {
   }
 
   private readonly logger: Logger;
-  private readonly bucketName = process.env.MINIO_BUCKET_NAME;
+  private readonly defaultBucket = process.env.MINIO_FILES_BUCKET;
 
   public get client() {
     return this.minio.client;
   }
 
   public async upload(
+    bucketName: string = this.defaultBucket,
     file: BufferedFile,
-    bucketName: string = this.bucketName,
   ) {
-    if (
-      !(file?.mimetype?.includes('jpeg') || file?.mimetype?.includes('png'))
-    ) {
-      throw new HttpException(
-        'File type not supported',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    if (!file)
+      throw new HttpException('File not found', HttpStatus.BAD_REQUEST);
+    // generate file name
     const timestamp = Date.now().toString();
     const hashedFileName = crypto
       .createHash('md5')
@@ -40,20 +35,10 @@ export class MinioClientService {
     );
     const metaData = {
       'Content-Type': file.mimetype,
+      originalname: file.originalname,
     };
-
-    // We need to append the extension at the end otherwise Minio will save it as a generic file
     const fileName = hashedFileName + extension;
 
-    return await this.uuu(bucketName, fileName, file, metaData);
-  }
-
-  async uuu(
-    bucketName: string,
-    fileName: string,
-    file: BufferedFile,
-    metaData: { 'Content-Type': AppMimeType },
-  ) {
     return new Promise((resolve, reject) => {
       this.client.putObject(
         bucketName,
@@ -62,33 +47,50 @@ export class MinioClientService {
         metaData,
         function (err: any, res: any) {
           if (err) {
-            throw new HttpException(
-              'Error uploading file',
-              HttpStatus.BAD_REQUEST,
-            );
+            throw new HttpException('Upload failed', HttpStatus.BAD_REQUEST);
           }
           return resolve({
-            url: `${process.env.STORAGE_BASE_URL}${process.env.MINIO_BUCKET_NAME}/${fileName}`,
+            title: file.originalname,
+            bucket: bucketName,
+            filename: fileName,
+            filesize: file.size,
+            mimetype: file.mimetype,
           });
         },
       );
     });
   }
 
-  async listAllBuckets() {
-    return this.client.listBuckets();
+  async delete(objetName: string, bucketName: string = this.defaultBucket) {
+    return new Promise((resolve, reject) => {
+      this.client.removeObject(
+        bucketName,
+        objetName,
+        function (err: any, res: any) {
+          if (err) {
+            throw new HttpException('Delete failed', HttpStatus.BAD_REQUEST);
+          }
+          resolve(true);
+        },
+      );
+    });
   }
 
-  // async delete(objetName: string, bucketName: string = this.bucketName) {
-  //   this.client.removeObject(
-  //     bucketName,
-  //     objetName,
-  //     function (err: any, res: any) {
-  //     if (err)
-  //       throw new HttpException(
-  //         'An error occurred when deleting!',
-  //         HttpStatus.BAD_REQUEST,
-  //       );
-  //   });
-  // }
+  async multipleDelete(
+    objetList: Array<string>,
+    bucketName: string = this.defaultBucket,
+  ) {
+    return new Promise((resolve, reject) => {
+      this.client.removeObjects(
+        bucketName,
+        objetList,
+        function (err: any, res: any) {
+          if (err) {
+            throw new HttpException('Delete failed', HttpStatus.BAD_REQUEST);
+          }
+          resolve(true);
+        },
+      );
+    });
+  }
 }
