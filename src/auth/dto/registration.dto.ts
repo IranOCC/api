@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { Match } from 'src/validators/match.decorators';
+import { Match } from '../../validators/match.decorators';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import {
   _$NamesLang,
