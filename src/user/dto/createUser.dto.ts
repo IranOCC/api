@@ -8,7 +8,7 @@ import {
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
-import { _$PhoneCountryCode, _$PhoneCountryRegion } from 'src/config/main';
+import { _$PhoneCountryCode, _$PhoneCountryRegion } from '../../config/main';
 import { UserStatusEum } from '../enum/userStatus.enum';
 
 const $ = 'validation.createUser';
