@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MinioClientModule } from 'src/minio-client/minio-client.module';
+import { MinioClientModule } from 'src/minio/minio.module';
 import { StorageService } from './storage.service';
 import { StorageController } from './storage.controller';
 import { MongooseModule } from '@nestjs/mongoose';

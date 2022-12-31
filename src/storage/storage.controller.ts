@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageService } from './storage.service';
-import { BufferedFile } from 'src/minio-client/file.model';
+import { BufferedFile } from 'src/minio/file.model';
 
 @Controller('storage')
 export class StorageController {

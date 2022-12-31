@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MinioClientService } from './minio-client.service';
+import { MinioClientService } from './minio.service';
 import { MinioModule } from 'nestjs-minio-client';
 import { ConfigService } from '@nestjs/config';
 
