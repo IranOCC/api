@@ -21,6 +21,8 @@ import {
 } from 'nestjs-i18n';
 import { SmsModule } from './sms/sms.module';
 import { EstateModule } from './estate/estate.module';
+import { OfficeModule } from './office/office.module';
+import { BlogModule } from './blog/blog.module';
 
 @Module({
   imports: [
@@ -48,6 +50,8 @@ import { EstateModule } from './estate/estate.module';
     MailModule,
     SmsModule,
     EstateModule,
+    OfficeModule,
+    BlogModule,
   ],
   controllers: [AppController],
   providers: [

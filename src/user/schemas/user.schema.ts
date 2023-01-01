@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
-import { RoleEnum } from '../enum/role.enum';
-import { UserStatusEum } from '../enum/userStatus.enum';
+import { RoleEnum } from '../../user/enum/role.enum';
+import { UserStatusEum } from '../../user/enum/userStatus.enum';
 import * as bcrypt from 'bcrypt';
 const saltRounds = 10;
 import * as speakeasy from 'speakeasy';
@@ -55,10 +55,10 @@ export class User extends Document {
   @Prop({ default: UserStatusEum.Active })
   status: UserStatusEum;
 
-  @Prop()
+  @Prop({ default: Date.now })
   lastLogin: Date;
 
-  @Prop()
+  @Prop({ default: Date.now })
   lastOnline: Date;
 
   @Prop({
@@ -67,6 +67,12 @@ export class User extends Document {
     required: true,
   })
   roles: RoleEnum[];
+
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Office',
+  })
+  office: any;
 
   checkPassword: any;
 }

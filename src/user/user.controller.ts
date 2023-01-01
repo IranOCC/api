@@ -13,6 +13,8 @@ import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { Public } from 'src/auth/jwt-auth.guard';
 import { ChangePasswordDto } from './dto/changePassword.dto';
+import { Roles } from 'src/auth/roles.decorator';
+import { RoleEnum } from './enum/role.enum';
 
 @Controller('user')
 export class UserController {
@@ -24,29 +26,31 @@ export class UserController {
   }
 
   @Post()
+  @Roles(RoleEnum.Admin)
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
   @Get()
-  // @Roles(Role.Admin)
-  @Public()
+  @Roles(RoleEnum.Admin)
   findAll() {
     return this.userService.findAll();
   }
 
   @Get(':id')
-  @Public()
+  @Roles(RoleEnum.Admin)
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
 
   @Patch(':id')
+  @Roles(RoleEnum.Admin)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
+  @Roles(RoleEnum.Admin)
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }

@@ -1,7 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { EstateService } from './estate.service';
-import { CreateEstateDto } from './dto/create-estate.dto';
-import { UpdateEstateDto } from './dto/update-estate.dto';
+import { CreateEstateDto } from './dto/createEstate.dto';
+import { UpdateEstateDto } from './dto/updateEstate.dto';
 
 @Controller('estate')
 export class EstateController {
