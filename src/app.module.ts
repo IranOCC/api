@@ -23,6 +23,9 @@ import { SmsModule } from './sms/sms.module';
 import { EstateModule } from './estate/estate.module';
 import { OfficeModule } from './office/office.module';
 import { BlogModule } from './blog/blog.module';
+import { EmailService } from './email/email.service';
+import { EmailModule } from './email/email.module';
+import { PhoneModule } from './phone/phone.module';
 
 @Module({
   imports: [
@@ -52,6 +55,8 @@ import { BlogModule } from './blog/blog.module';
     EstateModule,
     OfficeModule,
     BlogModule,
+    EmailModule,
+    PhoneModule,
   ],
   controllers: [AppController],
   providers: [
@@ -64,6 +69,7 @@ import { BlogModule } from './blog/blog.module';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    EmailService,
   ],
 })
 export class AppModule {}

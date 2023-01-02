@@ -4,10 +4,19 @@ import mongoose, { HydratedDocument, Document } from 'mongoose';
 @Schema({ timestamps: true })
 export class PhoneNumber extends Document {
   @Prop({ unique: true, trim: true })
-  phone: string;
+  value: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  })
   user: any;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Office',
+  })
+  office: any;
 
   @Prop({ default: false })
   verified: boolean;

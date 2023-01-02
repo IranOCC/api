@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import * as mongoose from 'mongoose';
-import { User } from 'src/user/schemas/user.schema';
 
 export type StorageDocument = HydratedDocument<Storage>;
 
@@ -9,6 +8,15 @@ export type StorageDocument = HydratedDocument<Storage>;
 export class Storage {
   @Prop()
   title: string;
+
+  @Prop()
+  alt: string;
+
+  @Prop()
+  content: string;
+
+  @Prop()
+  excerpt: string;
 
   @Prop()
   bucket: string;
@@ -22,8 +30,14 @@ export class Storage {
   @Prop()
   mimetype: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  uploadedBy: User;
+  @Prop()
+  dimensions: string;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  })
+  uploadedBy: any;
 }
 
 export const StorageSchema = SchemaFactory.createForClass(Storage);

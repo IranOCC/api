@@ -5,7 +5,8 @@ import { UserStatusEum } from '../../user/enum/userStatus.enum';
 import * as bcrypt from 'bcrypt';
 const saltRounds = 10;
 import * as speakeasy from 'speakeasy';
-
+import { PhoneNumber } from 'src/phone/schemas/phone.schema';
+import { EmailAddress } from 'src/email/schemas/email.schema';
 @Schema({ timestamps: true })
 export class User extends Document {
   @Prop({ required: true, trim: true })
@@ -23,8 +24,8 @@ export class User extends Document {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'EmailAddress',
-    get: (value) => {
-      return value?.email;
+    get: (value: EmailAddress) => {
+      return value.value;
     },
   })
   email: any;
@@ -32,8 +33,8 @@ export class User extends Document {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'PhoneNumber',
-    get: (value) => {
-      return value?.phone;
+    get: (value: PhoneNumber) => {
+      return value.value;
     },
   })
   phone: any;
@@ -52,7 +53,11 @@ export class User extends Document {
   })
   accountToken: string;
 
-  @Prop({ default: UserStatusEum.Active })
+  @Prop({
+    type: String,
+    enum: UserStatusEum,
+    default: UserStatusEum.Active,
+  })
   status: UserStatusEum;
 
   @Prop({ default: Date.now })
@@ -60,6 +65,9 @@ export class User extends Document {
 
   @Prop({ default: Date.now })
   lastOnline: Date;
+
+  @Prop()
+  deletedAt: Date;
 
   @Prop({
     type: [{ type: String, enum: RoleEnum }],
@@ -72,7 +80,7 @@ export class User extends Document {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Office',
   })
-  office: any;
+  office: any[];
 
   checkPassword: any;
 }

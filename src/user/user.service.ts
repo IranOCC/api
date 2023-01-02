@@ -7,8 +7,8 @@ import { User, UserDocument } from './schemas/user.schema';
 import { RegistrationDto } from 'src/auth/dto/registration.dto';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
-import { EmailService } from './services/email.service';
-import { PhoneService } from './services/phone.service';
+import { EmailService } from '../email/email.service';
+import { PhoneService } from '../phone/phone.service';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 @Injectable()
 export class UserService {

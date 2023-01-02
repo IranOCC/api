@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
+import { EmailAddress } from 'src/email/schemas/email.schema';
+import { PhoneNumber } from 'src/phone/schemas/phone.schema';
 
 @Schema({ timestamps: true })
 export class Office extends Document {
@@ -30,17 +32,29 @@ export class Office extends Document {
   })
   logo: any;
 
-  @Prop()
+  @Prop({ type: String })
   address: string;
 
   @Prop({ type: { type: String } })
   location: string;
 
-  @Prop()
-  email: string;
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EmailAddress',
+    get: (value: EmailAddress) => {
+      return value.value;
+    },
+  })
+  email: any;
 
-  @Prop()
-  phone: string;
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PhoneNumber',
+    get: (value: PhoneNumber) => {
+      return value.value;
+    },
+  })
+  phone: any;
 
   @Prop({ default: false })
   verified: boolean;

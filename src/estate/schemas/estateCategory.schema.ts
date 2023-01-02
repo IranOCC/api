@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
 
 @Schema()
-export class PostCategory extends Document {
+export class EstateCategory extends Document {
   @Prop({ required: true, trim: true })
   title: string;
 
@@ -20,10 +20,11 @@ export class PostCategory extends Document {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'PostCategory',
+    ref: 'EstateCategory',
   })
   parent: any;
 }
 
-export const PostCategorySchema = SchemaFactory.createForClass(PostCategory);
-export type PostCategoryDocument = HydratedDocument<PostCategory>;
+// eslint-disable-next-line prettier/prettier
+export const EstateCategorySchema = SchemaFactory.createForClass(EstateCategory);
+export type EstateCategoryDocument = HydratedDocument<EstateCategory>;

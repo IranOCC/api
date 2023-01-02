@@ -5,8 +5,8 @@ import { VerifyPhoneDto } from 'src/auth/dto/verifyPhone.dto';
 import { SendVerifyPhoneDto } from 'src/auth/dto/sendVerifyPhone.dto';
 import { _$RequiredVerifyPhone } from 'src/config/main';
 import { SmsService } from 'src/sms/sms.service';
-import { PhoneNumber, PhoneNumberDocument } from '../schemas/phone.schema';
-import { User } from '../schemas/user.schema';
+import { PhoneNumber, PhoneNumberDocument } from './schemas/phone.schema';
+import { User } from '../user/schemas/user.schema';
 import * as speakeasy from 'speakeasy';
 
 @Injectable()

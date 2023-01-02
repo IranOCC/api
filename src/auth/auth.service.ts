@@ -13,8 +13,8 @@ import { VerifyPhoneDto } from './dto/verifyPhone.dto';
 import { SendVerifyPhoneDto } from './dto/sendVerifyPhone.dto';
 
 import { UserService } from '../user/user.service';
-import { PhoneService } from 'src/user/services/phone.service';
-import { EmailService } from 'src/user/services/email.service';
+import { PhoneService } from 'src/phone/phone.service';
+import { EmailService } from 'src/email/email.service';
 import { PasswordResetMethods } from './enum/passwordResetMethod.enum';
 import { SmsService } from 'src/sms/sms.service';
 import { MailService } from 'src/mail/mail.service';

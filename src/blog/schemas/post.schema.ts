@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
+import { PostStatusEum } from '../enum/postStatus.enum';
+import { PostVisibilityEum } from '../enum/postVisibility.enum';
 
 @Schema({ timestamps: true })
 export class Post extends Document {
@@ -12,17 +14,8 @@ export class Post extends Document {
   @Prop()
   excerpt: string;
 
-  @Prop({ required: true, trim: true })
+  @Prop({ required: true, trim: true, unique: true })
   slug: string;
-
-  @Prop()
-  tags: string[];
-
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'PostCategory',
-  })
-  categories: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
@@ -30,17 +23,27 @@ export class Post extends Document {
   })
   image: any;
 
-  @Prop()
-  status: string;
+  @Prop({ type: String, enum: PostStatusEum, default: PostStatusEum.Pending })
+  status: PostStatusEum;
 
-  @Prop()
-  visibility: string;
+  @Prop({
+    type: String,
+    enum: PostVisibilityEum,
+    default: PostVisibilityEum.Public,
+  })
+  visibility: PostVisibilityEum;
 
-  @Prop()
+  @Prop({ select: false })
   password: string;
 
+  @Prop({ default: false })
+  pinned: boolean;
+
+  @Prop({ default: Date.now })
+  publishedAt: Date;
+
   @Prop()
-  publishTime: Date;
+  deletedAt: Date;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
@@ -59,6 +62,21 @@ export class Post extends Document {
     ref: 'Office',
   })
   office: any;
+
+  @Prop()
+  tags: string[];
+
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'PostCategory',
+  })
+  categories: any[];
+
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'PostComment',
+  })
+  comments: any[];
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

@@ -7,12 +7,12 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { _$RequiredVerifyEmail } from 'src/config/main';
-import { User } from '../schemas/user.schema';
 import * as speakeasy from 'speakeasy';
 import { VerifyEmailDto } from 'src/auth/dto/verifyEmail.dto';
 import { SendVerifyEmailDto } from 'src/auth/dto/sendVerifyEmail.dto';
-import { EmailAddress, EmailAddressDocument } from '../schemas/email.schema';
 import { MailService } from 'src/mail/mail.service';
+import { User } from 'src/user/schemas/user.schema';
+import { EmailAddress, EmailAddressDocument } from './schemas/email.schema';
 
 @Injectable()
 export class EmailService {
