@@ -1,25 +1,24 @@
 import { Controller, Post, Request, Body, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { Public } from './jwt-auth.guard';
+import { LocalAuthGuard } from './local-auth.guard';
+
 import { PasswordResetDto } from './dto/passwordReset.dto';
 import { PasswordResetConfirmDto } from './dto/passwordResetConfirm.dto';
 import { RegistrationDto } from './dto/registration.dto';
-import { VerifyEmailDto } from './dto/verifyEmail.dto';
-import { SendVerifyEmailDto as SendVerifyEmailDto } from '../email/dto/sendVerifyEmail.dto';
-import { VerifyPhoneDto } from './dto/verifyPhone.dto';
-import { SendVerifyPhoneDto } from '../phone/dto/sendVerifyPhone.dto';
-import { Public } from './jwt-auth.guard';
-import { LocalAuthGuard } from './local-auth.guard';
+import { VerifyEmailDto } from 'src/email/dto/verifyEmail.dto';
+import { SendVerifyEmailDto } from 'src/email/dto/sendVerifyEmail.dto';
+import { VerifyPhoneDto } from 'src/phone/dto/verifyPhone.dto';
+import { SendVerifyPhoneDto } from 'src/phone/dto/sendVerifyPhone.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   // auth ===>
-
   @Post('login')
   @Public()
   @UseGuards(LocalAuthGuard)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async login(@Request() { user }) {
     return this.authService.login(user);
   }

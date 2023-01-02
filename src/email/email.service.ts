@@ -1,8 +1,8 @@
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { VerifyEmailDto } from './dto/verifyEmail.dto';
-import { SendVerifyEmailDto } from './dto/sendVerifyEmail.dto';
+import { VerifyEmailDto as TokenValidEmailDto } from './dto/verifyEmail.dto';
+import { SendVerifyEmailDto as TokenRequestEmailDto } from './dto/sendVerifyEmail.dto';
 import { MUST_EMAIL_VERIFY } from 'src/config/main';
 import { MailService } from 'src/mail/mail.service';
 import { EmailAddress, EmailAddressDocument } from './schemas/email.schema';
@@ -11,6 +11,7 @@ import { Office } from 'src/office/schemas/office.schema';
 
 import * as speakeasy from 'speakeasy';
 import moment from 'moment';
+import { ContactForWhatEnum } from 'src/auth/enum/forWhat.enum';
 
 @Injectable()
 export class EmailService {
@@ -20,9 +21,6 @@ export class EmailService {
   ) {}
 
   // --> token & secret
-  generateSecret() {
-    return speakeasy.generateSecret({ length: 30 }).base32;
-  }
   generateToken(secret: string): string {
     return speakeasy.totp({ secret, encoding: 'base32', digits: 6 });
   }
@@ -57,41 +55,53 @@ export class EmailService {
     }
     await _query.save();
     // @@@
-    if (!_query.secret) _query.secret = this.generateSecret();
     if (autoVerify) _query.verified = true;
     await _query.save();
     // ### must verify
     if (!_query.verified && mustVerify) {
-      await this.verifyRequest({ email: value });
+      // eslint-disable-next-line prettier/prettier
+      const f = owner instanceof User ? ContactForWhatEnum.User : ContactForWhatEnum.Office;
+      await this.verifyRequest({ email: value }, f);
     }
     return _query;
   }
 
   // --> find
-  async find(value: string) {
+  async find(value: string, forWhat: string) {
     const data = await this.model.findOne({ value }).exec();
-    if (!data) throw new NotAcceptableException('Not found');
+    const exp =
+      !data ||
+      (forWhat === ContactForWhatEnum.User && !data.user) ||
+      (forWhat === ContactForWhatEnum.Office && !data.office);
+    if (exp) throw new NotAcceptableException('Not found');
     return data;
   }
-
-  async verifyRequest(data: SendVerifyEmailDto) {
+  async requestToken(data: TokenRequestEmailDto, forWhat: ContactForWhatEnum) {
     const { email } = data;
-    const _query = await this.find(email);
-    // generate token -->
+    const _query = await this.find(email, forWhat);
     const token = this.generateToken(_query.secret);
-    // send verification -->
-    await this.mailService.verification(_query.user || _query.office, token);
-    return true;
+    return { token, query: _query };
   }
-  async checkValid(data: VerifyEmailDto) {
+  async checkValid(data: TokenValidEmailDto, forWhat: ContactForWhatEnum) {
     const { email, token } = data;
-    const _query = await this.find(email);
+    const _query = await this.find(email, forWhat);
     const verified = this.validationToken(_query.secret, token);
     if (verified) return _query;
-    throw new NotAcceptableException('Entered token is incorrect or expired!');
+    else
+      throw new NotAcceptableException(
+        'Entered token is incorrect or expired!',
+      );
   }
-  async verify(data: VerifyEmailDto) {
-    const _query = await this.checkValid(data);
+  // =====>
+
+  // --> verification endpoints
+  async verifyRequest(data: TokenRequestEmailDto, forWhat: ContactForWhatEnum) {
+    const { token, query } = await this.requestToken(data, forWhat);
+    await this.mailService.verification(query.user || query.office, token);
+    return true;
+  }
+  async verify(data: TokenValidEmailDto, forWhat: ContactForWhatEnum) {
+    const _query = await this.checkValid(data, forWhat);
     _query.verified = true;
     _query.verifiedAt = moment().toDate();
     await _query.save();

@@ -1,4 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
 import { UserStatusEum } from 'src/user/enum/userStatus.enum';
@@ -19,6 +23,7 @@ import { EmailService } from 'src/email/email.service';
 import { PasswordResetMethods } from './enum/passwordResetMethod.enum';
 import { SmsService } from 'src/sms/sms.service';
 import { MailService } from 'src/mail/mail.service';
+import { ContactForWhatEnum } from './enum/forWhat.enum';
 
 @Injectable()
 export class AuthService {
@@ -33,16 +38,13 @@ export class AuthService {
 
   async validateUser(_username: string, _password: string): Promise<any> {
     const user = await this.userService.findByUsername(_username, true);
-    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    if (!user) throw new NotFoundException('User not found');
     const isMatch = await user.checkPassword(_password);
     if (!isMatch) {
-      throw new HttpException(
-        'Username or password is incorrect',
-        HttpStatus.FORBIDDEN,
-      );
+      throw new ForbiddenException('Username or password is incorrect');
     }
     if (user.status === UserStatusEum.NotActive) {
-      throw new HttpException('User is not active', HttpStatus.FORBIDDEN);
+      throw new ForbiddenException('User is not active');
     }
     return {
       _id: user._id,
@@ -52,10 +54,8 @@ export class AuthService {
   }
   async login(user: User) {
     const payload = user;
-    return {
-      payload,
-      access_token: this.jwtService.sign(payload),
-    };
+    const access_token = this.jwtService.sign(payload);
+    return { payload, access_token };
   }
 
   async logout(user: User) {
@@ -64,17 +64,22 @@ export class AuthService {
   }
 
   async passwordReset(data: PasswordResetDto) {
-    this.smsService.welcome();
-    return this.smsService.welcome();
+    // this.smsService.welcome();
+    // return this.smsService.welcome();
     const { method, email, phone } = data;
     if (method === PasswordResetMethods.ByEmail) {
-      const _email = await this.emailService.find(email);
-      const token = this.emailService.generateToken(_email.secret);
-      const user = await this.userService.findOne(_email.user);
+      const { token, query } = await this.emailService.requestToken(
+        { email },
+        ContactForWhatEnum.User,
+      );
+      const user = await this.userService.findOne(query.user);
       this.mailService.resetPassword(user, token);
     }
     if (method === PasswordResetMethods.ByPhone) {
-      const _phone = await this.phoneService.find(phone);
+      const _phone = await this.phoneService.find(
+        phone,
+        ContactForWhatEnum.User,
+      );
       const token = this.phoneService.generateToken(_phone.secret);
       const user = await this.userService.findOne(_phone.user);
       this.smsService.resetPassword(user, token);
@@ -86,17 +91,23 @@ export class AuthService {
     const { method, email, phone, token, password } = data;
     let user: User;
     if (method === PasswordResetMethods.ByEmail) {
-      const _email = await this.emailService.checkValid({
-        email,
-        token,
-      });
+      const _email = await this.emailService.checkValid(
+        {
+          email,
+          token,
+        },
+        ContactForWhatEnum.User,
+      );
       user = await this.userService.findOne(_email.user);
     }
     if (method === PasswordResetMethods.ByPhone) {
-      const _phone = await this.phoneService.checkValid({
-        phone,
-        token,
-      });
+      const _phone = await this.phoneService.checkValid(
+        {
+          phone,
+          token,
+        },
+        ContactForWhatEnum.User,
+      );
       user = await this.userService.findOne(_phone.user);
     }
     user.password = password;
@@ -109,15 +120,15 @@ export class AuthService {
   }
 
   async verifyEmail(data: VerifyEmailDto) {
-    return await this.emailService.verify(data);
+    return await this.emailService.verify(data, ContactForWhatEnum.User);
   }
   async verifyEmailResend(data: SendVerifyEmailDto) {
-    return await this.emailService.verifyRequest(data);
+    return await this.emailService.verifyRequest(data, ContactForWhatEnum.User);
   }
   async verifyPhone(data: VerifyPhoneDto) {
-    return await this.phoneService.verify(data);
+    return await this.phoneService.verify(data, ContactForWhatEnum.User);
   }
   async verifyPhoneResend(data: SendVerifyPhoneDto) {
-    return await this.phoneService.verifyRequest(data);
+    return await this.phoneService.verifyRequest(data, ContactForWhatEnum.User);
   }
 }

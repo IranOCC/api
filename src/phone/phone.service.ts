@@ -1,8 +1,8 @@
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { VerifyPhoneDto } from './dto/verifyPhone.dto';
-import { SendVerifyPhoneDto } from './dto/sendVerifyPhone.dto';
+import { VerifyPhoneDto as TokenValidPhoneDto } from './dto/verifyPhone.dto';
+import { SendVerifyPhoneDto as TokenRequestPhoneDto } from './dto/sendVerifyPhone.dto';
 import { MUST_PHONE_VERIFY } from 'src/config/main';
 import { SmsService } from 'src/sms/sms.service';
 import { PhoneNumber, PhoneNumberDocument } from './schemas/phone.schema';
@@ -11,6 +11,7 @@ import { Office } from 'src/office/schemas/office.schema';
 
 import * as speakeasy from 'speakeasy';
 import moment from 'moment';
+import { ContactForWhatEnum } from 'src/auth/enum/forWhat.enum';
 
 @Injectable()
 export class PhoneService {
@@ -20,9 +21,6 @@ export class PhoneService {
   ) {}
 
   // --> token & secret
-  generateSecret() {
-    return speakeasy.generateSecret({ length: 30 }).base32;
-  }
   generateToken(secret: string): string {
     return speakeasy.totp({ secret, encoding: 'base32', digits: 6 });
   }
@@ -57,41 +55,51 @@ export class PhoneService {
     }
     await _query.save();
     // @@@
-    if (!_query.secret) _query.secret = this.generateSecret();
     if (autoVerify) _query.verified = true;
     await _query.save();
     // ### must verify
     if (!_query.verified && mustVerify) {
-      await this.verifyRequest({ phone: value });
+      // eslint-disable-next-line prettier/prettier
+      const f = owner instanceof User ? ContactForWhatEnum.User : ContactForWhatEnum.Office;
+      await this.verifyRequest({ phone: value }, f);
     }
     return _query;
   }
 
   // --> find
-  async find(value: string) {
+  async find(value: string, forWhat: string) {
     const data = await this.model.findOne({ value }).exec();
-    if (!data) throw new NotAcceptableException('Not found');
+    const exp =
+      !data ||
+      (forWhat === ContactForWhatEnum.User && !data.user) ||
+      (forWhat === ContactForWhatEnum.Office && !data.office);
+    if (exp) throw new NotAcceptableException('Not found');
     return data;
   }
-
-  async verifyRequest(data: SendVerifyPhoneDto) {
+  async requestToken(data: TokenRequestPhoneDto, forWhat: ContactForWhatEnum) {
     const { phone } = data;
-    const _query = await this.find(phone);
-    // generate token -->
+    const _query = await this.find(phone, forWhat);
     const token = this.generateToken(_query.secret);
-    // send verification -->
-    await this.smsService.verification(_query.user || _query.office, token);
-    return true;
+    return { token, query: _query };
   }
-  async checkValid(data: VerifyPhoneDto) {
+  async checkValid(data: TokenValidPhoneDto, forWhat: ContactForWhatEnum) {
     const { phone, token } = data;
-    const _query = await this.find(phone);
+    const _query = await this.find(phone, forWhat);
     const verified = this.validationToken(_query.secret, token);
     if (verified) return _query;
-    throw new NotAcceptableException('Entered token is incorrect or expired!');
+    else
+      throw new NotAcceptableException(
+        'Entered token is incorrect or expired!',
+      );
   }
-  async verify(data: VerifyPhoneDto) {
-    const _query = await this.checkValid(data);
+
+  async verifyRequest(data: TokenRequestPhoneDto, forWhat: ContactForWhatEnum) {
+    const { token, query } = await this.requestToken(data, forWhat);
+    await this.smsService.verification(query.user || query.office, token);
+    return true;
+  }
+  async verify(data: TokenValidPhoneDto, forWhat: ContactForWhatEnum) {
+    const _query = await this.checkValid(data, forWhat);
     _query.verified = true;
     _query.verifiedAt = moment().toDate();
     await _query.save();

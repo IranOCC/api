@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
+import * as speakeasy from 'speakeasy';
 
 @Schema({ timestamps: true })
 export class EmailAddress extends Document {
@@ -24,7 +25,12 @@ export class EmailAddress extends Document {
   @Prop()
   verifiedAt: Date;
 
-  @Prop()
+  @Prop({
+    default: () => speakeasy.generateSecret({ length: 30 }).base32,
+    immutable: true,
+    unique: true,
+    required: true,
+  })
   secret: string;
 }
 export const EmailAddressSchema = SchemaFactory.createForClass(EmailAddress);
