@@ -22,6 +22,9 @@ export class EmailAddress extends Document {
   verified: boolean;
 
   @Prop()
+  verifiedAt: Date;
+
+  @Prop()
   secret: string;
 }
 export const EmailAddressSchema = SchemaFactory.createForClass(EmailAddress);

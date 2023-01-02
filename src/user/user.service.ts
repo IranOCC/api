@@ -23,21 +23,24 @@ export class UserService {
     const user = new this.userModel(_data);
 
     // => phone & email
-    let deVe: boolean, seVe: boolean, seWe: boolean;
+    let autoVerify: boolean, mustVerify: boolean;
     if (data instanceof CreateUserDto) {
-      deVe = false;
-      seVe = false;
-      seWe = false;
+      autoVerify = false;
+      mustVerify = false;
     } else {
-      deVe = false;
-      seVe = true;
-      seWe = true;
+      autoVerify = false;
+      mustVerify = true;
     }
     if (email) {
-      user.email = await this.emailService.setup(email, user, deVe, seVe, seWe);
+      user.email = await this.emailService.setup(email, user);
     }
     if (phone) {
-      user.phone = await this.phoneService.setup(phone, user, deVe, seVe, seWe);
+      user.phone = await this.phoneService.setup(
+        phone,
+        user,
+        autoVerify,
+        mustVerify,
+      );
     }
     // #
     return await user.save();

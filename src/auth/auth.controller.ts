@@ -4,9 +4,9 @@ import { PasswordResetDto } from './dto/passwordReset.dto';
 import { PasswordResetConfirmDto } from './dto/passwordResetConfirm.dto';
 import { RegistrationDto } from './dto/registration.dto';
 import { VerifyEmailDto } from './dto/verifyEmail.dto';
-import { SendVerifyEmailDto as SendVerifyEmailDto } from './dto/sendVerifyEmail.dto';
+import { SendVerifyEmailDto as SendVerifyEmailDto } from '../email/dto/sendVerifyEmail.dto';
 import { VerifyPhoneDto } from './dto/verifyPhone.dto';
-import { SendVerifyPhoneDto } from './dto/sendVerifyPhone.dto';
+import { SendVerifyPhoneDto } from '../phone/dto/sendVerifyPhone.dto';
 import { Public } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 

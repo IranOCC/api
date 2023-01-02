@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsEmail, IsOptional, IsPhoneNumber, IsEnum } from 'class-validator';
-import { _$PhoneCountryCode, _$PhoneCountryRegion } from 'src/config/main';
+import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from 'src/config/main';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import { PasswordResetMethods } from '../enum/passwordResetMethod.enum';
 const $ = 'validation.passwordReset';
@@ -20,9 +20,9 @@ export class PasswordResetDto {
   @ApiProperty()
   @Transform(({ value }) => {
     if (value.length === 10) value = '0' + value;
-    return value.replace(/^0/, _$PhoneCountryCode);
+    return value.replace(/^0/, PHONE_COUNTRY_CODE);
   })
-  @IsPhoneNumber(_$PhoneCountryRegion, {
+  @IsPhoneNumber(PHONE_COUNTRY_REGION, {
     message: i18nVM(`${$}.phone.IsPhoneNumber`),
   })
   @IsOptional()

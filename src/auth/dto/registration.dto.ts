@@ -13,22 +13,22 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Match } from '../../validators/match.decorators';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import {
-  _$NamesLang,
-  _$PhoneCountryCode,
-  _$PhoneCountryRegion,
+  NAME_LANG_INPUT,
+  PHONE_COUNTRY_CODE,
+  PHONE_COUNTRY_REGION,
 } from 'src/config/main';
 
 const $ = 'validation.registration';
 
 export class RegistrationDto {
   @ApiProperty()
-  @IsAlpha(_$NamesLang, { message: i18nVM(`${$}.firstName.IsAlpha`) })
+  @IsAlpha(NAME_LANG_INPUT, { message: i18nVM(`${$}.firstName.IsAlpha`) })
   @MinLength(3, { message: i18nVM(`${$}.firstName.MinLength`) })
   @MaxLength(35, { message: i18nVM(`${$}.firstName.MaxLength`) })
   firstName: string;
 
   @ApiProperty()
-  @IsAlpha(_$NamesLang, { message: i18nVM(`${$}.lastName.IsAlpha`) })
+  @IsAlpha(NAME_LANG_INPUT, { message: i18nVM(`${$}.lastName.IsAlpha`) })
   @MinLength(3, { message: i18nVM(`${$}.lastName.MinLength`) })
   @MaxLength(35, { message: i18nVM(`${$}.lastName.MaxLength`) })
   lastName: string;
@@ -49,9 +49,9 @@ export class RegistrationDto {
   @ApiProperty()
   @Transform(({ value }) => {
     if (value.length === 10) value = '0' + value;
-    return value.replace(/^0/, _$PhoneCountryCode);
+    return value.replace(/^0/, PHONE_COUNTRY_CODE);
   })
-  @IsPhoneNumber(_$PhoneCountryRegion, {
+  @IsPhoneNumber(PHONE_COUNTRY_REGION, {
     message: i18nVM(`${$}.phone.IsPhoneNumber`),
   })
   @IsOptional()

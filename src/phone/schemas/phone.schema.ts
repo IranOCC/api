@@ -22,6 +22,9 @@ export class PhoneNumber extends Document {
   verified: boolean;
 
   @Prop()
+  verifiedAt: Date;
+
+  @Prop()
   secret: string;
 }
 

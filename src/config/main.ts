@@ -1,6 +1,6 @@
-export const _$NamesLang = 'fa-IR';
-export const _$PhoneCountryRegion = 'IR';
-export const _$PhoneCountryCode = '+98';
+export const NAME_LANG_INPUT = 'fa-IR';
+export const PHONE_COUNTRY_REGION = 'IR';
+export const PHONE_COUNTRY_CODE = '+98';
 
-export const _$RequiredVerifyEmail = true;
-export const _$RequiredVerifyPhone = true;
+export const MUST_PHONE_VERIFY = true;
+export const MUST_EMAIL_VERIFY = true;

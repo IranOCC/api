@@ -7,10 +7,11 @@ import { User } from 'src/user/schemas/user.schema';
 import { PasswordResetConfirmDto } from './dto/passwordResetConfirm.dto';
 import { PasswordResetDto } from './dto/passwordReset.dto';
 import { RegistrationDto } from './dto/registration.dto';
-import { VerifyEmailDto } from './dto/verifyEmail.dto';
-import { SendVerifyEmailDto } from './dto/sendVerifyEmail.dto';
-import { VerifyPhoneDto } from './dto/verifyPhone.dto';
-import { SendVerifyPhoneDto } from './dto/sendVerifyPhone.dto';
+
+import { VerifyEmailDto } from 'src/email/dto/verifyEmail.dto';
+import { SendVerifyEmailDto } from 'src/email/dto/sendVerifyEmail.dto';
+import { VerifyPhoneDto } from 'src/phone/dto/verifyPhone.dto';
+import { SendVerifyPhoneDto } from 'src/phone/dto/sendVerifyPhone.dto';
 
 import { UserService } from '../user/user.service';
 import { PhoneService } from 'src/phone/phone.service';
@@ -68,13 +69,13 @@ export class AuthService {
     const { method, email, phone } = data;
     if (method === PasswordResetMethods.ByEmail) {
       const _email = await this.emailService.find(email);
-      const token = this.emailService.generateToken(_email);
+      const token = this.emailService.generateToken(_email.secret);
       const user = await this.userService.findOne(_email.user);
       this.mailService.resetPassword(user, token);
     }
     if (method === PasswordResetMethods.ByPhone) {
       const _phone = await this.phoneService.find(phone);
-      const token = this.phoneService.generateToken(_phone);
+      const token = this.phoneService.generateToken(_phone.secret);
       const user = await this.userService.findOne(_phone.user);
       this.smsService.resetPassword(user, token);
     }

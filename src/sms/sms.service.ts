@@ -1,5 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { Office } from 'src/office/schemas/office.schema';
 import { User } from 'src/user/schemas/user.schema';
 
 @Injectable()
@@ -9,11 +10,11 @@ export class SmsService {
   async welcome(): Promise<any> {
     return this.httpService.get('ws.asmx?WSDL');
   }
-  async verification(user: User, token: string) {
+  async verification(owner: User | Office, token: string) {
     console.log(token);
     return true;
   }
-  async resetPassword(user: User, token: string) {
+  async resetPassword(owner: User | Office, token: string) {
     console.log(token);
     return true;
   }

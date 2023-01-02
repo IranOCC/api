@@ -1,122 +1,100 @@
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { VerifyPhoneDto } from 'src/auth/dto/verifyPhone.dto';
-import { SendVerifyPhoneDto } from 'src/auth/dto/sendVerifyPhone.dto';
-import { _$RequiredVerifyPhone } from 'src/config/main';
+import { VerifyPhoneDto } from './dto/verifyPhone.dto';
+import { SendVerifyPhoneDto } from './dto/sendVerifyPhone.dto';
+import { MUST_PHONE_VERIFY } from 'src/config/main';
 import { SmsService } from 'src/sms/sms.service';
 import { PhoneNumber, PhoneNumberDocument } from './schemas/phone.schema';
-import { User } from '../user/schemas/user.schema';
+import { User } from 'src/user/schemas/user.schema';
+import { Office } from 'src/office/schemas/office.schema';
+
 import * as speakeasy from 'speakeasy';
+import moment from 'moment';
 
 @Injectable()
 export class PhoneService {
   constructor(
-    @InjectModel(PhoneNumber.name)
-    private phoneNumberModel: Model<PhoneNumberDocument>,
+    @InjectModel(PhoneNumber.name) private model: Model<PhoneNumberDocument>,
     private smsService: SmsService,
   ) {}
 
+  // --> token & secret
+  generateSecret() {
+    return speakeasy.generateSecret({ length: 30 }).base32;
+  }
+  generateToken(secret: string): string {
+    return speakeasy.totp({ secret, encoding: 'base32', digits: 6 });
+  }
+  validationToken(secret: string, token: string): boolean {
+    return speakeasy.totp.verify({ secret, encoding: 'base32', token });
+  }
+
+  // --> setup
   async setup(
-    phone: string,
-    user: User = null,
-    defaultVerified = false,
-    sendVerification = _$RequiredVerifyPhone,
-    sendWelcome = true,
-  ): Promise<any> {
-    const checkPhone = await this.phoneNumberModel.findOne({ phone });
-    // #
-    let _phone: PhoneNumber;
-    if (checkPhone) {
-      if (checkPhone.user !== user._id) {
+    value: string,
+    owner: User | Office,
+    autoVerify = false,
+    mustVerify = MUST_PHONE_VERIFY,
+  ): Promise<PhoneNumber> {
+    const check = await this.model.findOne({ value });
+    let _query: PhoneNumber;
+    if (check) {
+      if (
+        (check.user && owner instanceof Office) ||
+        (check.office && owner instanceof User) ||
+        (check.user && owner instanceof User && check.user !== owner._id) ||
+        (check.office && owner instanceof Office && check.office !== owner._id)
+      ) {
         throw new NotAcceptableException('Phone exists');
       } else {
-        _phone = checkPhone;
+        _query = check;
       }
     } else {
-      _phone = new this.phoneNumberModel({
-        phone,
-        user: user?._id,
-      });
+      _query = new this.model({ value });
+      if (owner instanceof User) _query.user = owner._id;
+      if (owner instanceof Office) _query.office = owner._id;
     }
-
-    // verify
-    if (defaultVerified) _phone.verified = true;
-    else if (!_phone.verified) _phone.verified = false;
-    await _phone.save();
-
-    // generateSecret
-    if (_phone.secret) await this.generateSecret(_phone);
-
-    // sendWelcome
-    // if (sendWelcome) await this.smsService.welcome(user);
-
-    // sendVerification
-    if (sendVerification) await this.verifyRequest({ phone });
-
-    return _phone._id;
-  }
-
-  find(phone: string): Promise<PhoneNumber> {
-    return this.phoneNumberModel.findOne({ phone }).exec();
-  }
-
-  async generateSecret(phone: PhoneNumber) {
-    if (!phone.secret) {
-      const secret = speakeasy.generateSecret({ length: 30 });
-      phone.secret = secret.base32;
-      await phone.save();
+    await _query.save();
+    // @@@
+    if (!_query.secret) _query.secret = this.generateSecret();
+    if (autoVerify) _query.verified = true;
+    await _query.save();
+    // ### must verify
+    if (!_query.verified && mustVerify) {
+      await this.verifyRequest({ phone: value });
     }
+    return _query;
   }
 
-  // @ resend phone token
-  async verifyRequest(data: SendVerifyPhoneDto): Promise<any> {
+  // --> find
+  async find(value: string) {
+    const data = await this.model.findOne({ value }).exec();
+    if (!data) throw new NotAcceptableException('Not found');
+    return data;
+  }
+
+  async verifyRequest(data: SendVerifyPhoneDto) {
     const { phone } = data;
-    const _phone: PhoneNumber = await this.phoneNumberModel.findOne({ phone });
-    // #
-    if (!_phone) {
-      throw new NotAcceptableException('Phone not found');
-    }
-    // send sms
-    const token = this.generateToken(_phone);
-    await this.smsService.verification(_phone.user, token);
+    const _query = await this.find(phone);
+    // generate token -->
+    const token = this.generateToken(_query.secret);
+    // send verification -->
+    await this.smsService.verification(_query.user || _query.office, token);
     return true;
   }
-
-  generateToken(phone: PhoneNumber): string {
-    return speakeasy.totp({
-      secret: phone.secret,
-      encoding: 'base32',
-      digits: 6,
-    });
-  }
-
-  // @ verify email
-  async checkValid(data: VerifyPhoneDto): Promise<any> {
+  async checkValid(data: VerifyPhoneDto) {
     const { phone, token } = data;
-    const _phone: PhoneNumber = await this.phoneNumberModel.findOne({
-      phone,
-    });
-    // #
-    if (!_phone) {
-      throw new NotAcceptableException('Phone not found');
-    }
-    const verified = speakeasy.totp.verify({
-      secret: _phone.secret,
-      encoding: 'base32',
-      token,
-    });
-    if (verified) return _phone;
-    return false;
+    const _query = await this.find(phone);
+    const verified = this.validationToken(_query.secret, token);
+    if (verified) return _query;
+    throw new NotAcceptableException('Entered token is incorrect or expired!');
   }
-  async verify(data: VerifyPhoneDto): Promise<any> {
-    const _phone = await this.checkValid(data);
-    if (!_phone) throw new NotAcceptableException('Token is incorrect!');
-    if (_phone) {
-      _phone.verified = true;
-      await _phone.save();
-      return true;
-    }
+  async verify(data: VerifyPhoneDto) {
+    const _query = await this.checkValid(data);
+    _query.verified = true;
+    _query.verifiedAt = moment().toDate();
+    await _query.save();
     return true;
   }
 }
