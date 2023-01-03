@@ -11,7 +11,7 @@ import { Office } from 'src/office/schemas/office.schema';
 
 import * as speakeasy from 'speakeasy';
 import moment from 'moment';
-import { ContactForWhatEnum } from 'src/auth/enum/forWhat.enum';
+import { useForEnum } from 'src/auth/enum/useFor.enum';
 
 @Injectable()
 export class EmailService {
@@ -60,7 +60,7 @@ export class EmailService {
     // ### must verify
     if (!_query.verified && mustVerify) {
       // eslint-disable-next-line prettier/prettier
-      const f = owner instanceof User ? ContactForWhatEnum.User : ContactForWhatEnum.Office;
+      const f = owner instanceof User ? useForEnum.User : useForEnum.Office;
       await this.verifyRequest({ email: value }, f);
     }
     return _query;
@@ -71,18 +71,18 @@ export class EmailService {
     const data = await this.model.findOne({ value }).exec();
     const exp =
       !data ||
-      (forWhat === ContactForWhatEnum.User && !data.user) ||
-      (forWhat === ContactForWhatEnum.Office && !data.office);
+      (forWhat === useForEnum.User && !data.user) ||
+      (forWhat === useForEnum.Office && !data.office);
     if (exp) throw new NotAcceptableException('Not found');
     return data;
   }
-  async requestToken(data: TokenRequestEmailDto, forWhat: ContactForWhatEnum) {
+  async requestToken(data: TokenRequestEmailDto, forWhat: useForEnum) {
     const { email } = data;
     const _query = await this.find(email, forWhat);
     const token = this.generateToken(_query.secret);
     return { token, query: _query };
   }
-  async checkValid(data: TokenValidEmailDto, forWhat: ContactForWhatEnum) {
+  async checkValid(data: TokenValidEmailDto, forWhat: useForEnum) {
     const { email, token } = data;
     const _query = await this.find(email, forWhat);
     const verified = this.validationToken(_query.secret, token);
@@ -95,12 +95,12 @@ export class EmailService {
   // =====>
 
   // --> verification endpoints
-  async verifyRequest(data: TokenRequestEmailDto, forWhat: ContactForWhatEnum) {
+  async verifyRequest(data: TokenRequestEmailDto, forWhat: useForEnum) {
     const { token, query } = await this.requestToken(data, forWhat);
     await this.mailService.verification(query.user || query.office, token);
     return true;
   }
-  async verify(data: TokenValidEmailDto, forWhat: ContactForWhatEnum) {
+  async verify(data: TokenValidEmailDto, forWhat: useForEnum) {
     const _query = await this.checkValid(data, forWhat);
     _query.verified = true;
     _query.verifiedAt = moment().toDate();

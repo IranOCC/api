@@ -1,4 +1,4 @@
-export enum ContactForWhatEnum {
+export enum useForEnum {
   User = 'User',
   Office = 'Office',
 }

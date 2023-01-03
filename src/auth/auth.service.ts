@@ -23,7 +23,7 @@ import { EmailService } from 'src/email/email.service';
 import { PasswordResetMethods } from './enum/passwordResetMethod.enum';
 import { SmsService } from 'src/sms/sms.service';
 import { MailService } from 'src/mail/mail.service';
-import { ContactForWhatEnum } from './enum/forWhat.enum';
+import { useForEnum } from './enum/useFor.enum';
 
 @Injectable()
 export class AuthService {
@@ -70,16 +70,13 @@ export class AuthService {
     if (method === PasswordResetMethods.ByEmail) {
       const { token, query } = await this.emailService.requestToken(
         { email },
-        ContactForWhatEnum.User,
+        useForEnum.User,
       );
       const user = await this.userService.findOne(query.user);
       this.mailService.resetPassword(user, token);
     }
     if (method === PasswordResetMethods.ByPhone) {
-      const _phone = await this.phoneService.find(
-        phone,
-        ContactForWhatEnum.User,
-      );
+      const _phone = await this.phoneService.find(phone, useForEnum.User);
       const token = this.phoneService.generateToken(_phone.secret);
       const user = await this.userService.findOne(_phone.user);
       this.smsService.resetPassword(user, token);
@@ -96,7 +93,7 @@ export class AuthService {
           email,
           token,
         },
-        ContactForWhatEnum.User,
+        useForEnum.User,
       );
       user = await this.userService.findOne(_email.user);
     }
@@ -106,7 +103,7 @@ export class AuthService {
           phone,
           token,
         },
-        ContactForWhatEnum.User,
+        useForEnum.User,
       );
       user = await this.userService.findOne(_phone.user);
     }
@@ -120,15 +117,15 @@ export class AuthService {
   }
 
   async verifyEmail(data: VerifyEmailDto) {
-    return await this.emailService.verify(data, ContactForWhatEnum.User);
+    return await this.emailService.verify(data, useForEnum.User);
   }
   async verifyEmailResend(data: SendVerifyEmailDto) {
-    return await this.emailService.verifyRequest(data, ContactForWhatEnum.User);
+    return await this.emailService.verifyRequest(data, useForEnum.User);
   }
   async verifyPhone(data: VerifyPhoneDto) {
-    return await this.phoneService.verify(data, ContactForWhatEnum.User);
+    return await this.phoneService.verify(data, useForEnum.User);
   }
   async verifyPhoneResend(data: SendVerifyPhoneDto) {
-    return await this.phoneService.verifyRequest(data, ContactForWhatEnum.User);
+    return await this.phoneService.verifyRequest(data, useForEnum.User);
   }
 }
