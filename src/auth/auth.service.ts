@@ -5,24 +5,24 @@ import {
 } from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
-import { UserStatusEum } from 'src/user/enum/userStatus.enum';
-import { User } from 'src/user/schemas/user.schema';
+import { UserStatusEum } from '../user/enum/userStatus.enum';
+import { User } from '../user/schemas/user.schema';
 
 import { PasswordResetConfirmDto } from './dto/passwordResetConfirm.dto';
 import { PasswordResetDto } from './dto/passwordReset.dto';
 import { RegistrationDto } from './dto/registration.dto';
 
-import { VerifyEmailDto } from 'src/email/dto/verifyEmail.dto';
-import { SendVerifyEmailDto } from 'src/email/dto/sendVerifyEmail.dto';
-import { VerifyPhoneDto } from 'src/phone/dto/verifyPhone.dto';
-import { SendVerifyPhoneDto } from 'src/phone/dto/sendVerifyPhone.dto';
+import { VerifyEmailDto } from '../email/dto/verifyEmail.dto';
+import { SendVerifyEmailDto } from '../email/dto/sendVerifyEmail.dto';
+import { VerifyPhoneDto } from '../phone/dto/verifyPhone.dto';
+import { SendVerifyPhoneDto } from '../phone/dto/sendVerifyPhone.dto';
 
 import { UserService } from '../user/user.service';
-import { PhoneService } from 'src/phone/phone.service';
-import { EmailService } from 'src/email/email.service';
+import { PhoneService } from '../phone/phone.service';
+import { EmailService } from '../email/email.service';
 import { PasswordResetMethods } from './enum/passwordResetMethod.enum';
-import { SmsService } from 'src/sms/sms.service';
-import { MailService } from 'src/mail/mail.service';
+import { SmsService } from '../sms/sms.service';
+import { MailService } from '../mail/mail.service';
 import { useForEnum } from './enum/useFor.enum';
 
 @Injectable()

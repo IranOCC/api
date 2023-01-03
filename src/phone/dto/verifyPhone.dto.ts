@@ -2,7 +2,7 @@ import { IsPhoneNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import { Transform } from 'class-transformer';
-import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from 'src/config/main';
+import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from '../../config/main';
 
 const $ = 'validation.verifyPhone';
 

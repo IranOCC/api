@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
-import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from 'src/config/main';
+import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from '../../config/main';
 import { Match } from '../../validators/match.decorators';
 import { PasswordResetMethods } from '../enum/passwordResetMethod.enum';
 const $ = 'validation.passwordResetConfirm';

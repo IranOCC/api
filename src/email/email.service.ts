@@ -3,15 +3,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { VerifyEmailDto as TokenValidEmailDto } from './dto/verifyEmail.dto';
 import { SendVerifyEmailDto as TokenRequestEmailDto } from './dto/sendVerifyEmail.dto';
-import { MUST_EMAIL_VERIFY } from 'src/config/main';
-import { MailService } from 'src/mail/mail.service';
+import { MUST_EMAIL_VERIFY } from '../config/main';
+import { MailService } from '../mail/mail.service';
 import { EmailAddress, EmailAddressDocument } from './schemas/email.schema';
-import { User } from 'src/user/schemas/user.schema';
-import { Office } from 'src/office/schemas/office.schema';
+import { User } from '../user/schemas/user.schema';
+import { Office } from '../office/schemas/office.schema';
 
 import * as speakeasy from 'speakeasy';
 import moment from 'moment';
-import { useForEnum } from 'src/auth/enum/useFor.enum';
+import { useForEnum } from '../auth/enum/useFor.enum';
 
 @Injectable()
 export class EmailService {

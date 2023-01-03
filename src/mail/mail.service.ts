@@ -1,7 +1,7 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { Office } from 'src/office/schemas/office.schema';
-import { User } from 'src/user/schemas/user.schema';
+import { Office } from '../office/schemas/office.schema';
+import { User } from '../user/schemas/user.schema';
 import { Subject } from './subjects';
 
 @Injectable()

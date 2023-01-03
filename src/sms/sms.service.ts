@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { Office } from 'src/office/schemas/office.schema';
-import { User } from 'src/user/schemas/user.schema';
+import { Office } from '../office/schemas/office.schema';
+import { User } from '../user/schemas/user.schema';
 
 @Injectable()
 export class SmsService {

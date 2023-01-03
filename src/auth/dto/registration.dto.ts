@@ -16,7 +16,7 @@ import {
   NAME_LANG_INPUT,
   PHONE_COUNTRY_CODE,
   PHONE_COUNTRY_REGION,
-} from 'src/config/main';
+} from '../../config/main';
 
 const $ = 'validation.registration';
 

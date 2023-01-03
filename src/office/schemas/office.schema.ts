@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
-import { EmailAddress } from 'src/email/schemas/email.schema';
-import { PhoneNumber } from 'src/phone/schemas/phone.schema';
+import { EmailAddress } from '../../email/schemas/email.schema';
+import { PhoneNumber } from '../../phone/schemas/phone.schema';
 
 @Schema({ timestamps: true })
 export class Office extends Document {

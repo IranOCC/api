@@ -1,8 +1,8 @@
 import { Model } from 'mongoose';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { MinioClientService } from 'src/minio/minio.service';
-import { BufferedFile } from 'src/minio/file.model';
+import { MinioClientService } from '../minio/minio.service';
+import { BufferedFile } from '../minio/file.model';
 import { Storage, StorageDocument } from './schemas/storage.schema';
 
 @Injectable()

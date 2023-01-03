@@ -3,15 +3,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { VerifyPhoneDto as TokenValidPhoneDto } from './dto/verifyPhone.dto';
 import { SendVerifyPhoneDto as TokenRequestPhoneDto } from './dto/sendVerifyPhone.dto';
-import { MUST_PHONE_VERIFY } from 'src/config/main';
-import { SmsService } from 'src/sms/sms.service';
+import { MUST_PHONE_VERIFY } from '../config/main';
+import { SmsService } from '../sms/sms.service';
 import { PhoneNumber, PhoneNumberDocument } from './schemas/phone.schema';
-import { User } from 'src/user/schemas/user.schema';
-import { Office } from 'src/office/schemas/office.schema';
+import { User } from '../user/schemas/user.schema';
+import { Office } from '../office/schemas/office.schema';
 
 import * as speakeasy from 'speakeasy';
 import moment from 'moment';
-import { useForEnum } from 'src/auth/enum/useFor.enum';
+import { useForEnum } from '../auth/enum/useFor.enum';
 
 @Injectable()
 export class PhoneService {

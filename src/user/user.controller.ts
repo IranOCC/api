@@ -11,9 +11,8 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
-import { Public } from 'src/auth/jwt-auth.guard';
 import { ChangePasswordDto } from './dto/changePassword.dto';
-import { Roles } from 'src/auth/roles.decorator';
+import { Roles } from '../auth/roles.decorator';
 import { RoleEnum } from './enum/role.enum';
 
 @Controller('user')

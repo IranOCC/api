@@ -6,10 +6,10 @@ import { LocalAuthGuard } from './local-auth.guard';
 import { PasswordResetDto } from './dto/passwordReset.dto';
 import { PasswordResetConfirmDto } from './dto/passwordResetConfirm.dto';
 import { RegistrationDto } from './dto/registration.dto';
-import { VerifyEmailDto } from 'src/email/dto/verifyEmail.dto';
-import { SendVerifyEmailDto } from 'src/email/dto/sendVerifyEmail.dto';
-import { VerifyPhoneDto } from 'src/phone/dto/verifyPhone.dto';
-import { SendVerifyPhoneDto } from 'src/phone/dto/sendVerifyPhone.dto';
+import { VerifyEmailDto } from '../email/dto/verifyEmail.dto';
+import { SendVerifyEmailDto } from '../email/dto/sendVerifyEmail.dto';
+import { VerifyPhoneDto } from '../phone/dto/verifyPhone.dto';
+import { SendVerifyPhoneDto } from '../phone/dto/sendVerifyPhone.dto';
 
 @Controller('auth')
 export class AuthController {

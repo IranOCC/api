@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PhoneNumber, PhoneNumberSchema } from 'src/phone/schemas/phone.schema';
+import { PhoneNumber, PhoneNumberSchema } from '../phone/schemas/phone.schema';
 import { PhoneService } from './phone.service';
 
 @Module({
