@@ -1,7 +1,7 @@
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { TokenConfirmPhoneDto } from './dto/tokenValidPhone.dto';
+import { TokenConfirmPhoneDto } from './dto/tokenConfirmPhone.dto';
 import { TokenRequestPhoneDto } from './dto/tokenRequestPhone.dto';
 import { MUST_PHONE_VERIFY } from '../config/main';
 import { PhoneNumber, PhoneNumberDocument } from './schemas/phone.schema';

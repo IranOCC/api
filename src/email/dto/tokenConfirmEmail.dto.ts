@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import { Transform } from 'class-transformer';
 
-const $ = 'validation.verifyEmail';
+const $ = 'validation.tokenConfirmEmail';
 
 export class TokenConfirmEmailDto {
   @ApiProperty()

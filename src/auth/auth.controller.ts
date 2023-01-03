@@ -3,12 +3,12 @@ import { AuthService } from './auth.service';
 import { Public } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 
-import { PasswordResetDto } from './dto/passwordReset.dto';
+import { PasswordResetRequestDto } from './dto/passwordResetRequest.dto';
 import { PasswordResetConfirmDto } from './dto/passwordResetConfirm.dto';
 import { RegistrationDto } from './dto/registration.dto';
-import { TokenConfirmEmailDto } from '../email/dto/tokenValidEmail.dto';
+import { TokenConfirmEmailDto } from '../email/dto/tokenConfirmEmail.dto';
 import { TokenRequestEmailDto } from '../email/dto/tokenRequestEmail.dto';
-import { TokenConfirmPhoneDto } from '../phone/dto/tokenValidPhone.dto';
+import { TokenConfirmPhoneDto } from '../phone/dto/tokenConfirmPhone.dto';
 import { TokenRequestPhoneDto } from '../phone/dto/tokenRequestPhone.dto';
 
 @Controller('auth')
@@ -30,7 +30,7 @@ export class AuthController {
   // password ===>
   @Post('passwordReset/request')
   @Public()
-  async passwordResetRequest(@Body() data: PasswordResetDto) {
+  async passwordResetRequest(@Body() data: PasswordResetRequestDto) {
     return this.authService.passwordResetRequest(data);
   }
   @Post('passwordReset/confirm')

@@ -9,12 +9,12 @@ import { UserStatusEum } from '../user/enum/userStatus.enum';
 import { User } from '../user/schemas/user.schema';
 
 import { PasswordResetConfirmDto } from './dto/passwordResetConfirm.dto';
-import { PasswordResetDto } from './dto/passwordReset.dto';
+import { PasswordResetRequestDto } from './dto/passwordResetRequest.dto';
 import { RegistrationDto } from './dto/registration.dto';
 
-import { TokenConfirmEmailDto } from '../email/dto/tokenValidEmail.dto';
+import { TokenConfirmEmailDto } from '../email/dto/tokenConfirmEmail.dto';
 import { TokenRequestEmailDto } from '../email/dto/tokenRequestEmail.dto';
-import { TokenConfirmPhoneDto } from '../phone/dto/tokenValidPhone.dto';
+import { TokenConfirmPhoneDto } from '../phone/dto/tokenConfirmPhone.dto';
 import { TokenRequestPhoneDto } from '../phone/dto/tokenRequestPhone.dto';
 
 import { UserService } from '../user/user.service';
@@ -78,7 +78,7 @@ export class AuthService {
     return await this.phoneService.verifyConfirm(data, useForEnum.User);
   }
   // @@
-  async passwordResetRequest(data: PasswordResetDto) {
+  async passwordResetRequest(data: PasswordResetRequestDto) {
     const { method, email, phone } = data;
     if (method === PasswordResetMethods.ByEmail) {
       await this.emailService.passwordResetRequest({ email });

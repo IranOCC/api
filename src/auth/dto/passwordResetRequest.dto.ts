@@ -4,9 +4,9 @@ import { IsEmail, IsOptional, IsPhoneNumber, IsEnum } from 'class-validator';
 import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from '../../config/main';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import { PasswordResetMethods } from '../enum/passwordResetMethod.enum';
-const $ = 'validation.passwordReset';
+const $ = 'validation.passwordResetRequest';
 
-export class PasswordResetDto {
+export class PasswordResetRequestDto {
   @ApiProperty({ enum: PasswordResetMethods })
   @IsEnum(PasswordResetMethods, { message: i18nVM(`${$}.method.IsEnum`) })
   method: string;

@@ -4,7 +4,7 @@ import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import { Transform } from 'class-transformer';
 import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from '../../config/main';
 
-const $ = 'validation.sendVerifyPhone';
+const $ = 'validation.tokenRequestPhone';
 
 export class TokenRequestPhoneDto {
   @ApiProperty()

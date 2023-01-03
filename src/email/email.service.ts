@@ -1,7 +1,7 @@
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { TokenConfirmEmailDto } from './dto/tokenValidEmail.dto';
+import { TokenConfirmEmailDto } from './dto/tokenConfirmEmail.dto';
 import { TokenRequestEmailDto } from './dto/tokenRequestEmail.dto';
 import { MUST_EMAIL_VERIFY } from '../config/main';
 import { EmailAddress, EmailAddressDocument } from './schemas/email.schema';
