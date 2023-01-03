@@ -7,6 +7,9 @@
       "**/*.hbs",
       "i18n/**/**/*"
     ],
+    "plugins": [
+      "node_modules/@nestjs/swagger/plugin"
+    ],
     "watchAssets": true
   }
 }
