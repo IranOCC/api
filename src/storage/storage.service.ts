@@ -54,4 +54,9 @@ export class StorageService {
     await this.storageModel.deleteMany({ _id: { $in: id } });
     return await this.minioClientService.multipleDelete(fileList, _bucket);
   }
+
+  async update(id: string) {
+    const storage = await this.storageModel.findOne({ _id: id });
+    return storage;
+  }
 }

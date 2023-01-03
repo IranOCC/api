@@ -18,7 +18,7 @@ export class Office extends Document {
   estateCount: number;
 
   @Prop()
-  blogCount: number;
+  postCount: number;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
@@ -35,8 +35,8 @@ export class Office extends Document {
   @Prop({ type: String })
   address: string;
 
-  @Prop({ type: { type: String } })
-  location: string;
+  @Prop({ index: '2dsphere' })
+  location: [number, number];
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,

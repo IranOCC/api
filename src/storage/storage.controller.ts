@@ -7,6 +7,7 @@ import {
   Body,
   UseInterceptors,
   UploadedFile,
+  Patch,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageService } from './storage.service';
@@ -43,5 +44,10 @@ export class StorageController {
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return await this.storageService.delete(id);
+  }
+
+  @Patch(':id')
+  async update(@Param('id') id: string) {
+    return await this.storageService.update(id);
   }
 }

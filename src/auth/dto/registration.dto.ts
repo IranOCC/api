@@ -1,43 +1,35 @@
 import {
   IsEmail,
-  IsAlpha,
   IsAlphanumeric,
   IsStrongPassword,
   IsPhoneNumber,
   IsOptional,
   MinLength,
   MaxLength,
+  IsNotEmpty,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { Match } from '../../validators/match.decorators';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
-import {
-  NAME_LANG_INPUT,
-  PHONE_COUNTRY_CODE,
-  PHONE_COUNTRY_REGION,
-} from '../../config/main';
+import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from '../../config/main';
 
 const $ = 'validation.registration';
 
 export class RegistrationDto {
   @ApiProperty()
-  @IsAlpha(NAME_LANG_INPUT, { message: i18nVM(`${$}.firstName.IsAlpha`) })
-  @MinLength(3, { message: i18nVM(`${$}.firstName.MinLength`) })
-  @MaxLength(35, { message: i18nVM(`${$}.firstName.MaxLength`) })
+  @IsNotEmpty({ message: i18nVM(`${$}.firstName.IsNotEmpty`) })
   firstName: string;
 
   @ApiProperty()
-  @IsAlpha(NAME_LANG_INPUT, { message: i18nVM(`${$}.lastName.IsAlpha`) })
-  @MinLength(3, { message: i18nVM(`${$}.lastName.MinLength`) })
-  @MaxLength(35, { message: i18nVM(`${$}.lastName.MaxLength`) })
+  @IsNotEmpty({ message: i18nVM(`${$}.lastName.IsNotEmpty`) })
   lastName: string;
 
   @ApiProperty()
   @Transform(({ value }) => value.toLowerCase())
   @IsAlphanumeric('en-US', { message: i18nVM(`${$}.username.IsAlphanumeric`) })
   @MinLength(3, { message: i18nVM(`${$}.username.MinLength`) })
-  @MaxLength(35, { message: i18nVM(`${$}.lastName.MaxLength`) })
+  @MaxLength(35, { message: i18nVM(`${$}.username.MaxLength`) })
   username: string;
 
   @ApiProperty()

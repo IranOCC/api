@@ -10,7 +10,6 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/roles.guard';
 import { MongoModule } from './mongo/mongo.module';
-import { MailModule } from './mail/mail.module';
 import * as path from 'path';
 import {
   // AcceptLanguageResolver,
@@ -19,13 +18,9 @@ import {
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
-import { SmsModule } from './sms/sms.module';
 import { EstateModule } from './estate/estate.module';
 import { OfficeModule } from './office/office.module';
 import { BlogModule } from './blog/blog.module';
-// import { EmailService } from './email/email.service';
-import { EmailModule } from './email/email.module';
-import { PhoneModule } from './phone/phone.module';
 
 @Module({
   imports: [
@@ -47,13 +42,9 @@ import { PhoneModule } from './phone/phone.module';
         // AcceptLanguageResolver,
       ],
     }),
-    EmailModule,
-    PhoneModule,
-    UserModule,
     AuthModule,
+    UserModule,
     StorageModule,
-    MailModule,
-    SmsModule,
     OfficeModule,
     EstateModule,
     BlogModule,

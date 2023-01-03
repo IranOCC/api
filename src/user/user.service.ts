@@ -32,20 +32,14 @@ export class UserService {
       mustVerify = true;
     }
     if (email) {
-      user.email = await this.emailService.setup(
-        email,
-        user,
-        autoVerify,
-        mustVerify,
-      );
+      user.email = (
+        await this.emailService.setup(email, user, autoVerify, mustVerify)
+      )._id;
     }
     if (phone) {
-      user.phone = await this.phoneService.setup(
-        phone,
-        user,
-        autoVerify,
-        mustVerify,
-      );
+      user.phone = (
+        await this.phoneService.setup(phone, user, autoVerify, mustVerify)
+      )._id;
     }
     // #
     return await user.save();
