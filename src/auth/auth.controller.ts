@@ -6,10 +6,10 @@ import { LocalAuthGuard } from './local-auth.guard';
 import { PasswordResetDto } from './dto/passwordReset.dto';
 import { PasswordResetConfirmDto } from './dto/passwordResetConfirm.dto';
 import { RegistrationDto } from './dto/registration.dto';
-import { VerifyEmailDto } from '../email/dto/verifyEmail.dto';
-import { SendVerifyEmailDto } from '../email/dto/sendVerifyEmail.dto';
-import { VerifyPhoneDto } from '../phone/dto/verifyPhone.dto';
-import { SendVerifyPhoneDto } from '../phone/dto/sendVerifyPhone.dto';
+import { TokenConfirmEmailDto } from '../email/dto/tokenValidEmail.dto';
+import { TokenRequestEmailDto } from '../email/dto/tokenRequestEmail.dto';
+import { TokenConfirmPhoneDto } from '../phone/dto/tokenValidPhone.dto';
+import { TokenRequestPhoneDto } from '../phone/dto/tokenRequestPhone.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -28,12 +28,12 @@ export class AuthController {
   }
 
   // password ===>
-  @Post('password/reset')
+  @Post('passwordReset/request')
   @Public()
-  async passwordReset(@Body() data: PasswordResetDto) {
-    return this.authService.passwordReset(data);
+  async passwordResetRequest(@Body() data: PasswordResetDto) {
+    return this.authService.passwordResetRequest(data);
   }
-  @Post('password/reset/confirm')
+  @Post('passwordReset/confirm')
   @Public()
   async passwordResetConfirm(@Body() data: PasswordResetConfirmDto) {
     return this.authService.passwordResetConfirm(data);
@@ -47,26 +47,26 @@ export class AuthController {
   }
 
   // email ===>
-  @Post('email/verify')
+  @Post('email/verifyConfirm')
   @Public()
-  async verifyEmail(@Body() data: VerifyEmailDto) {
-    return this.authService.verifyEmail(data);
+  async verifyEmailConfirm(@Body() data: TokenConfirmEmailDto) {
+    return this.authService.verifyEmailConfirm(data);
   }
-  @Post('email/sendVerify')
+  @Post('email/verifyRequest')
   @Public()
-  async sendVerifyEmail(@Body() data: SendVerifyEmailDto) {
-    return this.authService.verifyEmailResend(data);
+  async verifyEmailRequest(@Body() data: TokenRequestEmailDto) {
+    return this.authService.verifyEmailRequest(data);
   }
 
   // phone ===>
-  @Post('phone/verify')
+  @Post('phone/verifyConfirm')
   @Public()
-  async verifyPhone(@Body() data: VerifyPhoneDto) {
-    return this.authService.verifyPhone(data);
+  async verifyPhoneConfirm(@Body() data: TokenConfirmPhoneDto) {
+    return this.authService.verifyPhoneConfirm(data);
   }
-  @Post('phone/sendVerify')
+  @Post('phone/verifyRequest')
   @Public()
-  async sendVerifyPhone(@Body() data: SendVerifyPhoneDto) {
-    return this.authService.verifyPhoneResend(data);
+  async verifyPhoneRequest(@Body() data: TokenRequestPhoneDto) {
+    return this.authService.verifyPhoneRequest(data);
   }
 }

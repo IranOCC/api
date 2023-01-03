@@ -14,7 +14,7 @@ export class SmsService {
     console.log(token);
     return true;
   }
-  async resetPassword(owner: User | Office, token: string) {
+  async resetPassword(owner: User, token: string) {
     console.log(token);
     return true;
   }

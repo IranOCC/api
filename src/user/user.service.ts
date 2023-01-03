@@ -7,9 +7,9 @@ import { User, UserDocument } from './schemas/user.schema';
 import { RegistrationDto } from '../auth/dto/registration.dto';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
-import { EmailService } from '../email/email.service';
-import { PhoneService } from '../phone/phone.service';
 import { ChangePasswordDto } from './dto/changePassword.dto';
+import { PhoneService } from '../phone/phone.service';
+import { EmailService } from '../email/email.service';
 @Injectable()
 export class UserService {
   constructor(
@@ -32,7 +32,12 @@ export class UserService {
       mustVerify = true;
     }
     if (email) {
-      user.email = await this.emailService.setup(email, user);
+      user.email = await this.emailService.setup(
+        email,
+        user,
+        autoVerify,
+        mustVerify,
+      );
     }
     if (phone) {
       user.phone = await this.phoneService.setup(

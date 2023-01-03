@@ -12,28 +12,25 @@ import { PasswordResetConfirmDto } from './dto/passwordResetConfirm.dto';
 import { PasswordResetDto } from './dto/passwordReset.dto';
 import { RegistrationDto } from './dto/registration.dto';
 
-import { VerifyEmailDto } from '../email/dto/verifyEmail.dto';
-import { SendVerifyEmailDto } from '../email/dto/sendVerifyEmail.dto';
-import { VerifyPhoneDto } from '../phone/dto/verifyPhone.dto';
-import { SendVerifyPhoneDto } from '../phone/dto/sendVerifyPhone.dto';
+import { TokenConfirmEmailDto } from '../email/dto/tokenValidEmail.dto';
+import { TokenRequestEmailDto } from '../email/dto/tokenRequestEmail.dto';
+import { TokenConfirmPhoneDto } from '../phone/dto/tokenValidPhone.dto';
+import { TokenRequestPhoneDto } from '../phone/dto/tokenRequestPhone.dto';
 
 import { UserService } from '../user/user.service';
-import { PhoneService } from '../phone/phone.service';
-import { EmailService } from '../email/email.service';
 import { PasswordResetMethods } from './enum/passwordResetMethod.enum';
-import { SmsService } from '../sms/sms.service';
-import { MailService } from '../mail/mail.service';
+
 import { useForEnum } from './enum/useFor.enum';
+import { EmailService } from '../email/email.service';
+import { PhoneService } from '../phone/phone.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userService: UserService,
-    private phoneService: PhoneService,
     private emailService: EmailService,
-    private smsService: SmsService,
-    private mailService: MailService,
+    private phoneService: PhoneService,
   ) {}
 
   async validateUser(_username: string, _password: string): Promise<any> {
@@ -63,69 +60,53 @@ export class AuthService {
     return true;
   }
 
-  async passwordReset(data: PasswordResetDto) {
-    // this.smsService.welcome();
-    // return this.smsService.welcome();
-    const { method, email, phone } = data;
-    if (method === PasswordResetMethods.ByEmail) {
-      const { token, query } = await this.emailService.requestToken(
-        { email },
-        useForEnum.User,
-      );
-      const user = await this.userService.findOne(query.user);
-      this.mailService.resetPassword(user, token);
-    }
-    if (method === PasswordResetMethods.ByPhone) {
-      const _phone = await this.phoneService.find(phone, useForEnum.User);
-      const token = this.phoneService.generateToken(_phone.secret);
-      const user = await this.userService.findOne(_phone.user);
-      this.smsService.resetPassword(user, token);
-    }
-    return true;
-  }
-
-  async passwordResetConfirm(data: PasswordResetConfirmDto) {
-    const { method, email, phone, token, password } = data;
-    let user: User;
-    if (method === PasswordResetMethods.ByEmail) {
-      const _email = await this.emailService.checkValid(
-        {
-          email,
-          token,
-        },
-        useForEnum.User,
-      );
-      user = await this.userService.findOne(_email.user);
-    }
-    if (method === PasswordResetMethods.ByPhone) {
-      const _phone = await this.phoneService.checkValid(
-        {
-          phone,
-          token,
-        },
-        useForEnum.User,
-      );
-      user = await this.userService.findOne(_phone.user);
-    }
-    user.password = password;
-    await user.save();
-    return true;
-  }
-
   async registration(data: RegistrationDto) {
     return await this.userService.create(data);
   }
 
-  async verifyEmail(data: VerifyEmailDto) {
-    return await this.emailService.verify(data, useForEnum.User);
-  }
-  async verifyEmailResend(data: SendVerifyEmailDto) {
+  async verifyEmailRequest(data: TokenRequestEmailDto) {
     return await this.emailService.verifyRequest(data, useForEnum.User);
   }
-  async verifyPhone(data: VerifyPhoneDto) {
-    return await this.phoneService.verify(data, useForEnum.User);
+  async verifyEmailConfirm(data: TokenConfirmEmailDto) {
+    return await this.emailService.verifyConfirm(data, useForEnum.User);
   }
-  async verifyPhoneResend(data: SendVerifyPhoneDto) {
+  // @
+  async verifyPhoneRequest(data: TokenRequestPhoneDto) {
     return await this.phoneService.verifyRequest(data, useForEnum.User);
+  }
+  async verifyPhoneConfirm(data: TokenConfirmPhoneDto) {
+    return await this.phoneService.verifyConfirm(data, useForEnum.User);
+  }
+  // @@
+  async passwordResetRequest(data: PasswordResetDto) {
+    const { method, email, phone } = data;
+    if (method === PasswordResetMethods.ByEmail) {
+      await this.emailService.passwordResetRequest({ email });
+    }
+    if (method === PasswordResetMethods.ByPhone) {
+      await this.phoneService.passwordResetRequest({ phone });
+    }
+    return true;
+  }
+  async passwordResetConfirm(data: PasswordResetConfirmDto) {
+    const { method, email, phone, token, password } = data;
+    let user: User;
+    if (method === PasswordResetMethods.ByEmail) {
+      const _email = await this.emailService.passwordResetConfirm({
+        email,
+        token,
+      });
+      user = _email.user;
+    }
+    if (method === PasswordResetMethods.ByPhone) {
+      const _phone = await this.phoneService.passwordResetConfirm({
+        phone,
+        token,
+      });
+      user = _phone.user;
+    }
+    user.password = password;
+    await user.save();
+    return true;
   }
 }

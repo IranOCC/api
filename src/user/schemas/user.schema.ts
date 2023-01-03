@@ -5,8 +5,8 @@ import { UserStatusEum } from '../../user/enum/userStatus.enum';
 import * as bcrypt from 'bcrypt';
 const saltRounds = 10;
 import * as speakeasy from 'speakeasy';
-import { PhoneNumber } from '../phone/schemas/phone.schema';
-import { EmailAddress } from '../email/schemas/email.schema';
+import { PhoneNumber } from '../../phone/schemas/phone.schema';
+import { EmailAddress } from '../../email/schemas/email.schema';
 @Schema({ timestamps: true })
 export class User extends Document {
   @Prop({ required: true, trim: true })

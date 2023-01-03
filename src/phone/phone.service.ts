@@ -1,10 +1,9 @@
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { VerifyPhoneDto as TokenValidPhoneDto } from './dto/verifyPhone.dto';
-import { SendVerifyPhoneDto as TokenRequestPhoneDto } from './dto/sendVerifyPhone.dto';
+import { TokenConfirmPhoneDto } from './dto/tokenValidPhone.dto';
+import { TokenRequestPhoneDto } from './dto/tokenRequestPhone.dto';
 import { MUST_PHONE_VERIFY } from '../config/main';
-import { SmsService } from '../sms/sms.service';
 import { PhoneNumber, PhoneNumberDocument } from './schemas/phone.schema';
 import { User } from '../user/schemas/user.schema';
 import { Office } from '../office/schemas/office.schema';
@@ -12,6 +11,7 @@ import { Office } from '../office/schemas/office.schema';
 import * as speakeasy from 'speakeasy';
 import moment from 'moment';
 import { useForEnum } from '../auth/enum/useFor.enum';
+import { SmsService } from '../sms/sms.service';
 
 @Injectable()
 export class PhoneService {
@@ -68,7 +68,10 @@ export class PhoneService {
 
   // --> find
   async find(value: string, forWhat: string) {
-    const data = await this.model.findOne({ value }).exec();
+    const data = await this.model
+      .findOne({ value })
+      .populate(['user', 'office'])
+      .exec();
     const exp =
       !data ||
       (forWhat === useForEnum.User && !data.user) ||
@@ -82,7 +85,7 @@ export class PhoneService {
     const token = this.generateToken(_query.secret);
     return { token, query: _query };
   }
-  async checkValid(data: TokenValidPhoneDto, forWhat: useForEnum) {
+  async checkValid(data: TokenConfirmPhoneDto, forWhat: useForEnum) {
     const { phone, token } = data;
     const _query = await this.find(phone, forWhat);
     const verified = this.validationToken(_query.secret, token);
@@ -92,17 +95,29 @@ export class PhoneService {
         'Entered token is incorrect or expired!',
       );
   }
+  // =====>
 
+  // --> verification endpoints
   async verifyRequest(data: TokenRequestPhoneDto, forWhat: useForEnum) {
     const { token, query } = await this.requestToken(data, forWhat);
     await this.smsService.verification(query.user || query.office, token);
     return true;
   }
-  async verify(data: TokenValidPhoneDto, forWhat: useForEnum) {
+  async verifyConfirm(data: TokenConfirmPhoneDto, forWhat: useForEnum) {
     const _query = await this.checkValid(data, forWhat);
     _query.verified = true;
     _query.verifiedAt = moment().toDate();
     await _query.save();
     return true;
+  }
+
+  // --> passwordReset endpoints
+  async passwordResetRequest(data: TokenRequestPhoneDto) {
+    const { token, query } = await this.requestToken(data, useForEnum.User);
+    await this.smsService.resetPassword(query.user, token);
+    return true;
+  }
+  async passwordResetConfirm(data: TokenConfirmPhoneDto) {
+    return await this.checkValid(data, useForEnum.User);
   }
 }

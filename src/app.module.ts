@@ -13,9 +13,9 @@ import { MongoModule } from './mongo/mongo.module';
 import { MailModule } from './mail/mail.module';
 import * as path from 'path';
 import {
-  AcceptLanguageResolver,
-  CookieResolver,
-  HeaderResolver,
+  // AcceptLanguageResolver,
+  // CookieResolver,
+  // HeaderResolver,
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
@@ -23,7 +23,7 @@ import { SmsModule } from './sms/sms.module';
 import { EstateModule } from './estate/estate.module';
 import { OfficeModule } from './office/office.module';
 import { BlogModule } from './blog/blog.module';
-import { EmailService } from './email/email.service';
+// import { EmailService } from './email/email.service';
 import { EmailModule } from './email/email.module';
 import { PhoneModule } from './phone/phone.module';
 
@@ -47,16 +47,16 @@ import { PhoneModule } from './phone/phone.module';
         // AcceptLanguageResolver,
       ],
     }),
-    StorageModule,
-    UserModule,
-    AuthModule,
-    MailModule,
-    SmsModule,
-    EstateModule,
-    OfficeModule,
-    BlogModule,
     EmailModule,
     PhoneModule,
+    UserModule,
+    AuthModule,
+    StorageModule,
+    MailModule,
+    SmsModule,
+    OfficeModule,
+    EstateModule,
+    BlogModule,
   ],
   controllers: [AppController],
   providers: [
@@ -69,7 +69,6 @@ import { PhoneModule } from './phone/phone.module';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
-    EmailService,
   ],
 })
 export class AppModule {}

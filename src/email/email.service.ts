@@ -1,10 +1,9 @@
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { VerifyEmailDto as TokenValidEmailDto } from './dto/verifyEmail.dto';
-import { SendVerifyEmailDto as TokenRequestEmailDto } from './dto/sendVerifyEmail.dto';
+import { TokenConfirmEmailDto } from './dto/tokenValidEmail.dto';
+import { TokenRequestEmailDto } from './dto/tokenRequestEmail.dto';
 import { MUST_EMAIL_VERIFY } from '../config/main';
-import { MailService } from '../mail/mail.service';
 import { EmailAddress, EmailAddressDocument } from './schemas/email.schema';
 import { User } from '../user/schemas/user.schema';
 import { Office } from '../office/schemas/office.schema';
@@ -12,6 +11,7 @@ import { Office } from '../office/schemas/office.schema';
 import * as speakeasy from 'speakeasy';
 import moment from 'moment';
 import { useForEnum } from '../auth/enum/useFor.enum';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class EmailService {
@@ -68,7 +68,10 @@ export class EmailService {
 
   // --> find
   async find(value: string, forWhat: string) {
-    const data = await this.model.findOne({ value }).exec();
+    const data = await this.model
+      .findOne({ value })
+      .populate(['user', 'office'])
+      .exec();
     const exp =
       !data ||
       (forWhat === useForEnum.User && !data.user) ||
@@ -82,7 +85,7 @@ export class EmailService {
     const token = this.generateToken(_query.secret);
     return { token, query: _query };
   }
-  async checkValid(data: TokenValidEmailDto, forWhat: useForEnum) {
+  async checkValid(data: TokenConfirmEmailDto, forWhat: useForEnum) {
     const { email, token } = data;
     const _query = await this.find(email, forWhat);
     const verified = this.validationToken(_query.secret, token);
@@ -100,11 +103,21 @@ export class EmailService {
     await this.mailService.verification(query.user || query.office, token);
     return true;
   }
-  async verify(data: TokenValidEmailDto, forWhat: useForEnum) {
+  async verifyConfirm(data: TokenConfirmEmailDto, forWhat: useForEnum) {
     const _query = await this.checkValid(data, forWhat);
     _query.verified = true;
     _query.verifiedAt = moment().toDate();
     await _query.save();
     return true;
+  }
+
+  // --> passwordReset endpoints
+  async passwordResetRequest(data: TokenRequestEmailDto) {
+    const { token, query } = await this.requestToken(data, useForEnum.User);
+    await this.mailService.resetPassword(query.user, token);
+    return true;
+  }
+  async passwordResetConfirm(data: TokenConfirmEmailDto) {
+    return await this.checkValid(data, useForEnum.User);
   }
 }

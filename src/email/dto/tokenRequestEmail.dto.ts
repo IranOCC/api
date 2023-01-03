@@ -5,7 +5,7 @@ import { Transform } from 'class-transformer';
 
 const $ = 'validation.sendVerifyEmail';
 
-export class SendVerifyEmailDto {
+export class TokenRequestEmailDto {
   @ApiProperty()
   @Transform(({ value }) => value.toLowerCase())
   @IsEmail({}, { message: i18nVM(`${$}.email.IsEmail`) })

@@ -5,7 +5,7 @@ import { Transform } from 'class-transformer';
 
 const $ = 'validation.verifyEmail';
 
-export class VerifyEmailDto {
+export class TokenConfirmEmailDto {
   @ApiProperty()
   @IsString({ message: i18nVM(`${$}.token.IsString`) })
   token: string;

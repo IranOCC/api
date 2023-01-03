@@ -38,7 +38,7 @@ export class MailService {
     });
   }
 
-  async resetPassword(owner: User | Office, token: string) {
+  async resetPassword(owner: User, token: string) {
     const url = `${this.emailVerifyUrl}?token=${token}`;
     await this.mailerService.sendMail({
       to: owner.email,

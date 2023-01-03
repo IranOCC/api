@@ -1,16 +1,12 @@
-import { IsPhoneNumber, IsString } from 'class-validator';
+import { IsPhoneNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import { Transform } from 'class-transformer';
 import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from '../../config/main';
 
-const $ = 'validation.verifyPhone';
+const $ = 'validation.sendVerifyPhone';
 
-export class VerifyPhoneDto {
-  @ApiProperty()
-  @IsString({ message: i18nVM(`${$}.token.IsString`) })
-  token: string;
-
+export class TokenRequestPhoneDto {
   @ApiProperty()
   @Transform(({ value }) => {
     if (value.length === 10) value = '0' + value;
