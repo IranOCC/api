@@ -16,8 +16,8 @@ export class EstateController {
   constructor(private readonly estateService: EstateService) {}
 
   @Post()
-  create(@Body() createEstateDto: CreateEstateDto) {
-    return this.estateService.create(createEstateDto);
+  create(@Body() data: CreateEstateDto) {
+    return this.estateService.create(data);
   }
 
   @Get()
@@ -27,16 +27,16 @@ export class EstateController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.estateService.findOne(+id);
+    return this.estateService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEstateDto: UpdateEstateDto) {
-    return this.estateService.update(+id, updateEstateDto);
+  update(@Param('id') id: string, @Body() data: UpdateEstateDto) {
+    return this.estateService.update(id, data);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.estateService.remove(+id);
+    return this.estateService.remove(id);
   }
 }
