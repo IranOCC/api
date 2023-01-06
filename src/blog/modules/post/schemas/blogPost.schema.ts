@@ -4,7 +4,7 @@ import { PostStatusEum } from '../enum/postStatus.enum';
 import { PostVisibilityEum } from '../enum/postVisibility.enum';
 
 @Schema({ timestamps: true })
-export class Post extends Document {
+export class BlogPost extends Document {
   @Prop({ required: true, trim: true })
   title: string;
 
@@ -68,16 +68,16 @@ export class Post extends Document {
 
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'PostCategory',
+    ref: 'BlogCategory',
   })
   categories: any[];
 
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'PostComment',
+    ref: 'BlogComment',
   })
   comments: any[];
 }
 
-export const PostSchema = SchemaFactory.createForClass(Post);
-export type PostDocument = HydratedDocument<Post>;
+export const BlogPostSchema = SchemaFactory.createForClass(BlogPost);
+export type BlogPostDocument = HydratedDocument<BlogPost>;

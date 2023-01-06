@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
 
 @Schema({ timestamps: true })
-export class PostComment extends Document {
+export class BlogComment extends Document {
   @Prop()
   content: string;
 
@@ -20,10 +20,10 @@ export class PostComment extends Document {
 
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'PostComment',
+    ref: 'BlogComment',
   })
   responses: any[];
 }
 
-export const PostCommentSchema = SchemaFactory.createForClass(PostComment);
-export type PostCommentDocument = HydratedDocument<PostComment>;
+export const BlogCommentSchema = SchemaFactory.createForClass(BlogComment);
+export type BlogCommentDocument = HydratedDocument<BlogComment>;

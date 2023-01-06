@@ -1,26 +1,37 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateEstateFeatureDto } from './dto/createEstateFeature.dto';
 import { UpdateEstateFeatureDto } from './dto/updateEstateFeature.dto';
+import {
+  EstateFeature,
+  EstateFeatureDocument,
+} from './schemas/estateFeature.schema';
 
 @Injectable()
 export class EstateFeatureService {
-  create(data: CreateEstateFeatureDto) {
-    return 'This action adds a new estate';
+  constructor(
+    @InjectModel(EstateFeature.name)
+    private estateFeatureModel: Model<EstateFeatureDocument>,
+  ) {}
+
+  create(data: CreateEstateFeatureDto): Promise<any> {
+    return this.estateFeatureModel.create(data);
   }
 
-  findAll() {
-    return `This action returns all estate`;
+  findAll(): Promise<any> {
+    return this.estateFeatureModel.find().exec();
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} estate`;
+  findOne(id: string): Promise<any> {
+    return this.estateFeatureModel.findById(id).exec();
   }
 
-  update(id: string, data: UpdateEstateFeatureDto) {
-    return `This action updates a #${id} estate`;
+  update(id: string, data: UpdateEstateFeatureDto): Promise<any> {
+    return this.estateFeatureModel.findOneAndUpdate({ _id: id }, data).exec();
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} estate`;
+  remove(id: string): Promise<any> {
+    return this.estateFeatureModel.deleteOne({ _id: id }).exec();
   }
 }
