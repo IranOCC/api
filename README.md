@@ -71,3 +71,12 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+# Start minio server:
+
+minio server /mnt/data --console-address :9090
+
+# Reverse proxy:
+
+Target URL
+http://localhost:9000
