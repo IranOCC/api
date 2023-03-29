@@ -22,7 +22,7 @@ import { EstateModule } from './estate/estate.module';
 import { OfficeModule } from './office/office.module';
 import { BlogModule } from './blog/blog.module';
 import { SettingModule } from './setting/setting.module';
-import { S3managerModule } from './s3manager/s3manager.module';
+import { S3ManagerModule } from './s3manager/s3manager.module';
 
 @Module({
   imports: [
@@ -51,7 +51,7 @@ import { S3managerModule } from './s3manager/s3manager.module';
     EstateModule,
     BlogModule,
     SettingModule,
-    S3managerModule,
+    S3ManagerModule,
   ],
   controllers: [AppController],
   providers: [
