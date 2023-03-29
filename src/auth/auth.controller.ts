@@ -1,4 +1,11 @@
-import { Controller, Post, Request, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Request,
+  Body,
+  UseGuards,
+  Get,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
@@ -13,7 +20,7 @@ import { TokenRequestPhoneDto } from '../phone/dto/tokenRequestPhone.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   // auth ===>
   @Post('login')
@@ -25,6 +32,10 @@ export class AuthController {
   @Post('logout')
   async logout(@Request() { user }) {
     return this.authService.logout(user);
+  }
+  @Get()
+  async getMe(@Request() { user }) {
+    return this.authService.getMe(user);
   }
 
   // password ===>

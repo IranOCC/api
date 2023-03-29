@@ -31,7 +31,7 @@ export class AuthService {
     private userService: UserService,
     private emailService: EmailService,
     private phoneService: PhoneService,
-  ) {}
+  ) { }
 
   async validateUser(_username: string, _password: string): Promise<any> {
     const user = await this.userService.findByUsername(_username, true);
@@ -58,6 +58,11 @@ export class AuthService {
   async logout(user: User) {
     console.log(user);
     return true;
+  }
+
+  async getMe(user: User) {
+    console.log(user);
+    return user;
   }
 
   async registration(data: RegistrationDto) {

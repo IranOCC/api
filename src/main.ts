@@ -33,8 +33,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
-
-  await app.listen(7000);
+  await app.listen(3000, '0.0.0.0');
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 bootstrap();
