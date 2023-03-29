@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MinioClientModule } from '../minio/minio.module';
+import { MinioClientModule } from '../aws/minio.module';
 import { StorageService } from './storage.service';
 import { StorageController } from './storage.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -13,4 +13,4 @@ import { Storage, StorageSchema } from './schemas/storage.schema';
   providers: [StorageService],
   controllers: [StorageController],
 })
-export class StorageModule {}
+export class StorageModule { }

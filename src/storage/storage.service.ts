@@ -1,8 +1,8 @@
 import { Model } from 'mongoose';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { MinioClientService } from '../minio/minio.service';
-import { BufferedFile } from '../minio/file.model';
+import { MinioClientService } from '../aws/minio.service';
+import { BufferedFile } from '../aws/file.model';
 import { Storage, StorageDocument } from './schemas/storage.schema';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class StorageService {
   constructor(
     @InjectModel(Storage.name) private storageModel: Model<StorageDocument>,
     private minioClientService: MinioClientService,
-  ) {}
+  ) { }
 
   async list(perPage = 5, page = 1) {
     return this.storageModel

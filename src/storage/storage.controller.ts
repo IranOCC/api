@@ -11,11 +11,11 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageService } from './storage.service';
-import { BufferedFile } from '../minio/file.model';
+import { BufferedFile } from '../aws/file.model';
 
 @Controller('storage')
 export class StorageController {
-  constructor(private storageService: StorageService) {}
+  constructor(private storageService: StorageService) { }
 
   @Get()
   async list() {

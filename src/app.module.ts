@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { MinioClientModule } from './minio/minio.module';
+import { MinioClientModule } from './aws/minio.module';
 import { StorageModule } from './storage/storage.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
@@ -22,6 +22,7 @@ import { EstateModule } from './estate/estate.module';
 import { OfficeModule } from './office/office.module';
 import { BlogModule } from './blog/blog.module';
 import { SettingModule } from './setting/setting.module';
+import { S3managerModule } from './s3manager/s3manager.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { SettingModule } from './setting/setting.module';
     EstateModule,
     BlogModule,
     SettingModule,
+    S3managerModule,
   ],
   controllers: [AppController],
   providers: [
@@ -64,4 +66,4 @@ import { SettingModule } from './setting/setting.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

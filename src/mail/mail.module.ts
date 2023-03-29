@@ -13,6 +13,7 @@ import { ConfigService } from '@nestjs/config';
           transport: {
             host: configService.get('MAIL_SMTP_HOST'),
             secure: configService.get<boolean>('MAIL_SMTP_SECURE'),
+            port: configService.get('MAIL_SMTP_PORT'),
             auth: {
               user: configService.get('MAIL_SMTP_USER'),
               pass: configService.get('MAIL_SMTP_PASSWORD'),
@@ -37,4 +38,4 @@ import { ConfigService } from '@nestjs/config';
   providers: [MailService],
   exports: [MailService],
 })
-export class MailModule {}
+export class MailModule { }
