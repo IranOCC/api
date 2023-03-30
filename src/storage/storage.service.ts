@@ -1,15 +1,15 @@
 import { Model } from 'mongoose';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { MinioClientService } from '../aws/aws.service';
-import { BufferedFile } from '../aws/file.model';
+// import { AWSService } from '../aws/aws.service';
+// import { BufferedFile } from '../aws/file.model';
 import { Storage, StorageDocument } from './schemas/storage.schema';
 
 @Injectable()
 export class StorageService {
   constructor(
     @InjectModel(Storage.name) private storageModel: Model<StorageDocument>,
-    private minioClientService: MinioClientService,
+    // private minioClientService: AWSService,
   ) { }
 
   async list(perPage = 5, page = 1) {
@@ -26,18 +26,18 @@ export class StorageService {
     return this.storageModel.findById(id);
   }
 
-  async upload(bucket: string, image: BufferedFile) {
-    const file = await this.minioClientService.upload(bucket, image);
-    const storage = await this.storageModel.create(file);
-    return { storage };
+  async upload(bucket: string) {
+    // const file = await this.minioClientService.upload(bucket, image);
+    // const storage = await this.storageModel.create(file);
+    // return { storage };
   }
 
   async delete(id: string) {
     const storage = await this.storageModel.findOneAndDelete({ _id: id });
-    return await this.minioClientService.delete(
-      storage.filename,
-      storage.bucket,
-    );
+    // return await this.minioClientService.delete(
+    //   storage.filename,
+    //   storage.bucket,
+    // );
   }
 
   async multipleDelete(id: Array<string>) {
@@ -52,7 +52,7 @@ export class StorageService {
       _bucket = bucket;
     });
     await this.storageModel.deleteMany({ _id: { $in: id } });
-    return await this.minioClientService.multipleDelete(fileList, _bucket);
+    // return await this.minioClientService.multipleDelete(fileList, _bucket);
   }
 
   async update(id: string) {

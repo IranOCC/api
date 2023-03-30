@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { MinioClientModule } from './aws/aws.module';
 import { StorageModule } from './storage/storage.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
@@ -22,13 +21,11 @@ import { EstateModule } from './estate/estate.module';
 import { OfficeModule } from './office/office.module';
 import { BlogModule } from './blog/blog.module';
 import { SettingModule } from './setting/setting.module';
-import { S3ManagerModule } from './s3manager/s3manager.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, expandVariables: true }),
     MongoModule,
-    MinioClientModule,
     I18nModule.forRoot({
       fallbackLanguage: 'fa',
       loaderOptions: {
@@ -51,7 +48,6 @@ import { S3ManagerModule } from './s3manager/s3manager.module';
     EstateModule,
     BlogModule,
     SettingModule,
-    S3ManagerModule,
   ],
   controllers: [AppController],
   providers: [

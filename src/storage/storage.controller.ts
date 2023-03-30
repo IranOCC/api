@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageService } from './storage.service';
-import { BufferedFile } from '../aws/file.model';
+import { BufferedFile } from './file.model';
 
 @Controller('storage')
 export class StorageController {
@@ -33,7 +33,7 @@ export class StorageController {
     @Param('bucket') bucket: string,
     @UploadedFile() file: BufferedFile,
   ) {
-    return await this.storageService.upload(bucket, file);
+    // return await this.storageService.upload(bucket, file);
   }
 
   @Delete()
