@@ -21,6 +21,7 @@ import { EstateModule } from './estate/estate.module';
 import { OfficeModule } from './office/office.module';
 import { BlogModule } from './blog/blog.module';
 import { SettingModule } from './setting/setting.module';
+import { AwsModule } from './aws/aws.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { SettingModule } from './setting/setting.module';
     EstateModule,
     BlogModule,
     SettingModule,
+    AwsModule,
   ],
   controllers: [AppController],
   providers: [
