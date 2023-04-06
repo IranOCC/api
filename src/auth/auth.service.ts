@@ -1,6 +1,7 @@
 import {
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 
@@ -23,6 +24,9 @@ import { PasswordResetMethods } from './enum/passwordResetMethod.enum';
 import { useForEnum } from './enum/useFor.enum';
 import { EmailService } from '../email/email.service';
 import { PhoneService } from '../phone/phone.service';
+import { PhoneOtpDto } from './dto/phoneOtp.dto';
+import { SmsService } from 'src/sms/sms.service';
+import { PhoneOtpConfirm } from './dto/phoneOtpConfirm.dto';
 
 @Injectable()
 export class AuthService {
@@ -32,6 +36,37 @@ export class AuthService {
     private emailService: EmailService,
     private phoneService: PhoneService,
   ) { }
+
+  async phoneOtp(data: PhoneOtpDto) {
+    // find or create 
+    const user = await this.userService.findOrCreateByPhone(data);
+    // send otp
+    try {
+      await this.phoneService.sendOtpCode(user.phone.value)
+    } catch (error) {
+      throw new InternalServerErrorException({ message: "Otp send failed" })
+    }
+    // return
+    return { phone: user.phone.value };
+  }
+
+  async loginByOtp(data: PhoneOtpConfirm) {
+    // confirm otp
+    const isValid = await this.phoneService.confirmOtpCode(data)
+    if (!isValid) {
+      throw new ForbiddenException({ message: "Token is wrong" })
+    }
+
+    const phoneQ = await this.phoneService.find(data.phone, useForEnum.User)
+    const user = await this.userService.findOne(phoneQ.user)
+    const payload = { user };
+    const accessToken = this.jwtService.sign(payload);
+    return {
+      user,
+      accessToken
+    };
+  }
+
 
   async validateUser(_username: string, _password: string): Promise<any> {
     const user = await this.userService.findByUsername(_username, true);
@@ -55,19 +90,18 @@ export class AuthService {
     return { payload, access_token };
   }
 
-  async logout(user: User) {
-    console.log(user);
-    return true;
-  }
 
   async getMe(user: User) {
     console.log(user);
     return user;
   }
 
-  async registration(data: RegistrationDto) {
-    return await this.userService.create(data);
+  async registrationPhone(data: RegistrationDto) {
+    // return await this.userService.create(data);
   }
+
+
+
 
   async verifyEmailRequest(data: TokenRequestEmailDto) {
     return await this.emailService.verifyRequest(data, useForEnum.User);

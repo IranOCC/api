@@ -14,21 +14,26 @@ import { UpdateUserDto } from './dto/updateUser.dto';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 import { Roles } from '../auth/roles.decorator';
 import { RoleEnum } from './enum/role.enum';
+import { RegistrationDto } from './dto/registration.dto';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
+
+  @Patch('registration')
+  registration(@Request() { user }, @Body() data: RegistrationDto) {
+    return this.userService.registration(user, data);
+  }
+
+
+
+
 
   @Post('changePassword')
   async changePassword(@Request() { user }, @Body() data: ChangePasswordDto) {
     return this.userService.passwordChange(user, data);
   }
 
-  @Post()
-  @Roles(RoleEnum.Admin)
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
-  }
 
   @Get()
   @Roles(RoleEnum.Admin)

@@ -12,73 +12,98 @@ import * as speakeasy from 'speakeasy';
 import moment from 'moment';
 import { useForEnum } from '../auth/enum/useFor.enum';
 import { SmsService } from '../sms/sms.service';
+import { PhoneOtpConfirm } from 'src/auth/dto/phoneOtpConfirm.dto';
 
 @Injectable()
 export class PhoneService {
   constructor(
     @InjectModel(PhoneNumber.name) private model: Model<PhoneNumberDocument>,
     private smsService: SmsService,
-  ) {}
+  ) { }
+
+  async setup(value: string, useFor: useForEnum = useForEnum.User, owner: User | Office): Promise<any> {
+    const check = await this.model.findOne({ value });
+    let _query: PhoneNumber;
+
+    if (check) {
+      if (useFor === useForEnum.Office && check.office) {
+        _query = check;
+      }
+      else if (useFor === useForEnum.User && check.user) {
+        _query = check;
+      }
+      else {
+        throw 'Exists';
+      }
+    } else {
+      _query = new this.model({ value });
+      if (useFor === useForEnum.User) _query.user = owner._id;
+      else _query.office = owner._id;
+    }
+
+    await _query.save();
+    return _query;
+  }
+
+  async find(value: string, useFor: useForEnum = useForEnum.User) {
+    const data = await this.model
+      .findOne({ value })
+      .select(['user', 'office'])
+      .exec();
+
+    if (!data) throw 'Not found';
+    return data;
+  }
+
+  async sendOtpCode(phone: string) {
+    const _query = await this.model
+      .findOne({ value: phone })
+      .select(['secret', 'value'])
+      .exec();
+
+    const token = this.generateToken(_query.secret);
+    return await this.smsService.sendOtpCode(_query.value, token);
+  }
+
+  async confirmOtpCode({ phone, token }: PhoneOtpConfirm) {
+    const _query = await this.model
+      .findOne({ value: phone })
+      .select(['secret'])
+      .exec();
+
+    const isValid = this.validationToken(_query.secret, token);
+
+    // if not verified => do verify
+    if (isValid) await this.doVerify(phone)
+
+    return isValid
+  }
+
+
+  async doVerify(phone: string) {
+    const _query = await this.model
+      .findOne({ value: phone })
+      .exec();
+    // if not verified => do verify
+    if (!_query.verified) {
+      _query.verified = true
+
+      await _query.save()
+    }
+  }
+
 
   // --> token & secret
   generateToken(secret: string): string {
     return speakeasy.totp({ secret, encoding: 'base32', digits: 6 });
   }
   validationToken(secret: string, token: string): boolean {
-    return speakeasy.totp.verify({ secret, encoding: 'base32', token });
+    return speakeasy.totp.verify({
+      secret, encoding: 'base32', window: 4, token
+    });
   }
 
-  // --> setup
-  async setup(
-    value: string,
-    owner: User | Office,
-    autoVerify = false,
-    mustVerify = MUST_PHONE_VERIFY,
-  ): Promise<PhoneNumber> {
-    const check = await this.model.findOne({ value });
-    let _query: PhoneNumber;
-    if (check) {
-      if (
-        (check.user && owner instanceof Office) ||
-        (check.office && owner instanceof User) ||
-        (check.user && owner instanceof User && check.user !== owner._id) ||
-        (check.office && owner instanceof Office && check.office !== owner._id)
-      ) {
-        throw new NotAcceptableException('Phone exists');
-      } else {
-        _query = check;
-      }
-    } else {
-      _query = new this.model({ value });
-      if (owner instanceof User) _query.user = owner._id;
-      if (owner instanceof Office) _query.office = owner._id;
-    }
-    await _query.save();
-    // @@@
-    if (autoVerify) _query.verified = true;
-    await _query.save();
-    // ### must verify
-    if (!_query.verified && mustVerify) {
-      // eslint-disable-next-line prettier/prettier
-      const f = owner instanceof User ? useForEnum.User : useForEnum.Office;
-      await this.verifyRequest({ phone: value }, f);
-    }
-    return _query;
-  }
 
-  // --> find
-  async find(value: string, forWhat: string) {
-    const data = await this.model
-      .findOne({ value })
-      .populate(['user', 'office'])
-      .exec();
-    const exp =
-      !data ||
-      (forWhat === useForEnum.User && !data.user) ||
-      (forWhat === useForEnum.Office && !data.office);
-    if (exp) throw new NotAcceptableException('Not found');
-    return data;
-  }
   async requestToken(data: TokenRequestPhoneDto, forWhat: useForEnum) {
     const { phone } = data;
     const _query = await this.find(phone, forWhat);
@@ -100,7 +125,7 @@ export class PhoneService {
   // --> verification endpoints
   async verifyRequest(data: TokenRequestPhoneDto, forWhat: useForEnum) {
     const { token, query } = await this.requestToken(data, forWhat);
-    await this.smsService.verification(query.user || query.office, token);
+    // await this.smsService.verification(query.user || query.office, token);
     return true;
   }
   async verifyConfirm(data: TokenConfirmPhoneDto, forWhat: useForEnum) {
@@ -114,7 +139,7 @@ export class PhoneService {
   // --> passwordReset endpoints
   async passwordResetRequest(data: TokenRequestPhoneDto) {
     const { token, query } = await this.requestToken(data, useForEnum.User);
-    await this.smsService.resetPassword(query.user, token);
+    // await this.smsService.resetPassword(query.user, token);
     return true;
   }
   async passwordResetConfirm(data: TokenConfirmPhoneDto) {

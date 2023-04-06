@@ -33,6 +33,7 @@ specifiers:
   moment: ^2.29.4
   mongodb: ^4.13.0
   mongoose: ^6.8.1
+  mongoose-autopopulate: ^1.0.0
   mongoose-paginate: ^5.0.3
   nest-aws-sdk: ^3.0.1
   nestjs-i18n: ^10.2.3
@@ -45,6 +46,7 @@ specifiers:
   reflect-metadata: ^0.1.13
   rimraf: ^3.0.2
   rxjs: ^7.2.0
+  sms-typescript: ^1.0.2
   source-map-support: ^0.5.20
   speakeasy: ^2.0.0
   supertest: ^6.1.3
@@ -73,6 +75,7 @@ dependencies:
   moment: 2.29.4
   mongodb: 4.13.0
   mongoose: 6.8.1
+  mongoose-autopopulate: 1.0.0_mongoose@6.8.1
   mongoose-paginate: 5.0.3
   nest-aws-sdk: 3.0.1_gxkgb2mgmftvgvhfefmp5lt2re
   nestjs-i18n: 10.2.3_h2lpa5ubie3gihnjyboxiixjsy
@@ -84,6 +87,7 @@ dependencies:
   reflect-metadata: 0.1.13
   rimraf: 3.0.2
   rxjs: 7.8.0
+  sms-typescript: 1.0.2
   speakeasy: 2.0.0
 
 devDependencies:
@@ -2785,6 +2789,14 @@ packages:
       util: 0.12.5
       uuid: 8.0.0
       xml2js: 0.4.19
+    dev: false
+
+  /axios/0.26.1:
+    resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
+    dependencies:
+      follow-redirects: 1.15.2
+    transitivePeerDependencies:
+      - debug
     dev: false
 
   /axios/1.2.1:
@@ -6439,6 +6451,14 @@ packages:
       - aws-crt
     dev: false
 
+  /mongoose-autopopulate/1.0.0_mongoose@6.8.1:
+    resolution: {integrity: sha512-VWsGb4VqSFqWgS6a7zFTOuUr2+XArrThtX7fjUlzIMPowVxvuS1Zeiif7D0DgXIETLNc+B/0r84kV5A2B7w2UQ==}
+    peerDependencies:
+      mongoose: 6.x || 7.x
+    dependencies:
+      mongoose: 6.8.1
+    dev: false
+
   /mongoose-paginate/5.0.3:
     resolution: {integrity: sha512-sqrQJJ2nY7z2S5XzrMxbnlnAXpOnqyyM8t/FQ4Rv0uimYyacitmVSZOjlotbiQLI8I4v4hy3dCtJn31+OPl5Wg==}
     engines: {node: '>=4.0.0'}
@@ -7568,6 +7588,14 @@ packages:
   /smart-buffer/4.2.0:
     resolution: {integrity: sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==}
     engines: {node: '>= 6.0.0', npm: '>= 3.0.0'}
+    dev: false
+
+  /sms-typescript/1.0.2:
+    resolution: {integrity: sha512-2gJmzIRdIT9+vcZqNnXq1qSrO/henCYs6h2DCaPrQdJh3a1h1lCQhMtNwDcpKPeC7G0endyIEAP5cyQ6uFAQqw==}
+    dependencies:
+      axios: 0.26.1
+    transitivePeerDependencies:
+      - debug
     dev: false
 
   /socks-proxy-agent/5.0.1:

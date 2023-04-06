@@ -1,49 +1,55 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { ForbiddenException, Injectable } from '@nestjs/common';
 
 import { User, UserDocument } from './schemas/user.schema';
 
-import { RegistrationDto } from '../auth/dto/registration.dto';
+import { RegistrationDto } from './dto/registration.dto';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { ChangePasswordDto } from './dto/changePassword.dto';
 import { PhoneService } from '../phone/phone.service';
 import { EmailService } from '../email/email.service';
+import { PhoneOtpDto } from 'src/auth/dto/phoneOtp.dto';
+import { UserStatusEum } from './enum/userStatus.enum';
+import { RoleEnum } from './enum/role.enum';
+import { useForEnum } from 'src/auth/enum/useFor.enum';
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private phoneService: PhoneService,
     private emailService: EmailService,
-  ) {}
+  ) { }
 
-  async create(data: CreateUserDto | RegistrationDto): Promise<User> {
-    const { email, phone, ..._data } = data;
-    const user = new this.userModel(_data);
+  // ok
+  async findOrCreateByPhone({ phone }: PhoneOtpDto): Promise<User> {
+    let user: User
+    try {
+      const phoneQ = await this.phoneService.find(phone, useForEnum.User)
+      user = await this.findOne(phoneQ.user)
+      return user
+    } catch (error) {
+      const userData = {
+        status: UserStatusEum.NewUser,
+        roles: [RoleEnum.User],
+      } as CreateUserDto
 
-    // => phone & email
-    let autoVerify: boolean, mustVerify: boolean;
-    if (data instanceof CreateUserDto) {
-      autoVerify = false;
-      mustVerify = false;
-    } else {
-      autoVerify = false;
-      mustVerify = true;
+      user = new this.userModel(userData)
+      const phoneID = await this.phoneService.setup(phone, useForEnum.User, user)
+      user.phone = phoneID
+      await user.save()
+
+      return user
     }
-    if (email) {
-      user.email = (
-        await this.emailService.setup(email, user, autoVerify, mustVerify)
-      )._id;
-    }
-    if (phone) {
-      user.phone = (
-        await this.phoneService.setup(phone, user, autoVerify, mustVerify)
-      )._id;
-    }
-    // #
-    return await user.save();
   }
+
+  // ok
+  async registration(user: User, data: RegistrationDto): Promise<User> {
+    return user
+  }
+
+  // ===================
 
   async passwordChange(user: User, data: ChangePasswordDto) {
     user = await this.findUserAuth(user, true);

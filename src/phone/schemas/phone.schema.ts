@@ -10,12 +10,14 @@ export class PhoneNumber extends Document {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    select: false,
   })
   user: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Office',
+    select: false,
   })
   office: any;
 
@@ -30,6 +32,7 @@ export class PhoneNumber extends Document {
     immutable: true,
     unique: true,
     required: true,
+    select: false,
   })
   secret: string;
 }

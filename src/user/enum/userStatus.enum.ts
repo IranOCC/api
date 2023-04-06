@@ -1,5 +1,6 @@
 export enum UserStatusEum {
-  NotActive = 'NotActive',
   Active = 'Active',
+  NewUser = 'NewUser',
+  NotActive = 'NotActive',
   Delete = 'Delete',
 }

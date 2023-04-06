@@ -14,7 +14,7 @@ export class OfficeService {
     @InjectModel(Office.name) private officeModel: Model<OfficeDocument>,
     private phoneService: PhoneService,
     private emailService: EmailService,
-  ) {}
+  ) { }
 
   async create(data: CreateOfficeDto): Promise<Office> {
     const { email, phone, ..._data } = data;
@@ -35,9 +35,9 @@ export class OfficeService {
       )._id;
     }
     if (phone) {
-      office.phone = (
-        await this.phoneService.setup(phone, office, autoVerify, mustVerify)
-      )._id;
+      // office.phone = (
+      //   await this.phoneService.setup(phone, office, autoVerify, mustVerify)
+      // )._id;
     }
     return await office.save();
   }

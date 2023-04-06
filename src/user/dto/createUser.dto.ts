@@ -16,40 +16,42 @@ const $ = 'validation.createUser';
 export class CreateUserDto {
   @ApiProperty()
   @IsOptional()
-  firstName: string;
+  firstName: string | null | undefined;
 
   @ApiProperty()
   @IsOptional()
-  lastName: string;
+  lastName: string | null | undefined;
 
   @ApiProperty()
   @Transform(({ value }) => value.toLowerCase())
   @IsAlphanumeric('en-US', { message: i18nVM(`${$}.username.IsAlphanumeric`) })
-  username: string;
-
-  @ApiProperty()
-  @Transform(({ value }) => value.toLowerCase())
-  @IsEmail({}, { message: i18nVM(`${$}.email.IsEmail`) })
   @IsOptional()
-  email: string;
+  username: string | null | undefined;
 
-  @ApiProperty()
-  @Transform(({ value }) => {
-    if (value.length === 10) value = '0' + value;
-    return value.replace(/^0/, PHONE_COUNTRY_CODE);
-  })
-  @IsPhoneNumber(PHONE_COUNTRY_REGION, {
-    message: i18nVM(`${$}.phone.IsPhoneNumber`),
-  })
-  @IsOptional()
-  phone: string;
+  // @ApiProperty()
+  // @Transform(({ value }) => value.toLowerCase())
+  // @IsEmail({}, { message: i18nVM(`${$}.email.IsEmail`) })
+  // @IsOptional()
+  // email: string | null | undefined;
 
-  @ApiProperty()
-  password: string;
+  // @ApiProperty()
+  // @Transform(({ value }) => {
+  //   if (value.length === 10) value = '0' + value;
+  //   return value.replace(/^0/, PHONE_COUNTRY_CODE);
+  // })
+  // @IsPhoneNumber(PHONE_COUNTRY_REGION, {
+  //   message: i18nVM(`${$}.phone.IsPhoneNumber`),
+  // })
+  // @IsOptional()
+  // phone: string;
 
   @ApiProperty()
   @IsOptional()
-  avatar: string;
+  password: string | null | undefined;
+
+  @ApiProperty()
+  @IsOptional()
+  avatar: string | null | undefined;
 
   @ApiProperty({ enum: UserStatusEum })
   @IsEnum(UserStatusEum, { message: i18nVM(`${$}.status.IsEnum`) })
@@ -58,5 +60,5 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsOptional()
-  roles: string;
+  roles: string[] | null | undefined;
 }

@@ -1,43 +1,41 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument, Document } from 'mongoose';
+import mongoose, { HydratedDocument, Document, Types, SchemaTypes } from 'mongoose';
 import { RoleEnum } from '../../user/enum/role.enum';
 import { UserStatusEum } from '../../user/enum/userStatus.enum';
 import * as bcrypt from 'bcrypt';
 const saltRounds = 10;
 import * as speakeasy from 'speakeasy';
-import { PhoneNumber } from '../../phone/schemas/phone.schema';
+import { PhoneNumber, PhoneNumberSchema } from '../../phone/schemas/phone.schema';
 import { EmailAddress } from '../../email/schemas/email.schema';
+import { AnyTxtRecord } from 'dns';
 @Schema({ timestamps: true })
 export class User extends Document {
-  @Prop({ required: true, trim: true })
+
+  @Prop({ trim: true })
   firstName: string;
 
-  @Prop({ required: true, trim: true })
+  @Prop({ trim: true })
   lastName: string;
 
-  @Prop({ required: true, unique: true, trim: true, lowercase: true })
+  @Prop({ unique: true, trim: true, lowercase: true })
   username: string;
 
-  @Prop({ required: true, select: false })
+  @Prop({ select: false })
   password: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'EmailAddress',
-    get: (value: EmailAddress) => {
-      return value.value;
-    },
+    autopopulate: true
   })
   email: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'PhoneNumber',
-    get: (value: PhoneNumber) => {
-      return value.value;
-    },
+    autopopulate: true
   })
-  phone: any;
+  phone: PhoneNumber;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
@@ -49,14 +47,13 @@ export class User extends Document {
     default: () => speakeasy.generateSecret({ length: 10 }).base32,
     immutable: true,
     unique: true,
-    required: true,
   })
   accountToken: string;
 
   @Prop({
     type: String,
     enum: UserStatusEum,
-    default: UserStatusEum.Active,
+    default: UserStatusEum.NewUser,
   })
   status: UserStatusEum;
 
@@ -109,15 +106,29 @@ UserSchema.methods.checkPassword = async function (password: string) {
   });
 };
 
-UserSchema.set('toObject', { virtuals: true, getters: true });
-UserSchema.set('toJSON', { virtuals: true, getters: true });
+
+UserSchema.plugin(require('mongoose-autopopulate'));
+
+
+
+
+UserSchema.set('toObject', {
+  virtuals: true,
+  getters: true,
+});
+UserSchema.set('toJSON', {
+  virtuals: true,
+  getters: true,
+});
 
 UserSchema.virtual('fullName')
   .get(function () {
-    return this.firstName + ' ' + this.lastName;
+    return this.firstName ? this.firstName + ' ' + this.lastName : '';
   })
   .set(function (newName) {
     const nameParts = newName.split(' ');
     this.firstName = nameParts.slice(0, nameParts.length - 1).join(' ');
     this.lastName = nameParts[nameParts.length - 1];
   });
+
+
