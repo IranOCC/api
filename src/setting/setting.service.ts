@@ -18,13 +18,8 @@ export class SettingService {
   }
 
   async getWebInitialData(): Promise<any> {
-    // this.websiteSettingsModel.create({
-    //   title: 'ایران اکازیون',
-    //   description: 'بزرگترین مركز اطلاعات املاک در شمال كشور',
-    //   keywords: ['املاک'],
-    // });
     const data = await this.websiteSettingsModel.findOne();
-    return { data, time: new Date() };
+    return data;
   }
 
   create(createSettingDto: CreateSettingDto) {
