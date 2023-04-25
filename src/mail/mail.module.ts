@@ -1,9 +1,13 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
+import { MailController } from './mail.controller';
+import { MongooseModule } from '@nestjs/mongoose';
+import { EmailModule } from 'src/email/email.module';
+import { MailLog, MailLogSchema } from './schemas/mailLog.schema';
 
 @Module({
   imports: [
@@ -34,8 +38,13 @@ import { ConfigService } from '@nestjs/config';
       },
       inject: [ConfigService],
     }),
+    MongooseModule.forFeature([
+      { name: MailLog.name, schema: MailLogSchema },
+    ]),
+    forwardRef(() => EmailModule)
   ],
   providers: [MailService],
   exports: [MailService],
+  controllers: [MailController],
 })
 export class MailModule { }

@@ -44,7 +44,7 @@ export class AuthService {
     try {
       await this.phoneService.sendOtpCode(user.phone.value)
     } catch (error) {
-      throw new InternalServerErrorException({ message: "Otp send failed" })
+      throw new InternalServerErrorException({ message: JSON.stringify(error) })
     }
     // return
     return { phone: user.phone.value };
@@ -58,9 +58,9 @@ export class AuthService {
     }
 
     const phoneQ = await this.phoneService.find(data.phone, useForEnum.User)
-    const user = await this.userService.findOne(phoneQ.user)
-    const payload = { user };
-    const accessToken = this.jwtService.sign(payload);
+    const user = await this.userService.findOne(phoneQ.user).select(["_id", "roles", "status", "firstName", "lastName", "fullName", "emailAddress", "phoneNumber", "avatar"])
+    const payload = user.toJSON();
+    const accessToken = this.jwtService.sign(payload, { expiresIn: process.env.JWT_EXPIRE_IN });
     return {
       user,
       accessToken
@@ -92,8 +92,10 @@ export class AuthService {
 
 
   async getMe(user: User) {
-    console.log(user);
-    return user;
+    const _user = await this.userService.findOne(user._id)
+      .select(["_id", "roles", "status", "firstName", "lastName", "fullName", "emailAddress", "phoneNumber", "avatar"])
+
+    return _user as User;
   }
 
   async registrationPhone(data: RegistrationDto) {

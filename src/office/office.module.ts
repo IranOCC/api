@@ -15,4 +15,4 @@ import { Office, OfficeSchema } from './schemas/office.schema';
   controllers: [OfficeController],
   providers: [OfficeService],
 })
-export class OfficeModule {}
+export class OfficeModule { }

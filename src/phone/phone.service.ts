@@ -1,4 +1,4 @@
-import { Injectable, NotAcceptableException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TokenConfirmPhoneDto } from './dto/tokenConfirmPhone.dto';
@@ -13,11 +13,15 @@ import moment from 'moment';
 import { useForEnum } from '../auth/enum/useFor.enum';
 import { SmsService } from '../sms/sms.service';
 import { PhoneOtpConfirm } from 'src/auth/dto/phoneOtpConfirm.dto';
+import { SendSmsDto } from './dto/sendSms.dto';
+import { UserService } from 'src/user/user.service';
+import { GetSmsLogs } from './dto/getSmsLogs.dto';
 
 @Injectable()
 export class PhoneService {
   constructor(
     @InjectModel(PhoneNumber.name) private model: Model<PhoneNumberDocument>,
+    @Inject(forwardRef(() => UserService)) private userService: UserService,
     private smsService: SmsService,
   ) { }
 
@@ -101,6 +105,62 @@ export class PhoneService {
     return speakeasy.totp.verify({
       secret, encoding: 'base32', window: 4, token
     });
+  }
+
+  // --> send sms
+  async sendSms(data: SendSmsDto, user: User) {
+    if (data.userID) {
+      const u = await this.userService.findOne(data.userID)
+      if (!u || !u?.phone) throw new NotFoundException("Phone number not found")
+      return await this.smsService.sendTextMessage(u.phone, data.text, user)
+    }
+    else if (data.officeID) {
+      // TODO: for office
+    }
+    else if (data.phoneID) {
+      const phone = await this.model.findById(data.phoneID)
+      if (!phone) throw new NotFoundException("Phone number not found")
+      return await this.smsService.sendTextMessage(phone, data.text, user)
+    }
+    else if (data.phoneNumber) {
+      let phone = await this.model.findOne({ value: data.phoneNumber });
+      if (!phone) {
+        phone = new this.model({ value: data.phoneNumber });
+        await phone.save()
+      }
+      return await this.smsService.sendTextMessage(phone, data.text, user)
+    }
+    else {
+      throw new NotAcceptableException("Phone number invalid")
+    }
+  }
+
+  // --> get sms logs
+  async getSmsLogs(data: GetSmsLogs) {
+    if (data.userID) {
+      const u = await this.userService.findOne(data.userID)
+      if (!u || !u?.phone) throw new NotFoundException("Phone number not found")
+      return await this.smsService.logs(u.phone)
+    }
+    else if (data.officeID) {
+      // TODO: for office
+    }
+    else if (data.phoneID) {
+      const phone = await this.model.findById(data.phoneID)
+      if (!phone) throw new NotFoundException("Phone number not found")
+      return await this.smsService.logs(phone)
+    }
+    else if (data.phoneNumber) {
+      let phone = await this.model.findOne({ value: data.phoneNumber });
+      if (!phone) {
+        phone = new this.model({ value: data.phoneNumber });
+        await phone.save()
+      }
+      return await this.smsService.logs(phone)
+    }
+    else {
+      throw new NotAcceptableException("Phone number invalid")
+    }
   }
 
 

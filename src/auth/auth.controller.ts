@@ -40,6 +40,12 @@ export class AuthController {
   }
 
 
+  @Get()
+  async getMe(@Request() { user }) {
+    return this.authService.getMe(user);
+  }
+
+
   // ===============================
 
   // auth ===>
@@ -49,10 +55,7 @@ export class AuthController {
   async login(@Request() { user }) {
     return this.authService.login(user);
   }
-  @Get()
-  async getMe(@Request() { user }) {
-    return this.authService.getMe(user);
-  }
+
 
   // password ===>
   @Post('passwordReset/request')

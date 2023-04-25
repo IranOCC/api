@@ -27,7 +27,7 @@ export class UserService {
     let user: User
     try {
       const phoneQ = await this.phoneService.find(phone, useForEnum.User)
-      user = await this.findOne(phoneQ.user)
+      user = await this.userModel.findById(phoneQ.user)
       return user
     } catch (error) {
       const userData = {
@@ -71,12 +71,16 @@ export class UserService {
       .exec();
   }
 
-  findOne(id: string): Promise<User> {
-    return this.userModel.findById(id).exec();
+  create(updateUserDto: UpdateUserDto): Promise<any> {
+    return this.userModel.create(updateUserDto);
   }
 
   findAll(): Promise<User[]> {
     return this.userModel.find().populate('email').exec();
+  }
+
+  findOne(id: string) {
+    return this.userModel.findById(id);
   }
 
   update(id: string, updateUserDto: UpdateUserDto): Promise<any> {

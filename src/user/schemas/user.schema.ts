@@ -25,6 +25,7 @@ export class User extends Document {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
+    select: true,
     ref: 'EmailAddress',
     autopopulate: true
   })
@@ -32,6 +33,7 @@ export class User extends Document {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
+    select: true,
     ref: 'PhoneNumber',
     autopopulate: true
   })
@@ -123,7 +125,7 @@ UserSchema.set('toJSON', {
 
 UserSchema.virtual('fullName')
   .get(function () {
-    return this.firstName ? this.firstName + ' ' + this.lastName : '';
+    return this.firstName ? this.firstName + ' ' + this.lastName : null;
   })
   .set(function (newName) {
     const nameParts = newName.split(' ');
@@ -131,4 +133,15 @@ UserSchema.virtual('fullName')
     this.lastName = nameParts[nameParts.length - 1];
   });
 
+
+
+UserSchema.virtual('phoneNumber')
+  .get(function () {
+    return this.phone ? this.phone.value : null;
+  })
+
+UserSchema.virtual('emailAddress')
+  .get(function () {
+    return this.email ? this.email.value : null;
+  })
 

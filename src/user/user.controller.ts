@@ -35,6 +35,12 @@ export class UserController {
   }
 
 
+  @Post()
+  @Roles(RoleEnum.Admin)
+  create(@Body() updateUserDto: UpdateUserDto) {
+    return this.userService.create(updateUserDto);
+  }
+
   @Get()
   @Roles(RoleEnum.Admin)
   findAll() {

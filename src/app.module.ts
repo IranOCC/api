@@ -22,6 +22,10 @@ import { OfficeModule } from './office/office.module';
 import { BlogModule } from './blog/blog.module';
 import { SettingModule } from './setting/setting.module';
 import { AwsModule } from './aws/aws.module';
+import { EmailModule } from './email/email.module';
+import { PhoneModule } from './phone/phone.module';
+import { MailModule } from './mail/mail.module';
+import { SmsModule } from './sms/sms.module';
 
 @Module({
   imports: [
@@ -44,6 +48,10 @@ import { AwsModule } from './aws/aws.module';
     }),
     AuthModule,
     UserModule,
+    PhoneModule,
+    SmsModule,
+    EmailModule,
+    MailModule,
     StorageModule,
     OfficeModule,
     EstateModule,

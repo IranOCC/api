@@ -32,4 +32,4 @@ import { PhoneModule } from '../phone/phone.module';
   providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }
