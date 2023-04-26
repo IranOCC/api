@@ -16,4 +16,4 @@ jobs:
           LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
         run: |
           npm i -g @liara/cli@3
-          liara deploy --app="irocc-api" --api-token="$LIARA_TOKEN" --detach --port=8000
+          liara deploy --app="iranocc-api" --api-token="$LIARA_TOKEN" --detach --port=8000
