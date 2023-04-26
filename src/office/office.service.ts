@@ -17,44 +17,22 @@ export class OfficeService {
   ) { }
 
   async create(data: CreateOfficeDto): Promise<Office> {
-    const { email, phone, ..._data } = data;
-    const office = new this.officeModel(_data);
-
-    // => phone & email
-    let autoVerify: boolean, mustVerify: boolean;
-    if (data instanceof CreateUserDto) {
-      autoVerify = false;
-      mustVerify = false;
-    } else {
-      autoVerify = false;
-      mustVerify = true;
-    }
-    if (email) {
-      office.email = (
-        await this.emailService.setup(email, office, autoVerify, mustVerify)
-      )._id;
-    }
-    if (phone) {
-      // office.phone = (
-      //   await this.phoneService.setup(phone, office, autoVerify, mustVerify)
-      // )._id;
-    }
-    return await office.save();
+    return this.officeModel.create(data);
   }
 
-  findAll() {
-    return `This action returns all office`;
+  findAll(): Promise<Office[]> {
+    return this.officeModel.find().exec();
   }
 
-  findOne(id) {
-    return `This action returns a #${id} office`;
+  findOne(id: string) {
+    return this.officeModel.findById(id);
   }
 
   update(id: string, data: UpdateOfficeDto): Promise<any> {
     return this.officeModel.updateOne({ _id: id }, data).exec();
   }
 
-  remove(id) {
-    return `This action removes a #${id} office`;
+  remove(id: string): Promise<any> {
+    return this.officeModel.deleteOne({ _id: id }).exec();
   }
 }

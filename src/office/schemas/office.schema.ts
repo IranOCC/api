@@ -23,38 +23,44 @@ export class Office extends Document {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    autopopulate: true
   })
   management: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Storage',
+    autopopulate: true
   })
   logo: any;
 
-  @Prop({ type: String })
-  address: string;
-
-  @Prop({ index: '2dsphere' })
-  location: [number, number];
-
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
+    select: true,
     ref: 'EmailAddress',
-    get: (value: EmailAddress) => {
-      return value.value;
-    },
+    autopopulate: true
   })
   email: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
+    select: true,
     ref: 'PhoneNumber',
-    get: (value: PhoneNumber) => {
-      return value.value;
-    },
+    autopopulate: true
   })
   phone: any;
+
+  @Prop({ type: String, })
+  province: string;
+
+  @Prop({ type: String, })
+  city: string;
+
+  @Prop({ type: String, })
+  address: string;
+
+  @Prop({ index: '2dsphere' })
+  location: [number, number];
 
   @Prop({ default: false })
   verified: boolean;
@@ -65,3 +71,15 @@ export class Office extends Document {
 
 export const OfficeSchema = SchemaFactory.createForClass(Office);
 export type OfficeDocument = HydratedDocument<Office>;
+
+
+
+OfficeSchema.virtual('phoneNumber')
+  .get(function () {
+    return this.phone ? this.phone.value : null;
+  })
+
+OfficeSchema.virtual('emailAddress')
+  .get(function () {
+    return this.email ? this.email.value : null;
+  })

@@ -33,14 +33,6 @@ export class CreateOfficeDto {
   logo: string;
 
   @ApiProperty()
-  @IsOptional()
-  address: string;
-
-  @ApiProperty()
-  @IsOptional()
-  location: string;
-
-  @ApiProperty()
   @Transform(({ value }) => value.toLowerCase())
   @IsEmail({}, { message: i18nVM(`${$}.email.IsEmail`) })
   @IsOptional()
@@ -56,4 +48,24 @@ export class CreateOfficeDto {
   })
   @IsOptional()
   phone: string;
+
+  @ApiProperty()
+  @IsOptional()
+  province: string;
+
+  @ApiProperty()
+  @IsOptional()
+  city: string;
+
+  @ApiProperty()
+  @IsOptional()
+  address: string;
+
+  @ApiProperty()
+  @IsOptional()
+  location: [number, number];
+
+  @ApiProperty()
+  @IsOptional()
+  verified: boolean;
 }

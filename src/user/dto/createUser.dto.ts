@@ -22,12 +22,6 @@ export class CreateUserDto {
   @IsOptional()
   lastName: string | null | undefined;
 
-  @ApiProperty()
-  @Transform(({ value }) => value.toLowerCase())
-  @IsAlphanumeric('en-US', { message: i18nVM(`${$}.username.IsAlphanumeric`) })
-  @IsOptional()
-  username: string | null | undefined;
-
   // @ApiProperty()
   // @Transform(({ value }) => value.toLowerCase())
   // @IsEmail({}, { message: i18nVM(`${$}.email.IsEmail`) })

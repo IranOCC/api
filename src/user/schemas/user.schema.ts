@@ -1,13 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument, Document, Types, SchemaTypes } from 'mongoose';
+import mongoose, { HydratedDocument, Document, } from 'mongoose';
 import { RoleEnum } from '../../user/enum/role.enum';
 import { UserStatusEum } from '../../user/enum/userStatus.enum';
 import * as bcrypt from 'bcrypt';
 const saltRounds = 10;
 import * as speakeasy from 'speakeasy';
-import { PhoneNumber, PhoneNumberSchema } from '../../phone/schemas/phone.schema';
-import { EmailAddress } from '../../email/schemas/email.schema';
-import { AnyTxtRecord } from 'dns';
+
+
+
 @Schema({ timestamps: true })
 export class User extends Document {
 
@@ -16,9 +16,6 @@ export class User extends Document {
 
   @Prop({ trim: true })
   lastName: string;
-
-  @Prop({ unique: true, trim: true, lowercase: true })
-  username: string;
 
   @Prop({ select: false })
   password: string;
@@ -37,7 +34,19 @@ export class User extends Document {
     ref: 'PhoneNumber',
     autopopulate: true
   })
-  phone: PhoneNumber;
+  phone: any;
+
+  @Prop({ type: String, })
+  province: string;
+
+  @Prop({ type: String, })
+  city: string;
+
+  @Prop({ type: String, })
+  address: string;
+
+  @Prop({ index: '2dsphere' })
+  location: [number, number];
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,

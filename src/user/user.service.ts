@@ -65,26 +65,21 @@ export class UserService {
     return this.userModel.findById(user._id, { password: withPassword }).exec();
   }
 
-  findByUsername(username: string, withPassword = false): Promise<User> {
-    return this.userModel
-      .findOne({ username: username }, { password: withPassword })
-      .exec();
-  }
-
-  create(updateUserDto: UpdateUserDto): Promise<any> {
-    return this.userModel.create(updateUserDto);
+  // 
+  create(data: UpdateUserDto): Promise<any> {
+    return this.userModel.create(data);
   }
 
   findAll(): Promise<User[]> {
-    return this.userModel.find().populate('email').exec();
+    return this.userModel.find().exec();
   }
 
   findOne(id: string) {
     return this.userModel.findById(id);
   }
 
-  update(id: string, updateUserDto: UpdateUserDto): Promise<any> {
-    return this.userModel.updateOne({ _id: id }, updateUserDto).exec();
+  update(id: string, data: UpdateUserDto): Promise<any> {
+    return this.userModel.updateOne({ _id: id }, data).exec();
   }
 
   remove(id: string): Promise<any> {

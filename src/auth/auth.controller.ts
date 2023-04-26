@@ -49,12 +49,6 @@ export class AuthController {
   // ===============================
 
   // auth ===>
-  @Post('login')
-  @Public()
-  @UseGuards(LocalAuthGuard)
-  async login(@Request() { user }) {
-    return this.authService.login(user);
-  }
 
 
   // password ===>

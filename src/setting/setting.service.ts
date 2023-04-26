@@ -18,8 +18,7 @@ export class SettingService {
   }
 
   async getWebInitialData(): Promise<any> {
-    const data = await this.websiteSettingsModel.findOne();
-    return data;
+    return await this.websiteSettingsModel.findOne();
   }
 
   create(createSettingDto: CreateSettingDto) {

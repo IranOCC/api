@@ -27,13 +27,6 @@ export class RegistrationDto {
 
   @ApiProperty()
   @Transform(({ value }) => value.toLowerCase())
-  @IsAlphanumeric('en-US', { message: i18nVM(`${$}.username.IsAlphanumeric`) })
-  @MinLength(3, { message: i18nVM(`${$}.username.MinLength`) })
-  @MaxLength(35, { message: i18nVM(`${$}.username.MaxLength`) })
-  username: string;
-
-  @ApiProperty()
-  @Transform(({ value }) => value.toLowerCase())
   @IsEmail({}, { message: i18nVM(`${$}.email.IsEmail`) })
   @IsOptional()
   email: string;

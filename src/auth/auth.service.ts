@@ -68,28 +68,6 @@ export class AuthService {
   }
 
 
-  async validateUser(_username: string, _password: string): Promise<any> {
-    const user = await this.userService.findByUsername(_username, true);
-    if (!user) throw new NotFoundException('User not found');
-    const isMatch = await user.checkPassword(_password);
-    if (!isMatch) {
-      throw new ForbiddenException('Username or password is incorrect');
-    }
-    if (user.status === UserStatusEum.NotActive) {
-      throw new ForbiddenException('User is not active');
-    }
-    return {
-      _id: user._id,
-      username: user.username,
-      roles: user.roles,
-    };
-  }
-  async login(user: User) {
-    const payload = user;
-    const access_token = this.jwtService.sign(payload);
-    return { payload, access_token };
-  }
-
 
   async getMe(user: User) {
     const _user = await this.userService.findOne(user._id)
