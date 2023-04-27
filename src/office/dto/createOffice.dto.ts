@@ -7,38 +7,39 @@ import {
   IsMongoId,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from '../../config/main';
 
-const $ = 'validation.createOffice';
+const $ = 'validation.CreateOfficeDto';
 
 export class CreateOfficeDto {
   @ApiProperty()
   @IsNotEmpty({ message: i18nVM(`${$}.name.IsNotEmpty`) })
   name: string;
 
-  @ApiProperty()
-  @MinLength(10, { message: i18nVM(`${$}.description.MinLength`) })
+  @ApiPropertyOptional()
   @IsOptional()
+  @MinLength(10, { message: i18nVM(`${$}.description.MinLength`) })
   description: string;
 
   @ApiProperty()
   @IsMongoId({ message: i18nVM(`${$}.management.IsMongoId`) })
   management: string;
 
-  @ApiProperty()
-  @IsMongoId({ message: i18nVM(`${$}.logo.IsMongoId`) })
+  @ApiPropertyOptional()
   @IsOptional()
+  @IsMongoId({ message: i18nVM(`${$}.logo.IsMongoId`), })
   logo: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @Transform(({ value }) => value.toLowerCase())
   @IsEmail({}, { message: i18nVM(`${$}.email.IsEmail`) })
-  @IsOptional()
   email: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @Transform(({ value }) => {
     if (value.length === 10) value = '0' + value;
     return value.replace(/^0/, PHONE_COUNTRY_CODE);
@@ -46,26 +47,25 @@ export class CreateOfficeDto {
   @IsPhoneNumber(PHONE_COUNTRY_REGION, {
     message: i18nVM(`${$}.phone.IsPhoneNumber`),
   })
-  @IsOptional()
   phone: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   province: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   city: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   address: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   location: [number, number];
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   verified: boolean;
 }

@@ -83,3 +83,7 @@ OfficeSchema.virtual('emailAddress')
   .get(function () {
     return this.email ? this.email.value : null;
   })
+
+
+
+OfficeSchema.plugin(require('mongoose-autopopulate'));

@@ -15,22 +15,22 @@ import { RoleEnum } from 'src/user/enum/role.enum';
 
 @Controller('office')
 export class OfficeController {
-  constructor(private readonly officeService: OfficeService) {}
+  constructor(private readonly officeService: OfficeService) { }
 
   @Post()
-  @Roles(RoleEnum.SuperAdmin)
+  @Roles(RoleEnum.Admin)
   create(@Body() createOfficeDto: CreateOfficeDto) {
     return this.officeService.create(createOfficeDto);
   }
 
   @Get()
-  @Roles(RoleEnum.SuperAdmin)
+  @Roles(RoleEnum.Admin)
   findAll() {
     return this.officeService.findAll();
   }
 
   @Get(':id')
-  @Roles(RoleEnum.SuperAdmin)
+  @Roles(RoleEnum.Admin)
   findOne(@Param('id') id: string) {
     return this.officeService.findOne(id);
   }
@@ -42,7 +42,7 @@ export class OfficeController {
   }
 
   @Delete(':id')
-  @Roles(RoleEnum.SuperAdmin)
+  @Roles(RoleEnum.Admin)
   remove(@Param('id') id: string) {
     return this.officeService.remove(id);
   }
