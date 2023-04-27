@@ -11,13 +11,13 @@ export class Office extends Document {
   @Prop()
   description: string;
 
-  @Prop()
+  @Prop({ default: 0 })
   personnelCount: number;
 
-  @Prop()
+  @Prop({ default: 0 })
   estateCount: number;
 
-  @Prop()
+  @Prop({ default: 0 })
   postCount: number;
 
   @Prop({
