@@ -8,9 +8,9 @@ import {
   Delete,
 } from '@nestjs/common';
 import { SettingService } from './setting.service';
-import { CreateSettingDto } from './dto/create-setting.dto';
-import { UpdateSettingDto } from './dto/update-setting.dto';
 import { Public } from 'src/auth/jwt-auth.guard';
+import { Roles } from 'src/auth/roles.decorator';
+import { RoleEnum } from 'src/user/enum/role.enum';
 
 @Controller('setting')
 export class SettingController {
@@ -24,23 +24,17 @@ export class SettingController {
     return this.settingService.getWebInitialData();
   }
 
-  @Post()
-  create(@Body() createSettingDto: CreateSettingDto) {
-    return this.settingService.create(createSettingDto);
+  @Get('initial')
+  @Roles(RoleEnum.SuperAdmin)
+  getInitial() {
+    return this.settingService.getInitial();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.settingService.findOne(+id);
+  @Patch('initial')
+  @Roles(RoleEnum.SuperAdmin)
+  setInitial() {
+    return this.settingService.setInitial();
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSettingDto: UpdateSettingDto) {
-    return this.settingService.update(+id, updateSettingDto);
-  }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.settingService.remove(+id);
-  }
 }

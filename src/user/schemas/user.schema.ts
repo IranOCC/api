@@ -17,6 +17,9 @@ export class User extends Document {
   @Prop({ trim: true })
   lastName: string;
 
+  fullName: string;
+
+
   @Prop({ select: false })
   password: string;
 
@@ -46,13 +49,20 @@ export class User extends Document {
   address: string;
 
   @Prop({ index: '2dsphere' })
-  location: [number, number];
+  location: [number, number, number];
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Storage',
+    autopopulate: true
   })
   avatar: any;
+
+  @Prop({ default: false })
+  verified: boolean;
+
+  @Prop({ default: true })
+  active: boolean;
 
   @Prop({
     default: () => speakeasy.generateSecret({ length: 10 }).base32,

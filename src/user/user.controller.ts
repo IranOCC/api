@@ -11,34 +11,31 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
-import { ChangePasswordDto } from './dto/changePassword.dto';
 import { Roles } from '../auth/roles.decorator';
 import { RoleEnum } from './enum/role.enum';
-import { RegistrationDto } from './dto/registration.dto';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
-  @Patch('registration')
-  registration(@Request() { user }, @Body() data: RegistrationDto) {
-    return this.userService.registration(user, data);
+  @Get('assignList')
+  @Roles(RoleEnum.SuperAdmin)
+  assignList() {
+    return this.userService.assignList();
   }
 
 
-
-
-
-  @Post('changePassword')
-  async changePassword(@Request() { user }, @Body() data: ChangePasswordDto) {
-    return this.userService.passwordChange(user, data);
+  @Get('statics/:subject')
+  @Roles(RoleEnum.Admin)
+  statics(@Param('subject') subject: string) {
+    return this.userService.statics(subject);
   }
 
 
   @Post()
   @Roles(RoleEnum.Admin)
-  create(@Body() updateUserDto: UpdateUserDto) {
-    return this.userService.create(updateUserDto);
+  create(@Body() data: CreateUserDto) {
+    return this.userService.create(data);
   }
 
   @Get()
@@ -55,8 +52,8 @@ export class UserController {
 
   @Patch(':id')
   @Roles(RoleEnum.Admin)
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  update(@Param('id') id: string, @Body() data: UpdateUserDto) {
+    return this.userService.update(id, data);
   }
 
   @Delete(':id')

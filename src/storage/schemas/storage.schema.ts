@@ -2,42 +2,37 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import * as mongoose from 'mongoose';
 
-export type StorageDocument = HydratedDocument<Storage>;
 
 @Schema({ timestamps: true })
 export class Storage {
-  @Prop()
+  @Prop({ type: String, })
   title: string;
 
-  @Prop()
+  @Prop({ type: String, })
   alt: string;
 
-  @Prop()
-  content: string;
-
-  @Prop()
-  excerpt: string;
-
-  @Prop()
-  bucket: string;
-
-  @Prop()
-  filename: string;
-
-  @Prop()
+  @Prop({ type: Number, })
   filesize: number;
 
-  @Prop()
+  @Prop({ type: String, })
   mimetype: string;
 
-  @Prop()
+  @Prop({ type: String, })
   dimensions: string;
+
+  @Prop({ type: String, })
+  path: string;
+
+  @Prop({ type: String, })
+  subject: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    select: false,
   })
   uploadedBy: any;
 }
 
 export const StorageSchema = SchemaFactory.createForClass(Storage);
+export type StorageDocument = HydratedDocument<Storage>;

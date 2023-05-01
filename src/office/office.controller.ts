@@ -19,8 +19,8 @@ export class OfficeController {
 
   @Post()
   @Roles(RoleEnum.Admin)
-  create(@Body() createOfficeDto: CreateOfficeDto) {
-    return this.officeService.create(createOfficeDto);
+  create(@Body() data: CreateOfficeDto) {
+    return this.officeService.create(data);
   }
 
   @Get()
@@ -37,8 +37,8 @@ export class OfficeController {
 
   @Patch(':id')
   @Roles(RoleEnum.Admin)
-  update(@Param('id') id: string, @Body() updateOfficeDto: UpdateOfficeDto) {
-    return this.officeService.update(id, updateOfficeDto);
+  update(@Param('id') id: string, @Body() data: UpdateOfficeDto) {
+    return this.officeService.update(id, data);
   }
 
   @Delete(':id')

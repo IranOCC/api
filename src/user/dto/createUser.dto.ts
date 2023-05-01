@@ -4,55 +4,75 @@ import {
   IsPhoneNumber,
   IsOptional,
   IsEnum,
+  IsNotEmpty,
+  ValidateNested,
 } from 'class-validator';
-import { Transform } from 'class-transformer';
-import { ApiProperty } from '@nestjs/swagger';
+import { Transform, Type } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from '../../config/main';
 import { UserStatusEum } from '../enum/userStatus.enum';
+import { EmailDto } from 'src/email/dto/email.dto';
+import { PhoneDto } from 'src/phone/dto/phone.dto';
+import { Storage } from "src/storage/schemas/storage.schema"
 
-const $ = 'validation.createUser';
+
+
+const $ = 'validation.CreateUserDto';
 
 export class CreateUserDto {
   @ApiProperty()
-  @IsOptional()
+  @IsNotEmpty({ message: i18nVM(`${$}.firstName.IsNotEmpty`) })
   firstName: string | null | undefined;
 
   @ApiProperty()
-  @IsOptional()
+  @IsNotEmpty({ message: i18nVM(`${$}.lastName.IsNotEmpty`) })
   lastName: string | null | undefined;
 
-  // @ApiProperty()
-  // @Transform(({ value }) => value.toLowerCase())
-  // @IsEmail({}, { message: i18nVM(`${$}.email.IsEmail`) })
-  // @IsOptional()
-  // email: string | null | undefined;
-
-  // @ApiProperty()
-  // @Transform(({ value }) => {
-  //   if (value.length === 10) value = '0' + value;
-  //   return value.replace(/^0/, PHONE_COUNTRY_CODE);
-  // })
-  // @IsPhoneNumber(PHONE_COUNTRY_REGION, {
-  //   message: i18nVM(`${$}.phone.IsPhoneNumber`),
-  // })
-  // @IsOptional()
-  // phone: string;
-
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
-  password: string | null | undefined;
-
-  @ApiProperty()
-  @IsOptional()
-  avatar: string | null | undefined;
+  avatar: Storage;
 
   @ApiProperty({ enum: UserStatusEum })
   @IsEnum(UserStatusEum, { message: i18nVM(`${$}.status.IsEnum`) })
-  @IsOptional()
   status: string;
 
   @ApiProperty()
-  @IsOptional()
   roles: string[] | null | undefined;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => EmailDto)
+  @ValidateNested()
+  email: EmailDto;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @Type(() => PhoneDto)
+  @ValidateNested()
+  phone: PhoneDto;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  province: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  city: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  address: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  location: [number, number];
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  verified: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  active: boolean;
 }

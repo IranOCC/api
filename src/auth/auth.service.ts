@@ -83,49 +83,4 @@ export class AuthService {
 
 
 
-  async verifyEmailRequest(data: TokenRequestEmailDto) {
-    return await this.emailService.verifyRequest(data, useForEnum.User);
-  }
-  async verifyEmailConfirm(data: TokenConfirmEmailDto) {
-    return await this.emailService.verifyConfirm(data, useForEnum.User);
-  }
-  // @
-  async verifyPhoneRequest(data: TokenRequestPhoneDto) {
-    return await this.phoneService.verifyRequest(data, useForEnum.User);
-  }
-  async verifyPhoneConfirm(data: TokenConfirmPhoneDto) {
-    return await this.phoneService.verifyConfirm(data, useForEnum.User);
-  }
-  // @@
-  async passwordResetRequest(data: PasswordResetRequestDto) {
-    const { method, email, phone } = data;
-    if (method === PasswordResetMethods.ByEmail) {
-      await this.emailService.passwordResetRequest({ email });
-    }
-    if (method === PasswordResetMethods.ByPhone) {
-      await this.phoneService.passwordResetRequest({ phone });
-    }
-    return true;
-  }
-  async passwordResetConfirm(data: PasswordResetConfirmDto) {
-    const { method, email, phone, token, password } = data;
-    let user: User;
-    if (method === PasswordResetMethods.ByEmail) {
-      const _email = await this.emailService.passwordResetConfirm({
-        email,
-        token,
-      });
-      user = _email.user;
-    }
-    if (method === PasswordResetMethods.ByPhone) {
-      const _phone = await this.phoneService.passwordResetConfirm({
-        phone,
-        token,
-      });
-      user = _phone.user;
-    }
-    user.password = password;
-    await user.save();
-    return true;
-  }
 }

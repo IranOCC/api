@@ -1,17 +1,25 @@
 import {
   IsEmail,
-  IsPhoneNumber,
   IsOptional,
   MinLength,
   IsNotEmpty,
   IsMongoId,
+  ValidateNested
 } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
+import { Storage } from "src/storage/schemas/storage.schema"
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from '../../config/main';
+import { PhoneDto } from 'src/phone/dto/phone.dto';
+import { EmailDto } from 'src/email/dto/email.dto';
+
+
 
 const $ = 'validation.CreateOfficeDto';
+
+
+
 
 export class CreateOfficeDto {
   @ApiProperty()
@@ -29,25 +37,19 @@ export class CreateOfficeDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsMongoId({ message: i18nVM(`${$}.logo.IsMongoId`), })
-  logo: string;
+  logo: Storage;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @Transform(({ value }) => value.toLowerCase())
-  @IsEmail({}, { message: i18nVM(`${$}.email.IsEmail`) })
-  email: string;
+  @Type(() => EmailDto)
+  @ValidateNested()
+  email: EmailDto;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @Transform(({ value }) => {
-    if (value.length === 10) value = '0' + value;
-    return value.replace(/^0/, PHONE_COUNTRY_CODE);
-  })
-  @IsPhoneNumber(PHONE_COUNTRY_REGION, {
-    message: i18nVM(`${$}.phone.IsPhoneNumber`),
-  })
-  phone: string;
+  @Type(() => PhoneDto)
+  @ValidateNested()
+  phone: PhoneDto;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -68,4 +70,8 @@ export class CreateOfficeDto {
   @ApiPropertyOptional()
   @IsOptional()
   verified: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  active: boolean;
 }

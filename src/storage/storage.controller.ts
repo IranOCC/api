@@ -8,46 +8,54 @@ import {
   UseInterceptors,
   UploadedFile,
   Patch,
+  Request
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageService } from './storage.service';
-import { BufferedFile } from './file.model';
+import { BufferedFile } from './file.type';
+import { Public } from 'src/auth/jwt-auth.guard';
+import { Roles } from 'src/auth/roles.decorator';
+import { RoleEnum } from 'src/user/enum/role.enum';
 
 @Controller('storage')
 export class StorageController {
   constructor(private storageService: StorageService) { }
 
-  @Get()
-  async list() {
-    return await this.storageService.list();
-  }
-
-  @Get(':id')
-  async item(@Param('id') id: string) {
-    return await this.storageService.item(id);
-  }
-
-  @Post(':bucket')
+  @Post("users")
+  @Roles(RoleEnum.User)
   @UseInterceptors(FileInterceptor('file'))
-  async upload(
-    @Param('bucket') bucket: string,
-    @UploadedFile() file: BufferedFile,
-  ) {
-    // return await this.storageService.upload(bucket, file);
+  async uploadUsersFiles(@UploadedFile() file: BufferedFile, @Request() { user }) {
+    return this.storageService.upload(file, "users", user)
   }
 
-  @Delete()
-  async multipleDelete(@Body('id') id: Array<string>) {
-    return await this.storageService.multipleDelete(id);
+  @Post("offices")
+  @Roles(RoleEnum.User)
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadOfficesFiles(@UploadedFile() file: BufferedFile, @Request() { user }) {
+    return this.storageService.upload(file, "offices", user)
   }
 
-  @Delete(':id')
-  async delete(@Param('id') id: string) {
-    return await this.storageService.delete(id);
+  @Post("estates")
+  @Roles(RoleEnum.Agent)
+  @Public()
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadEstatesFiles(@UploadedFile() file: BufferedFile, @Request() { user }) {
+    return this.storageService.upload(file, "estates", user)
   }
 
-  @Patch(':id')
-  async update(@Param('id') id: string) {
-    return await this.storageService.update(id);
+  @Post("posts")
+  @Roles(RoleEnum.Author)
+  @Public()
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadPostsFiles(@UploadedFile() file: BufferedFile, @Request() { user }) {
+    return this.storageService.upload(file, "posts", user)
+  }
+
+  @Post("others")
+  @Roles(RoleEnum.SuperAdmin)
+  @Public()
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadOthersFiles(@UploadedFile() file: BufferedFile, @Request() { user }) {
+    return this.storageService.upload(file, "others", user)
   }
 }

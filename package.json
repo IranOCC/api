@@ -41,6 +41,7 @@
     "mongoose": "^6.8.1",
     "mongoose-autopopulate": "^1.0.0",
     "mongoose-paginate": "^5.0.3",
+    "nanoid": "3",
     "nest-aws-sdk": "^3.0.1",
     "nestjs-i18n": "^10.2.3",
     "nestjs-minio-client": "^2.0.0",

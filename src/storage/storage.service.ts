@@ -4,59 +4,82 @@ import { InjectModel } from '@nestjs/mongoose';
 // import { AWSService } from '../aws/aws.service';
 // import { BufferedFile } from '../aws/file.model';
 import { Storage, StorageDocument } from './schemas/storage.schema';
+import { S3 } from 'aws-sdk';
+import { S3ManagerService } from './s3-manager/s3-manager.service';
+import { BufferedFile } from './file.type';
+import { customAlphabet } from 'nanoid/non-secure'
+import { User } from 'src/user/schemas/user.schema';
+const nanoid = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz', 16)
+
+
 
 @Injectable()
 export class StorageService {
   constructor(
     @InjectModel(Storage.name) private storageModel: Model<StorageDocument>,
-    // private minioClientService: AWSService,
+    private s3managerService: S3ManagerService,
   ) { }
 
-  async list(perPage = 5, page = 1) {
-    return this.storageModel
-      .find()
-      .limit(perPage)
-      .skip(perPage * page)
-      .sort({
-        createdAt: 'asc',
-      });
+
+
+  async upload(file: BufferedFile, subject: string, user: User) {
+    const ext = "." + file.originalname.split('.').filter(Boolean).slice(1).join('.')
+    const fileKey = subject + "/" + nanoid() + ext
+
+    await this.s3managerService.upload(file, fileKey)
+
+    const storage = await this.storageModel.create({
+      title: file.originalname,
+      alt: file.originalname,
+      filesize: file.size,
+      mimetype: file.mimetype,
+      path: fileKey,
+      subject: subject,
+      uploadedBy: user,
+    })
+    return storage
   }
 
-  async item(id: string) {
-    return this.storageModel.findById(id);
-  }
 
-  async upload(bucket: string) {
-    // const file = await this.minioClientService.upload(bucket, image);
-    // const storage = await this.storageModel.create(file);
-    // return { storage };
-  }
+  // async list(perPage = 5, page = 1) {
+  //   return this.storageModel
+  //     .find()
+  //     .limit(perPage)
+  //     .skip(perPage * page)
+  //     .sort({
+  //       createdAt: 'asc',
+  //     });
+  // }
 
-  async delete(id: string) {
-    const storage = await this.storageModel.findOneAndDelete({ _id: id });
-    // return await this.minioClientService.delete(
-    //   storage.filename,
-    //   storage.bucket,
-    // );
-  }
+  // async item(id: string) {
+  //   return this.storageModel.findById(id);
+  // }
 
-  async multipleDelete(id: Array<string>) {
-    const storageList = await this.storageModel.find({ _id: { $in: id } });
-    const fileList = [];
-    let _bucket = '';
-    if (storageList.length === 0) {
-      throw new HttpException('Files is empty', HttpStatus.BAD_REQUEST);
-    }
-    storageList.forEach(({ filename, bucket }) => {
-      fileList.push(filename);
-      _bucket = bucket;
-    });
-    await this.storageModel.deleteMany({ _id: { $in: id } });
-    // return await this.minioClientService.multipleDelete(fileList, _bucket);
-  }
+  // async delete(id: string) {
+  //   const storage = await this.storageModel.findOneAndDelete({ _id: id });
+  //   // return await this.minioClientService.delete(
+  //   //   storage.filename,
+  //   //   storage.bucket,
+  //   // );
+  // }
 
-  async update(id: string) {
-    const storage = await this.storageModel.findOne({ _id: id });
-    return storage;
-  }
+  // async multipleDelete(id: Array<string>) {
+  //   const storageList = await this.storageModel.find({ _id: { $in: id } });
+  //   const fileList = [];
+  //   let _bucket = '';
+  //   if (storageList.length === 0) {
+  //     throw new HttpException('Files is empty', HttpStatus.BAD_REQUEST);
+  //   }
+  //   storageList.forEach(({ filename, bucket }) => {
+  //     fileList.push(filename);
+  //     _bucket = bucket;
+  //   });
+  //   await this.storageModel.deleteMany({ _id: { $in: id } });
+  //   // return await this.minioClientService.multipleDelete(fileList, _bucket);
+  // }
+
+  // async update(id: string) {
+  //   const storage = await this.storageModel.findOne({ _id: id });
+  //   return storage;
+  // }
 }

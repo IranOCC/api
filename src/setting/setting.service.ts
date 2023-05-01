@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateSettingDto } from './dto/create-setting.dto';
-import { UpdateSettingDto } from './dto/update-setting.dto';
 import {
   WebsiteSettings,
   WebsiteSettingsDocument,
@@ -21,19 +19,11 @@ export class SettingService {
     return await this.websiteSettingsModel.findOne();
   }
 
-  create(createSettingDto: CreateSettingDto) {
-    return 'This action adds a new setting';
+  async getInitial(): Promise<any> {
+    return await this.websiteSettingsModel.findOne();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} setting`;
-  }
-
-  update(id: number, updateSettingDto: UpdateSettingDto) {
-    return `This action updates a #${id} setting`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} setting`;
+  async setInitial(): Promise<any> {
+    return await this.websiteSettingsModel.updateOne({}, {});
   }
 }

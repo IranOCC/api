@@ -35,6 +35,7 @@ specifiers:
   mongoose: ^6.8.1
   mongoose-autopopulate: ^1.0.0
   mongoose-paginate: ^5.0.3
+  nanoid: '3'
   nest-aws-sdk: ^3.0.1
   nestjs-i18n: ^10.2.3
   nestjs-minio-client: ^2.0.0
@@ -77,6 +78,7 @@ dependencies:
   mongoose: 6.8.1
   mongoose-autopopulate: 1.0.0_mongoose@6.8.1
   mongoose-paginate: 5.0.3
+  nanoid: 3.3.6
   nest-aws-sdk: 3.0.1_gxkgb2mgmftvgvhfefmp5lt2re
   nestjs-i18n: 10.2.3_h2lpa5ubie3gihnjyboxiixjsy
   nestjs-minio-client: 2.0.0
@@ -6520,6 +6522,12 @@ packages:
   /mute-stream/0.0.8:
     resolution: {integrity: sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==}
     dev: true
+
+  /nanoid/3.3.6:
+    resolution: {integrity: sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA==}
+    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+    dev: false
 
   /natural-compare-lite/1.4.0:
     resolution: {integrity: sha512-Tj+HTDSJJKaZnfiuw+iaF9skdPpTo2GtEly5JHnWV/hfv2Qj/9RKsGISQtLh2ox3l5EAGw487hnBee0sIJ6v2g==}

@@ -60,7 +60,7 @@ export class Office extends Document {
   address: string;
 
   @Prop({ index: '2dsphere' })
-  location: [number, number];
+  location: [number, number, number];
 
   @Prop({ default: false })
   verified: boolean;

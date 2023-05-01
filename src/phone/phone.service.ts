@@ -25,25 +25,27 @@ export class PhoneService {
     private smsService: SmsService,
   ) { }
 
-  async setup(value: string, useFor: useForEnum = useForEnum.User, owner: User | Office): Promise<any> {
-    const check = await this.model.findOne({ value });
+  async setup(value: string, useFor: useForEnum = useForEnum.User, owner: User | Office, verified = false): Promise<any> {
+    const check = await this.model.findOne({ value }).select(["user", "value", "verified", "office"]);
     let _query: PhoneNumber;
 
     if (check) {
-      if (useFor === useForEnum.Office && check.office) {
+      if (useFor === useForEnum.Office && owner._id.equals(check.office)) {
         _query = check;
       }
-      else if (useFor === useForEnum.User && check.user) {
+      else if (useFor === useForEnum.User && owner._id.equals(check.user)) {
         _query = check;
       }
       else {
         throw 'Exists';
       }
     } else {
-      _query = new this.model({ value });
+      _query = new this.model({ value, verified });
       if (useFor === useForEnum.User) _query.user = owner._id;
-      else _query.office = owner._id;
+      if (useFor === useForEnum.Office) _query.office = owner._id;
     }
+
+    _query.verified = !!verified
 
     await _query.save();
     return _query;
@@ -164,45 +166,5 @@ export class PhoneService {
   }
 
 
-  async requestToken(data: TokenRequestPhoneDto, forWhat: useForEnum) {
-    const { phone } = data;
-    const _query = await this.find(phone, forWhat);
-    const token = this.generateToken(_query.secret);
-    return { token, query: _query };
-  }
-  async checkValid(data: TokenConfirmPhoneDto, forWhat: useForEnum) {
-    const { phone, token } = data;
-    const _query = await this.find(phone, forWhat);
-    const verified = this.validationToken(_query.secret, token);
-    if (verified) return _query;
-    else
-      throw new NotAcceptableException(
-        'Entered token is incorrect or expired!',
-      );
-  }
-  // =====>
 
-  // --> verification endpoints
-  async verifyRequest(data: TokenRequestPhoneDto, forWhat: useForEnum) {
-    const { token, query } = await this.requestToken(data, forWhat);
-    // await this.smsService.verification(query.user || query.office, token);
-    return true;
-  }
-  async verifyConfirm(data: TokenConfirmPhoneDto, forWhat: useForEnum) {
-    const _query = await this.checkValid(data, forWhat);
-    _query.verified = true;
-    _query.verifiedAt = moment().toDate();
-    await _query.save();
-    return true;
-  }
-
-  // --> passwordReset endpoints
-  async passwordResetRequest(data: TokenRequestPhoneDto) {
-    const { token, query } = await this.requestToken(data, useForEnum.User);
-    // await this.smsService.resetPassword(query.user, token);
-    return true;
-  }
-  async passwordResetConfirm(data: TokenConfirmPhoneDto) {
-    return await this.checkValid(data, useForEnum.User);
-  }
 }

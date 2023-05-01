@@ -32,6 +32,7 @@ export class AuthController {
   async phoneOtp(@Body() data: PhoneOtpDto) {
     return this.authService.phoneOtp(data);
   }
+
   // loginByOtp
   @Post('loginByOtp')
   @Public()
@@ -51,51 +52,5 @@ export class AuthController {
   // auth ===>
 
 
-  // password ===>
-  @Post('passwordReset/request')
-  @Public()
-  async passwordResetRequest(@Body() data: PasswordResetRequestDto) {
-    return this.authService.passwordResetRequest(data);
-  }
-  @Post('passwordReset/confirm')
-  @Public()
-  async passwordResetConfirm(@Body() data: PasswordResetConfirmDto) {
-    return this.authService.passwordResetConfirm(data);
-  }
 
-  // registration ===>
-  @Post('registration/phone')
-  @Public()
-  async registrationPhone(@Body() data: RegistrationDto) {
-    return this.authService.registrationPhone(data);
-  }
-  @Post('registration/complete')
-  @Public()
-  async registration(@Body() data: RegistrationDto) {
-    return this.authService.registrationPhone(data);
-  }
-
-  // email ===>
-  @Post('email/verifyConfirm')
-  @Public()
-  async verifyEmailConfirm(@Body() data: TokenConfirmEmailDto) {
-    return this.authService.verifyEmailConfirm(data);
-  }
-  @Post('email/verifyRequest')
-  @Public()
-  async verifyEmailRequest(@Body() data: TokenRequestEmailDto) {
-    return this.authService.verifyEmailRequest(data);
-  }
-
-  // phone ===>
-  @Post('phone/verifyConfirm')
-  @Public()
-  async verifyPhoneConfirm(@Body() data: TokenConfirmPhoneDto) {
-    return this.authService.verifyPhoneConfirm(data);
-  }
-  @Post('phone/verifyRequest')
-  @Public()
-  async verifyPhoneRequest(@Body() data: TokenRequestPhoneDto) {
-    return this.authService.verifyPhoneRequest(data);
-  }
 }
