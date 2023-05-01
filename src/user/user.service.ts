@@ -29,7 +29,7 @@ export class UserService {
       return user
     } catch (error) {
       const userData = {
-        status: UserStatusEum.NewUser,
+        status: UserStatusEum.Active,
         roles: [RoleEnum.User],
       } as CreateUserDto
       user = new this.userModel(userData)
@@ -40,13 +40,19 @@ export class UserService {
     }
   }
 
-  async assignList() {
-    return (await this.userModel.find({}, { firstName: 1, lastName: 1, _id: 1, phone: 0, email: 0, password: 1 })).map((item) => {
-      return {
-        title: item.fullName,
-        value: item._id,
-      }
-    });
+  async assignList(search: string = "") {
+    return (await this.userModel
+      .find(
+        {
+          $or: [
+            { firstName: { $regex: search } },
+            { lastName: { $regex: search } },
+          ]
+        },
+        { phone: 0, email: 0, avatar: 0, password: 1 }
+      )
+      .limit(10)
+    ).map((doc) => ({ title: doc.fullName, value: doc._id }))
   }
 
   findUserAuth(user: User, withPassword = false): Promise<User> {

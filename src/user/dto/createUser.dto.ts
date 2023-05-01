@@ -15,6 +15,7 @@ import { UserStatusEum } from '../enum/userStatus.enum';
 import { EmailDto } from 'src/email/dto/email.dto';
 import { PhoneDto } from 'src/phone/dto/phone.dto';
 import { Storage } from "src/storage/schemas/storage.schema"
+import { RoleEnum } from '../enum/role.enum';
 
 
 
@@ -23,11 +24,11 @@ const $ = 'validation.CreateUserDto';
 export class CreateUserDto {
   @ApiProperty()
   @IsNotEmpty({ message: i18nVM(`${$}.firstName.IsNotEmpty`) })
-  firstName: string | null | undefined;
+  firstName: string;
 
   @ApiProperty()
   @IsNotEmpty({ message: i18nVM(`${$}.lastName.IsNotEmpty`) })
-  lastName: string | null | undefined;
+  lastName: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -38,7 +39,8 @@ export class CreateUserDto {
   status: string;
 
   @ApiProperty()
-  roles: string[] | null | undefined;
+  @IsEnum(RoleEnum, { each: true, message: i18nVM(`${$}.roles.IsEnum`) })
+  roles: string[];
 
   @ApiPropertyOptional()
   @IsOptional()

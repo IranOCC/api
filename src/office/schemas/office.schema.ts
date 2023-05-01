@@ -12,13 +12,13 @@ export class Office extends Document {
   description: string;
 
   @Prop({ default: 0 })
-  personnelCount: number;
+  membersCount: number;
 
   @Prop({ default: 0 })
   estateCount: number;
 
   @Prop({ default: 0 })
-  postCount: number;
+  postsCount: number;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
@@ -67,6 +67,12 @@ export class Office extends Document {
 
   @Prop({ default: true })
   active: boolean;
+
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'User',
+  })
+  members: any[];
 }
 
 export const OfficeSchema = SchemaFactory.createForClass(Office);

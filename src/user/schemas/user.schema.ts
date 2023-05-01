@@ -11,10 +11,10 @@ import * as speakeasy from 'speakeasy';
 @Schema({ timestamps: true })
 export class User extends Document {
 
-  @Prop({ trim: true })
+  @Prop({ trim: true, select: true, })
   firstName: string;
 
-  @Prop({ trim: true })
+  @Prop({ trim: true, select: true, })
   lastName: string;
 
   fullName: string;
@@ -74,7 +74,7 @@ export class User extends Document {
   @Prop({
     type: String,
     enum: UserStatusEum,
-    default: UserStatusEum.NewUser,
+    default: UserStatusEum.Active,
   })
   status: UserStatusEum;
 
@@ -93,12 +93,6 @@ export class User extends Document {
     required: true,
   })
   roles: RoleEnum[];
-
-  @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Office',
-  })
-  office: any[];
 
   checkPassword: any;
 }

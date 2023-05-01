@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Request,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/createUser.dto';
@@ -20,8 +21,8 @@ export class UserController {
 
   @Get('assignList')
   @Roles(RoleEnum.SuperAdmin)
-  assignList() {
-    return this.userService.assignList();
+  assignList(@Query('search') search: string) {
+    return this.userService.assignList(search);
   }
 
 
