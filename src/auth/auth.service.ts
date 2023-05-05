@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
-import { UserStatusEum } from '../user/enum/userStatus.enum';
 import { User } from '../user/schemas/user.schema';
 
 import { PasswordResetConfirmDto } from './dto/passwordResetConfirm.dto';
@@ -58,7 +57,7 @@ export class AuthService {
     }
 
     const phoneQ = await this.phoneService.find(data.phone, useForEnum.User)
-    const user = await this.userService.findOne(phoneQ.user).select(["_id", "roles", "status", "firstName", "lastName", "fullName", "emailAddress", "phoneNumber", "avatar"])
+    const user = await this.userService.findOne(phoneQ.user).select(["_id", "roles", "firstName", "lastName", "fullName", "emailAddress", "phoneNumber", "avatar"])
     const payload = user.toJSON();
     const accessToken = this.jwtService.sign(payload, { expiresIn: process.env.JWT_EXPIRE_IN });
     return {
@@ -71,7 +70,7 @@ export class AuthService {
 
   async getMe(user: User) {
     const _user = await this.userService.findOne(user._id)
-      .select(["_id", "roles", "status", "firstName", "lastName", "fullName", "emailAddress", "phoneNumber", "avatar"])
+      .select(["_id", "roles", "firstName", "lastName", "fullName", "emailAddress", "phoneNumber", "avatar"])
 
     return _user as User;
   }

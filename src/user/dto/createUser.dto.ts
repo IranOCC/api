@@ -11,7 +11,6 @@ import { Transform, Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from '../../config/main';
-import { UserStatusEum } from '../enum/userStatus.enum';
 import { EmailDto } from 'src/email/dto/email.dto';
 import { PhoneDto } from 'src/phone/dto/phone.dto';
 import { Storage } from "src/storage/schemas/storage.schema"
@@ -33,10 +32,6 @@ export class CreateUserDto {
   @ApiPropertyOptional()
   @IsOptional()
   avatar: Storage;
-
-  @ApiProperty({ enum: UserStatusEum })
-  @IsEnum(UserStatusEum, { message: i18nVM(`${$}.status.IsEnum`) })
-  status: string;
 
   @ApiProperty()
   @IsEnum(RoleEnum, { each: true, message: i18nVM(`${$}.roles.IsEnum`) })

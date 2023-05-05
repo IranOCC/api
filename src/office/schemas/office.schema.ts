@@ -15,7 +15,7 @@ export class Office extends Document {
   membersCount: number;
 
   @Prop({ default: 0 })
-  estateCount: number;
+  estatesCount: number;
 
   @Prop({ default: 0 })
   postsCount: number;
@@ -71,6 +71,7 @@ export class Office extends Document {
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'User',
+    default: []
   })
   members: any[];
 }

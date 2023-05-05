@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document, } from 'mongoose';
 import { RoleEnum } from '../../user/enum/role.enum';
-import { UserStatusEum } from '../../user/enum/userStatus.enum';
 import * as bcrypt from 'bcrypt';
 const saltRounds = 10;
 import * as speakeasy from 'speakeasy';
@@ -70,13 +69,6 @@ export class User extends Document {
     unique: true,
   })
   accountToken: string;
-
-  @Prop({
-    type: String,
-    enum: UserStatusEum,
-    default: UserStatusEum.Active,
-  })
-  status: UserStatusEum;
 
   @Prop({ default: Date.now })
   lastLogin: Date;

@@ -9,7 +9,6 @@ import { UpdateUserDto } from './dto/updateUser.dto';
 import { PhoneService } from '../phone/phone.service';
 import { EmailService } from '../email/email.service';
 import { PhoneOtpDto } from 'src/auth/dto/phoneOtp.dto';
-import { UserStatusEum } from './enum/userStatus.enum';
 import { RoleEnum } from './enum/role.enum';
 import { useForEnum } from 'src/auth/enum/useFor.enum';
 @Injectable()
@@ -29,7 +28,7 @@ export class UserService {
       return user
     } catch (error) {
       const userData = {
-        status: UserStatusEum.Active,
+        active: true,
         roles: [RoleEnum.User],
       } as CreateUserDto
       user = new this.userModel(userData)
@@ -51,7 +50,7 @@ export class UserService {
         },
         { phone: 0, email: 0, avatar: 0, password: 1 }
       )
-      .limit(10)
+      .limit(20)
     ).map((doc) => ({ title: doc.fullName, value: doc._id }))
   }
 
@@ -63,7 +62,6 @@ export class UserService {
 
   statics(subject: string) {
     return {
-      statuses: UserStatusEum,
       roles: RoleEnum
     }[subject]
   }
@@ -154,4 +152,44 @@ export class UserService {
   remove(id: string): Promise<any> {
     return this.userModel.deleteOne({ _id: id }).exec();
   }
+
+
+
+
+  // ==>
+  async getOrCheck(data: User | string): Promise<User> {
+    let _data: User
+    if (typeof data === 'string')
+      _data = await this.findOne(data)
+    else
+      _data = data
+    return _data
+  }
+
+
+  async hasSuperAdminRole(user: User | string): Promise<boolean | User> {
+    let _user: User = await this.getOrCheck(user)
+    return _user.roles.includes(RoleEnum.SuperAdmin) && _user
+  }
+
+  async hasAdminRole(user: User | string): Promise<boolean | User> {
+    let _user: User = await this.getOrCheck(user)
+    return _user.roles.includes(RoleEnum.Admin) && _user
+  }
+
+  async hasAgentRole(user: User | string): Promise<boolean | User> {
+    let _user: User = await this.getOrCheck(user)
+    return _user.roles.includes(RoleEnum.Agent) && _user
+  }
+
+  async hasAuthorRole(user: User | string): Promise<boolean | User> {
+    let _user: User = await this.getOrCheck(user)
+    return _user.roles.includes(RoleEnum.Author) && _user
+  }
+
+  async hasUserRole(user: User | string): Promise<boolean | User> {
+    let _user: User = await this.getOrCheck(user)
+    return _user.roles.includes(RoleEnum.User) && _user
+  }
+
 }

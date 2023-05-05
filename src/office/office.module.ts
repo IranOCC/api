@@ -5,14 +5,17 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { EmailModule } from 'src/email/email.module';
 import { PhoneModule } from 'src/phone/phone.module';
 import { Office, OfficeSchema } from './schemas/office.schema';
+import { UserModule } from 'src/user/user.module';
+import { MemberService } from './member/member.service';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Office.name, schema: OfficeSchema }]),
+    UserModule,
     PhoneModule,
     EmailModule,
   ],
   controllers: [OfficeController],
-  providers: [OfficeService],
+  providers: [OfficeService, MemberService],
 })
 export class OfficeModule { }
