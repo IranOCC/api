@@ -138,7 +138,12 @@ UserSchema.virtual('fullName')
     this.lastName = nameParts[nameParts.length - 1];
   });
 
-
+// UserSchema.virtual('isManagement', {
+//   ref: "Office",
+//   localField: "_id",
+//   foreignField: "management",
+//   justOne: true,
+// })
 
 UserSchema.virtual('phoneNumber')
   .get(function () {

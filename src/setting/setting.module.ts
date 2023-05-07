@@ -3,14 +3,14 @@ import { SettingService } from './setting.service';
 import { SettingController } from './setting.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
-  WebsiteSettings,
-  WebsiteSettingsSchema,
-} from './schemas/websiteSettings.schema';
+  Settings,
+  SettingsSchema,
+} from './schemas/settings.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: WebsiteSettings.name, schema: WebsiteSettingsSchema },
+      { name: Settings.name, schema: SettingsSchema },
     ]),
   ],
   controllers: [SettingController],

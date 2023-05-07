@@ -11,6 +11,8 @@ import { SettingService } from './setting.service';
 import { Public } from 'src/auth/jwt-auth.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
+import { SettingsKeys } from './enum/settingKeys.enum';
+import { InitialSettingDto } from './dto/initialSetting.dto';
 
 @Controller('setting')
 export class SettingController {
@@ -24,16 +26,18 @@ export class SettingController {
     return this.settingService.getWebInitialData();
   }
 
-  @Get('initial')
+  // ==
+
+  @Get(':key')
   @Roles(RoleEnum.SuperAdmin)
-  getInitial() {
-    return this.settingService.getInitial();
+  get(@Param('key') key: SettingsKeys) {
+    return this.settingService.get(key);
   }
 
-  @Patch('initial')
+  @Patch(':key')
   @Roles(RoleEnum.SuperAdmin)
-  setInitial() {
-    return this.settingService.setInitial();
+  set(@Param('key') key: SettingsKeys, @Body() data: InitialSettingDto) {
+    return this.settingService.set(key, data);
   }
 
 

@@ -16,8 +16,7 @@ export class MemberService {
 
 
     async find(office: Office) {
-        const management = office.management
-        return (await office.populate(["members"]))["members"]
+        return (await office.populate('members'))['membersWithManagement']
     }
 
 
@@ -30,13 +29,11 @@ export class MemberService {
                 if (item instanceof User) {
                     if (!d.members.includes(item._id)) {
                         d.members.push(item._id)
-                        d.membersCount++
                     }
                 }
                 else {
                     if (!d.members.includes(item)) {
                         d.members.push(item)
-                        d.membersCount++
                     }
                 }
             })
@@ -45,13 +42,11 @@ export class MemberService {
             if (members instanceof User) {
                 if (!d.members.includes(members._id)) {
                     d.members.push(members._id)
-                    d.membersCount++
                 }
             }
             else {
                 if (!d.members.includes(members)) {
                     d.members.push(members)
-                    d.membersCount++
                 }
             }
         }
@@ -72,7 +67,6 @@ export class MemberService {
                         if (office.management === item._id) this.removeManagementException()
                         const _index = d.members.indexOf(item._id)
                         d.members.splice(_index, 1)
-                        d.membersCount--
                     }
                 }
                 else {
@@ -80,7 +74,6 @@ export class MemberService {
                         if (office.management === item) this.removeManagementException()
                         const _index = d.members.indexOf(item)
                         d.members.splice(_index, 1)
-                        d.membersCount--
                     }
                 }
             })
@@ -93,7 +86,6 @@ export class MemberService {
                     if (office.management.equals(members._id)) this.removeManagementException()
                     const _index = d.members.indexOf(members._id)
                     d.members.splice(_index, 1)
-                    d.membersCount--
                 }
             }
             else {
@@ -101,11 +93,10 @@ export class MemberService {
                     if (office.management.equals(members)) this.removeManagementException()
                     const _index = d.members.indexOf(members)
                     d.members.splice(_index, 1)
-                    d.membersCount--
                 }
             }
         }
         // save
-        // await d.save()
+        await d.save()
     }
 }

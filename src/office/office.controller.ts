@@ -63,9 +63,9 @@ export class OfficeController {
 
   @Post(':id/member')
   @Roles(RoleEnum.Admin)
-  async addMember(@Param('id') id: string, @Body() data: string[]) {
+  async addMember(@Param('id') id: string, @Body() members: string[]) {
     const office = await this.officeService.getOrCheck(id)
-    return await this.memberService.add(office, data)
+    return await this.memberService.add(office, members)
   }
 
   @Delete(':id/member')

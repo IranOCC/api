@@ -11,6 +11,8 @@ import { EmailService } from '../email/email.service';
 import { PhoneOtpDto } from 'src/auth/dto/phoneOtp.dto';
 import { RoleEnum } from './enum/role.enum';
 import { useForEnum } from 'src/auth/enum/useFor.enum';
+import { PhoneDto } from 'src/phone/dto/phone.dto';
+import { EmailDto } from 'src/email/dto/email.dto';
 @Injectable()
 export class UserService {
   constructor(
@@ -69,36 +71,10 @@ export class UserService {
   async create(data: CreateUserDto): Promise<any> {
     const { phone, email, ...modelData } = data
     const _user = new this.userModel(modelData)
-    if (phone) {
-      try {
-        const phoneID = await this.phoneService.setup(phone.value, useForEnum.User, _user, phone.verified)
-        _user.phone = phoneID
-      } catch (error) {
-        throw new BadRequestException({
-          errors: [
-            {
-              property: "phone.value",
-              constraints: { "IsAlreadyExists": "این شماره قبلا ثبت شده است" }
-            }
-          ]
-        })
-      }
-    }
-    if (email) {
-      try {
-        const emailID = await this.emailService.setup(email.value, useForEnum.User, _user, email.verified)
-        _user.email = emailID
-      } catch (error) {
-        throw new BadRequestException({
-          errors: [
-            {
-              property: "email.value",
-              constraints: { "IsAlreadyExists": "این ایمیل قبلا ثبت شده است" }
-            }
-          ]
-        })
-      }
-    }
+
+    if (phone) await this.setPhone(_user, phone)
+    if (email) await this.setEmail(_user, email)
+
     await _user.save()
     return _user;
   }
@@ -114,46 +90,54 @@ export class UserService {
   async update(id: string, data: UpdateUserDto): Promise<any> {
     const { phone, email, ...modelData } = data
     const _user = await this.userModel.findById(id)
-    if (phone) {
-      try {
-        const phoneID = await this.phoneService.setup(phone.value, useForEnum.User, _user, phone.verified)
-        _user.phone = phoneID
-        await _user.save()
-      } catch (error) {
-        throw new BadRequestException({
-          errors: [
-            {
-              property: "phone.value",
-              constraints: { "IsAlreadyExists": "این شماره قبلا ثبت شده است" }
-            }
-          ]
-        })
-      }
-    }
-    if (email) {
-      try {
-        const emailID = await this.emailService.setup(email.value, useForEnum.User, _user, email.verified)
-        _user.email = emailID
-        await _user.save()
-      } catch (error) {
-        throw new BadRequestException({
-          errors: [
-            {
-              property: "email.value",
-              constraints: { "IsAlreadyExists": "این ایمیل قبلا ثبت شده است" }
-            }
-          ]
-        })
-      }
-    }
+
+    if (phone) await this.setPhone(_user, phone)
+    if (email) await this.setEmail(_user, email)
+
     return this.userModel.updateOne({ _id: id }, modelData).exec();
   }
 
-  remove(id: string): Promise<any> {
-    return this.userModel.deleteOne({ _id: id }).exec();
+
+  async remove(id: string) {
+    const o = await this.findOne(id)
+    if (o.phone) this.phoneService.remove(o.phone?._id);
+    if (o.email) this.emailService.remove(o.email?._id);
+    await o.remove();
   }
 
 
+  // ======> phone
+  async setPhone(user: User, phone: PhoneDto) {
+    try {
+      const phoneID = await this.phoneService.setup(phone.value, useForEnum.User, user, phone.verified)
+      user.phone = phoneID
+    } catch (error) {
+      throw new BadRequestException({
+        errors: [
+          {
+            property: "phone.value",
+            constraints: { "IsAlreadyExists": "این شماره قبلا ثبت شده است" }
+          }
+        ]
+      })
+    }
+  }
+  // ======> email
+  async setEmail(user: User, email: EmailDto) {
+    try {
+      const emailID = await this.emailService.setup(email.value, useForEnum.User, user, email.verified)
+      user.email = emailID
+    } catch (error) {
+      throw new BadRequestException({
+        errors: [
+          {
+            property: "email.value",
+            constraints: { "IsAlreadyExists": "این ایمیل قبلا ثبت شده است" }
+          }
+        ]
+      })
+    }
+  }
 
 
   // ==>
@@ -163,6 +147,7 @@ export class UserService {
       _data = await this.findOne(data)
     else
       _data = data
+
     return _data
   }
 

@@ -61,8 +61,11 @@ export class OfficeService {
     return this.officeModel.findById(id);
   }
 
-  remove(id: string): Promise<any> {
-    return this.officeModel.deleteOne({ _id: id }).exec();
+  async remove(id: string) {
+    const o = await this.findOne(id)
+    if (o.phone) this.phoneService.remove(o.phone?._id);
+    if (o.email) this.emailService.remove(o.email?._id);
+    await o.remove();
   }
 
   // ====================> tools <====================
@@ -81,7 +84,6 @@ export class OfficeService {
     try {
       const phoneID = await this.phoneService.setup(phone.value, useForEnum.Office, office, phone.verified)
       office.phone = phoneID
-      await office.save()
     } catch (error) {
       throw new BadRequestException({
         errors: [
@@ -98,7 +100,6 @@ export class OfficeService {
     try {
       const emailID = await this.emailService.setup(email.value, useForEnum.Office, office, email.verified)
       office.email = emailID
-      await office.save()
     } catch (error) {
       throw new BadRequestException({
         errors: [
@@ -141,9 +142,7 @@ export class OfficeService {
     await this.memberService.add(office, management)
 
     // set admin
-    const d = await this.getOrCheck(office)
-    d.management = management
-    await d.save()
+    office.management = management
   }
 
 

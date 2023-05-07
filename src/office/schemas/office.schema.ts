@@ -12,9 +12,6 @@ export class Office extends Document {
   description: string;
 
   @Prop({ default: 0 })
-  membersCount: number;
-
-  @Prop({ default: 0 })
   estatesCount: number;
 
   @Prop({ default: 0 })
@@ -71,7 +68,7 @@ export class Office extends Document {
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'User',
-    default: []
+    default: [],
   })
   members: any[];
 }
@@ -79,7 +76,14 @@ export class Office extends Document {
 export const OfficeSchema = SchemaFactory.createForClass(Office);
 export type OfficeDocument = HydratedDocument<Office>;
 
-
+OfficeSchema.set('toObject', {
+  virtuals: true,
+  getters: true,
+});
+OfficeSchema.set('toJSON', {
+  virtuals: true,
+  getters: true,
+});
 
 OfficeSchema.virtual('phoneNumber')
   .get(function () {
@@ -90,6 +94,29 @@ OfficeSchema.virtual('emailAddress')
   .get(function () {
     return this.email ? this.email.value : null;
   })
+
+OfficeSchema.virtual('membersWithManagement', {
+  ref: 'User',
+  localField: 'members',
+  foreignField: '_id',
+  get: function () {
+    return this.members.map((member) => {
+      return {
+        isManagement: member._id.equals(this.management._id),
+        ...JSON.parse(JSON.stringify(member)),
+      }
+    })
+  },
+})
+
+OfficeSchema.virtual('membersCount', {
+  ref: 'User',
+  localField: 'members',
+  foreignField: '_id',
+  get: function () {
+    return this.members.length
+  },
+})
 
 
 

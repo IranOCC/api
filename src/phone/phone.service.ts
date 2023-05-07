@@ -26,15 +26,20 @@ export class PhoneService {
   ) { }
 
   async setup(value: string, useFor: useForEnum = useForEnum.User, owner: User | Office, verified = false): Promise<any> {
-    const check = await this.model.findOne({ value }).select(["user", "value", "verified", "office"]);
+    const check = await this.model.findOne({ value }).select(["value", "verified", "user", "office"]).populate(['office', 'user']);
+
     let _query: PhoneNumber;
 
     if (check) {
-      if (useFor === useForEnum.Office && owner._id.equals(check.office)) {
+      if (useFor === useForEnum.Office && ((!check.user && !check.office) || owner._id.equals(check.office._id))) {
         _query = check;
+        _query.office = owner._id
+        _query.user = null
       }
-      else if (useFor === useForEnum.User && owner._id.equals(check.user)) {
+      else if (useFor === useForEnum.User && ((!check.user && !check.office) || owner._id.equals(check.user._id))) {
         _query = check;
+        _query.office = null
+        _query.user = owner._id
       }
       else {
         throw 'Exists';
@@ -163,6 +168,12 @@ export class PhoneService {
     else {
       throw new NotAcceptableException("Phone number invalid")
     }
+  }
+
+
+  // remove
+  async remove(id: string): Promise<any> {
+    return this.model.deleteOne({ _id: id })
   }
 
 
