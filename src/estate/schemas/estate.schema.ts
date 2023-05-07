@@ -46,28 +46,32 @@ export class Estate extends Document {
   @Prop({ default: Date.now })
   publishedAt: Date;
 
-  @Prop()
+
+  @Prop({ select: false, })
   deletedAt: Date;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    select: false,
   })
   createdBy: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    select: false,
   })
   confirmedBy: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Office',
+    select: false,
   })
   office: any;
 
-  @Prop()
+  @Prop({ type: [String] })
   tags: string[];
 
   @Prop({
@@ -78,31 +82,37 @@ export class Estate extends Document {
 
   // @@@@
 
-  @Prop()
+  @Prop({ type: String })
   code: string;
 
-  @Prop()
+  @Prop({ type: String, })
+  province: string;
+
+  @Prop({ type: String })
   city: string;
 
-  @Prop()
+  @Prop({ type: String })
   district: string;
 
-  @Prop()
+  @Prop({ type: String })
   quarter: string;
 
-  @Prop()
+  @Prop({ type: String })
   alley: string;
 
-  @Prop()
-  location: string;
+  @Prop({ type: String, })
+  address: string;
 
-  @Prop()
+  @Prop({ index: '2dsphere' })
+  location: [number, number];
+
+  @Prop({ type: Number })
   price: number;
 
-  @Prop()
+  @Prop({ type: Number })
   totalPrice: number;
 
-  @Prop()
+  @Prop({ type: String })
   description: string;
 
   @Prop({
@@ -111,7 +121,7 @@ export class Estate extends Document {
   })
   gallery: any[];
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   canBarter: boolean;
 
   @Prop({
@@ -120,7 +130,7 @@ export class Estate extends Document {
   })
   owner: any;
 
-  @Prop()
+  @Prop({ type: Number })
   area: number;
 
   @Prop({

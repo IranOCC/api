@@ -48,7 +48,7 @@ export class User extends Document {
   address: string;
 
   @Prop({ index: '2dsphere' })
-  location: [number, number, number];
+  location: [number, number];
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
