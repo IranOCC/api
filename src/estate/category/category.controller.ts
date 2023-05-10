@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { Roles } from 'src/auth/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
@@ -15,7 +16,13 @@ import { UpdateEstateCategoryDto } from './dto/updateEstateCategory.dto';
 
 @Controller('estate/category')
 export class EstateCategoryController {
-  constructor(private readonly estateCategoryService: EstateCategoryService) {}
+  constructor(private readonly estateCategoryService: EstateCategoryService) { }
+
+  @Get('parentList')
+  @Roles(RoleEnum.SuperAdmin)
+  assignList(@Query('search') search: string) {
+    return this.estateCategoryService.parentList(search);
+  }
 
   @Post()
   @Roles(RoleEnum.SuperAdmin)

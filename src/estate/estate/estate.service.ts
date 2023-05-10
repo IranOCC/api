@@ -3,12 +3,21 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateEstateDto } from './dto/createEstate.dto';
 import { UpdateEstateDto } from './dto/updateEstate.dto';
+import { EstateStatusEum } from './enum/estateStatus.enum';
+import { EstateVisibilityEum } from './enum/estateVisibility.enum';
 import { Estate, EstateDocument } from './schemas/estate.schema';
 @Injectable()
 export class EstateService {
   constructor(
     @InjectModel(Estate.name) private estateModel: Model<EstateDocument>,
   ) { }
+
+  statics(subject: string) {
+    return {
+      status: EstateStatusEum,
+      visibility: EstateVisibilityEum,
+    }[subject]
+  }
 
 
   create(data: CreateEstateDto) {

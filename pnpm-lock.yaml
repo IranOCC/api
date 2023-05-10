@@ -47,6 +47,7 @@ specifiers:
   reflect-metadata: ^0.1.13
   rimraf: ^3.0.2
   rxjs: ^7.2.0
+  slugify: ^1.6.6
   sms-typescript: ^1.0.2
   source-map-support: ^0.5.20
   speakeasy: ^2.0.0
@@ -89,6 +90,7 @@ dependencies:
   reflect-metadata: 0.1.13
   rimraf: 3.0.2
   rxjs: 7.8.0
+  slugify: 1.6.6
   sms-typescript: 1.0.2
   speakeasy: 2.0.0
 
@@ -7591,6 +7593,11 @@ packages:
 
   /slick/1.12.2:
     resolution: {integrity: sha512-4qdtOGcBjral6YIBCWJ0ljFSKNLz9KkhbWtuGvUyRowl1kxfuE1x/Z/aJcaiilpb3do9bl5K7/1h9XC5wWpY/A==}
+    dev: false
+
+  /slugify/1.6.6:
+    resolution: {integrity: sha512-h+z7HKHYXj6wJU+AnS/+IH8Uh9fdcX1Lrhg1/VMdf9PwoBQXFcXiAdsy2tSK0P6gKwJLXp02r90ahUCqHk9rrw==}
+    engines: {node: '>=8.0.0'}
     dev: false
 
   /smart-buffer/4.2.0:

@@ -29,7 +29,7 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       stopAtFirstError: true,
-      forbidUnknownValues: true,
+      // forbidUnknownValues: true,
       transform: true,
     }),
   );

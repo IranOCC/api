@@ -71,8 +71,11 @@ export class Estate extends Document {
   })
   office: any;
 
-  @Prop({ type: [String] })
-  tags: string[];
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Tag',
+  })
+  tags: any[];
 
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],

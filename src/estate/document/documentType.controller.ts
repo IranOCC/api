@@ -13,11 +13,11 @@ import { EstateDocumentTypeService } from './documentType.service';
 import { CreateEstateDocumentTypeDto } from './dto/createEstateDocumentType.dto';
 import { UpdateEstateDocumentTypeDto } from './dto/updateEstateDocumentType.dto';
 
-@Controller('estate/documentType')
+@Controller('estate/document')
 export class EstateDocumentTypeController {
   constructor(
     private readonly estateDocumentTypeService: EstateDocumentTypeService,
-  ) {}
+  ) { }
 
   @Post()
   @Roles(RoleEnum.SuperAdmin)

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { DeleteResult } from 'mongodb';
 import { Model } from 'mongoose';
 import { CreateEstateDocumentTypeDto } from './dto/createEstateDocumentType.dto';
 import { UpdateEstateDocumentTypeDto } from './dto/updateEstateDocumentType.dto';
@@ -13,27 +14,25 @@ export class EstateDocumentTypeService {
   constructor(
     @InjectModel(EstateDocumentType.name)
     private estateDocumentTypeModel: Model<EstateDocumentTypeDocument>,
-  ) {}
+  ) { }
 
-  create(data: CreateEstateDocumentTypeDto): Promise<any> {
+  create(data: CreateEstateDocumentTypeDto) {
     return this.estateDocumentTypeModel.create(data);
   }
 
-  findAll(): Promise<any> {
-    return this.estateDocumentTypeModel.find().exec();
+  findAll() {
+    return this.estateDocumentTypeModel.find().populate(["icon", "tags", "categories"]).exec();
   }
 
-  findOne(id: string): Promise<any> {
-    return this.estateDocumentTypeModel.findById(id).exec();
+  findOne(id: string) {
+    return this.estateDocumentTypeModel.findById(id).populate(["icon", "tags", "categories"]).exec();
   }
 
-  update(id: string, data: UpdateEstateDocumentTypeDto): Promise<any> {
-    return this.estateDocumentTypeModel
-      .findOneAndUpdate({ _id: id }, data)
-      .exec();
+  update(id: string, data: UpdateEstateDocumentTypeDto) {
+    return this.estateDocumentTypeModel.findOneAndUpdate({ _id: id }, data).exec();
   }
 
-  remove(id: string): Promise<any> {
+  remove(id: string): Promise<DeleteResult> {
     return this.estateDocumentTypeModel.deleteOne({ _id: id }).exec();
   }
 }

@@ -1,51 +1,43 @@
 import { Module } from '@nestjs/common';
-import { EstateService } from './estate.service';
-import { EstateController } from './estate.controller';
-import { EstateDocumentTypeController } from './modules/documentType/documentType.controller';
-import { EstateDocumentTypeService } from './modules/documentType/documentType.service';
-import { EstateCategoryController } from './modules/category/category.controller';
-import { EstateCategoryService } from './modules/category/category.service';
-import { EstateFeatureController } from './modules/feature/feature.controller';
-import { EstateFeatureService } from './modules/feature/feature.service';
-import { Estate, EstateSchema } from './schemas/estate.schema';
 import { MongooseModule } from '@nestjs/mongoose';
-import {
-  EstateCategory,
-  EstateCategorySchema,
-} from './modules/category/schemas/estateCategory.schema';
-import {
-  EstateFeature,
-  EstateFeatureSchema,
-} from './modules/feature/schemas/estateFeature.schema';
-import {
-  EstateDocumentType,
-  EstateDocumentTypeSchema,
-} from './modules/documentType/schemas/estateDocumentType.schema';
+
+import { Estate, EstateSchema } from './estate/schemas/estate.schema';
+import { EstateService } from './estate/estate.service';
+import { EstateController } from './estate/estate.controller';
+
+import { EstateDocumentType, EstateDocumentTypeSchema } from './document/schemas/estateDocumentType.schema';
+import { EstateDocumentTypeController } from './document/documentType.controller';
+import { EstateDocumentTypeService } from './document/documentType.service';
+
+import { EstateCategory, EstateCategorySchema } from './category/schemas/estateCategory.schema';
+import { EstateCategoryController } from './category/category.controller';
+import { EstateCategoryService } from './category/category.service';
+
+import { EstateFeature, EstateFeatureSchema } from './feature/schemas/estateFeature.schema';
+import { EstateFeatureController } from './feature/feature.controller';
+import { EstateFeatureService } from './feature/feature.service';
+
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Estate.name, schema: EstateSchema }]),
-    MongooseModule.forFeature([
-      { name: EstateCategory.name, schema: EstateCategorySchema },
-    ]),
-    MongooseModule.forFeature([
-      { name: EstateFeature.name, schema: EstateFeatureSchema },
-    ]),
-    MongooseModule.forFeature([
-      { name: EstateDocumentType.name, schema: EstateDocumentTypeSchema },
-    ]),
+    MongooseModule.forFeature([{ name: EstateCategory.name, schema: EstateCategorySchema }]),
+    MongooseModule.forFeature([{ name: EstateFeature.name, schema: EstateFeatureSchema }]),
+    MongooseModule.forFeature([{ name: EstateDocumentType.name, schema: EstateDocumentTypeSchema }]),
   ],
   controllers: [
-    EstateController,
     EstateCategoryController,
     EstateFeatureController,
     EstateDocumentTypeController,
+    EstateController,
   ],
   providers: [
-    EstateService,
     EstateCategoryService,
     EstateFeatureService,
     EstateDocumentTypeService,
+    EstateService,
   ],
 })
-export class EstateModule {}
+
+
+export class EstateModule { }

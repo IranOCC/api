@@ -6,8 +6,23 @@ export class EstateFeature extends Document {
   @Prop({ required: true, trim: true })
   title: string;
 
-  @Prop({ required: true, trim: true })
+  @Prop({ required: true, trim: true, unique: true, lowercase: true })
   slug: string;
+
+  @Prop({ type: String })
+  description: string;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Icon',
+  })
+  icon: any;
+
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Tag',
+  })
+  tags: any[];
 
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],

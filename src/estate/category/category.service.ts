@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { DeleteResult } from 'mongodb';
 import { Model } from 'mongoose';
 import { CreateEstateCategoryDto } from './dto/createEstateCategory.dto';
 import { UpdateEstateCategoryDto } from './dto/updateEstateCategory.dto';
@@ -13,25 +14,38 @@ export class EstateCategoryService {
   constructor(
     @InjectModel(EstateCategory.name)
     private estateCategoryModel: Model<EstateCategoryDocument>,
-  ) {}
+  ) { }
 
-  create(data: CreateEstateCategoryDto): Promise<any> {
+  async parentList(search: string = "") {
+    return (await this.estateCategoryModel
+      .find(
+        {
+          title: { $regex: search }
+        },
+        { title: 1, value: 1 }
+      )
+      .limit(20)
+    ).map((doc) => ({ title: doc.title, value: doc._id }))
+  }
+
+
+  create(data: CreateEstateCategoryDto) {
     return this.estateCategoryModel.create(data);
   }
 
-  findAll(): Promise<any> {
-    return this.estateCategoryModel.find().exec();
+  findAll() {
+    return this.estateCategoryModel.find().populate(["icon", "tags", "parent"]).exec();
   }
 
-  findOne(id: string): Promise<any> {
-    return this.estateCategoryModel.findById(id).exec();
+  findOne(id: string) {
+    return this.estateCategoryModel.findById(id).populate(["icon", "tags", "parent"]).exec();
   }
 
-  update(id: string, data: UpdateEstateCategoryDto): Promise<any> {
+  update(id: string, data: UpdateEstateCategoryDto) {
     return this.estateCategoryModel.findOneAndUpdate({ _id: id }, data).exec();
   }
 
-  remove(id: string): Promise<any> {
+  remove(id: string): Promise<DeleteResult> {
     return this.estateCategoryModel.deleteOne({ _id: id }).exec();
   }
 }
