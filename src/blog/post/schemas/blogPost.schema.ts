@@ -63,7 +63,9 @@ export class BlogPost extends Document {
   })
   office: any;
 
-  @Prop()
+  @Prop({
+    type: [String],
+  })
   tags: string[];
 
   @Prop({

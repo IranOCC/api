@@ -27,8 +27,7 @@ import { PhoneModule } from './phone/phone.module';
 import { MailModule } from './mail/mail.module';
 import { SmsModule } from './sms/sms.module';
 import { IconModule } from './icon/icon.module';
-import { TagService } from './tag/tag.service';
-import { TagModule } from './tag/tag.module';
+
 
 @Module({
   imports: [
@@ -62,7 +61,6 @@ import { TagModule } from './tag/tag.module';
     SettingModule,
     AwsModule,
     IconModule,
-    TagModule,
   ],
   controllers: [AppController],
   providers: [

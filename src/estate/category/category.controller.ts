@@ -18,10 +18,10 @@ import { UpdateEstateCategoryDto } from './dto/updateEstateCategory.dto';
 export class EstateCategoryController {
   constructor(private readonly estateCategoryService: EstateCategoryService) { }
 
-  @Get('parentList')
+  @Get(['assignList/:exclude', 'assignList/'])
   @Roles(RoleEnum.SuperAdmin)
-  assignList(@Query('search') search: string) {
-    return this.estateCategoryService.parentList(search);
+  assignList(@Param('id') id: string, @Query('search') search: string) {
+    return this.estateCategoryService.assignList(id, search);
   }
 
   @Post()

@@ -19,10 +19,9 @@ export class EstateCategory extends Document {
   icon: any;
 
   @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Tag',
+    type: [String],
   })
-  tags: any[];
+  tags: string[];
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,

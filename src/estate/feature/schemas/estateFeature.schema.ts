@@ -19,10 +19,9 @@ export class EstateFeature extends Document {
   icon: any;
 
   @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Tag',
+    type: [String],
   })
-  tags: any[];
+  tags: string[];
 
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
@@ -31,6 +30,6 @@ export class EstateFeature extends Document {
   categories: any[];
 }
 
-// eslint-disable-next-line prettier/prettier
+
 export const EstateFeatureSchema = SchemaFactory.createForClass(EstateFeature);
 export type EstateFeatureDocument = HydratedDocument<EstateFeature>;

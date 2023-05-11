@@ -21,11 +21,11 @@ export class EstateDocumentTypeService {
   }
 
   findAll() {
-    return this.estateDocumentTypeModel.find().populate(["icon", "tags", "categories"]).exec();
+    return this.estateDocumentTypeModel.find().populate(["icon", "categories"]).exec();
   }
 
   findOne(id: string) {
-    return this.estateDocumentTypeModel.findById(id).populate(["icon", "tags", "categories"]).exec();
+    return this.estateDocumentTypeModel.findById(id).populate(["icon", "categories"]).exec();
   }
 
   update(id: string, data: UpdateEstateDocumentTypeDto) {

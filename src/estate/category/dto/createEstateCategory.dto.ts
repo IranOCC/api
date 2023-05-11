@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsMongoId, IsNotEmpty, IsOptional, MinLength, ValidateIf } from "class-validator";
+import { IsMongoId, IsNotEmpty, IsOptional, MinLength, } from "class-validator";
 import slugify from "slugify";
 
 export class CreateEstateCategoryDto {
@@ -9,9 +9,9 @@ export class CreateEstateCategoryDto {
     title: string;
 
     @ApiProperty()
-    @ValidateIf(o => !!o.title)
+    @IsNotEmpty()
     @Transform(({ value, obj }: { value: string, obj: any }) => {
-        const vv = value ? value : obj.title
+        const vv = value.length ? value : obj.title
         return slugify(vv, {
             replacement: "_",
             remove: undefined,

@@ -21,11 +21,11 @@ export class EstateFeatureService {
   }
 
   findAll() {
-    return this.estateFeatureModel.find().populate(["icon", "tags", "parent"]).exec();
+    return this.estateFeatureModel.find().populate(["icon", "parent"]).exec();
   }
 
   findOne(id: string) {
-    return this.estateFeatureModel.findById(id).populate(["icon", "tags", "parent"]).exec();
+    return this.estateFeatureModel.findById(id).populate(["icon", "parent"]).exec();
   }
 
   update(id: string, data: UpdateEstateFeatureDto) {

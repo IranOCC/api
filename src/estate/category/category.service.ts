@@ -16,10 +16,11 @@ export class EstateCategoryService {
     private estateCategoryModel: Model<EstateCategoryDocument>,
   ) { }
 
-  async parentList(search: string = "") {
+  async assignList(id: string, search: string = "") {
     return (await this.estateCategoryModel
       .find(
         {
+          _id: { $ne: id },
           title: { $regex: search }
         },
         { title: 1, value: 1 }
@@ -34,11 +35,14 @@ export class EstateCategoryService {
   }
 
   findAll() {
-    return this.estateCategoryModel.find().populate(["icon", "tags", "parent"]).exec();
+    return this.estateCategoryModel.find()
+      .populate(["icon", "parent"])
+      .exec();
   }
 
   findOne(id: string) {
-    return this.estateCategoryModel.findById(id).populate(["icon", "tags", "parent"]).exec();
+    return this.estateCategoryModel.findById(id).populate(["icon", "parent"]).exec();
+
   }
 
   update(id: string, data: UpdateEstateCategoryDto) {
@@ -49,3 +53,5 @@ export class EstateCategoryService {
     return this.estateCategoryModel.deleteOne({ _id: id }).exec();
   }
 }
+
+
