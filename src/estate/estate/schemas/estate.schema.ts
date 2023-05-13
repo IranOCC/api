@@ -73,12 +73,14 @@ export class Estate extends Document {
 
   @Prop({
     type: [String],
+    default: []
   })
   tags: string[];
 
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'EstateCategory',
+    default: []
   })
   categories: any[];
 
@@ -120,6 +122,7 @@ export class Estate extends Document {
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Storage',
+    default: []
   })
   gallery: any[];
 
@@ -144,6 +147,7 @@ export class Estate extends Document {
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'EstateFeature',
+    default: []
   })
   features: any[];
 

@@ -21,11 +21,11 @@ export class EstateFeatureService {
   }
 
   findAll() {
-    return this.estateFeatureModel.find().populate(["icon", "parent"]).exec();
+    return this.estateFeatureModel.find().populate(["icon", "categories"]).exec();
   }
 
   findOne(id: string) {
-    return this.estateFeatureModel.findById(id).populate(["icon", "parent"]).exec();
+    return this.estateFeatureModel.findById(id).populate(["icon", "categories"]).exec();
   }
 
   update(id: string, data: UpdateEstateFeatureDto) {
@@ -37,5 +37,28 @@ export class EstateFeatureService {
   }
 
 
+  // 
 
+  async assignList(cat: string[], search: string = "") {
+    const $query = {
+      $or: [
+        {
+          categories: { $size: 0 },
+        },
+        {
+          categories: { $in: cat },
+        }
+      ]
+    }
+    return (await this.estateFeatureModel
+      .find(
+        {
+          title: { $regex: search },
+          ...$query
+        },
+        { title: 1, value: 1 }
+      )
+      .limit(20)
+    ).map((doc) => ({ title: doc.title, value: doc._id }))
+  }
 }

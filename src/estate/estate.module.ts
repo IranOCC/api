@@ -17,6 +17,9 @@ import { EstateFeature, EstateFeatureSchema } from './feature/schemas/estateFeat
 import { EstateFeatureController } from './feature/feature.controller';
 import { EstateFeatureService } from './feature/feature.service';
 
+import { EstateType, EstateTypeSchema } from './type/schemas/estateType.schema';
+import { EstateTypeController } from './type/type.controller';
+import { EstateTypeService } from './type/type.service';
 
 @Module({
   imports: [
@@ -24,14 +27,17 @@ import { EstateFeatureService } from './feature/feature.service';
     MongooseModule.forFeature([{ name: EstateCategory.name, schema: EstateCategorySchema }]),
     MongooseModule.forFeature([{ name: EstateFeature.name, schema: EstateFeatureSchema }]),
     MongooseModule.forFeature([{ name: EstateDocumentType.name, schema: EstateDocumentTypeSchema }]),
+    MongooseModule.forFeature([{ name: EstateType.name, schema: EstateTypeSchema }]),
   ],
   controllers: [
+    EstateTypeController,
     EstateCategoryController,
     EstateFeatureController,
     EstateDocumentTypeController,
     EstateController,
   ],
   providers: [
+    EstateTypeService,
     EstateCategoryService,
     EstateFeatureService,
     EstateDocumentTypeService,

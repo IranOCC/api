@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { Roles } from 'src/auth/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
@@ -18,6 +19,14 @@ export class EstateDocumentTypeController {
   constructor(
     private readonly estateDocumentTypeService: EstateDocumentTypeService,
   ) { }
+
+  // ==
+  @Get('assignList')
+  @Roles(RoleEnum.SuperAdmin)
+  assignList(@Query('cat') cat: string[], @Query('search') search: string,) {
+    return this.estateDocumentTypeService.assignList(cat, search);
+  }
+  // ==
 
   @Post()
   @Roles(RoleEnum.SuperAdmin)
@@ -46,4 +55,6 @@ export class EstateDocumentTypeController {
   remove(@Param('id') id: string) {
     return this.estateDocumentTypeService.remove(id);
   }
+
+
 }

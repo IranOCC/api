@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { Roles } from 'src/auth/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
@@ -15,7 +16,16 @@ import { EstateFeatureService } from './feature.service';
 
 @Controller('estate/feature')
 export class EstateFeatureController {
-  constructor(private readonly estateFeatureService: EstateFeatureService) {}
+  constructor(private readonly estateFeatureService: EstateFeatureService) { }
+
+  // ==
+  @Get('assignList')
+  @Roles(RoleEnum.SuperAdmin)
+  assignList(@Query('cat') cat: string[], @Query('search') search: string,) {
+    return this.estateFeatureService.assignList(cat, search);
+  }
+  // ==
+
 
   @Post()
   @Roles(RoleEnum.SuperAdmin)

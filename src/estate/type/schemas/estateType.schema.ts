@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
 
-@Schema({ timestamps: true })
-export class EstateCategory extends Document {
-  @Prop({ required: true, })
+@Schema()
+export class EstateType extends Document {
+  @Prop({ required: true, trim: true })
   title: string;
 
   @Prop({ required: true, trim: true, unique: true, lowercase: true })
@@ -25,13 +25,13 @@ export class EstateCategory extends Document {
   tags: string[];
 
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
+    type: [mongoose.Schema.Types.ObjectId],
     ref: 'EstateCategory',
-    default: null
+    default: []
   })
-  parent: any;
+  categories: any[];
 }
 
 
-export const EstateCategorySchema = SchemaFactory.createForClass(EstateCategory);
-export type EstateCategoryDocument = HydratedDocument<EstateCategory>;
+export const EstateTypeSchema = SchemaFactory.createForClass(EstateType);
+export type EstateTypeDocument = HydratedDocument<EstateType>;

@@ -35,4 +35,29 @@ export class EstateDocumentTypeService {
   remove(id: string): Promise<DeleteResult> {
     return this.estateDocumentTypeModel.deleteOne({ _id: id }).exec();
   }
+
+  // 
+
+  async assignList(cat: string[], search: string = "") {
+    const $query = {
+      $or: [
+        {
+          categories: { $size: 0 },
+        },
+        {
+          categories: { $in: cat },
+        }
+      ]
+    }
+    return (await this.estateDocumentTypeModel
+      .find(
+        {
+          title: { $regex: search },
+          ...$query
+        },
+        { title: 1, value: 1 }
+      )
+      .limit(20)
+    ).map((doc) => ({ title: doc.title, value: doc._id }))
+  }
 }
