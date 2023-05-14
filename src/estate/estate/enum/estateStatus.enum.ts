@@ -1,6 +1,5 @@
-export enum EstateStatusEum {
+export enum EstateStatusEnum {
   Pending = 'Pending',
   Draft = 'Draft',
   Publish = 'Publish',
-  Delete = 'Delete',
 }

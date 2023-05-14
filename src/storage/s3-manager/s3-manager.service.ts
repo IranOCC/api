@@ -13,17 +13,13 @@ export class S3ManagerService {
 
 
     async upload(file: BufferedFile, key: string) {
-        try {
-            await this.s3.upload({
-                Bucket: process.env.S3_BUCKET,
-                ContentType: file.mimetype,
-                ContentEncoding: file.encoding,
-                ContentLength: file.size,
-                Key: key,
-                Body: file.buffer,
-            }).promise();
-        } catch (error) {
-            throw error
-        }
+        await this.s3.upload({
+            Bucket: process.env.S3_BUCKET,
+            ContentType: file.mimetype,
+            ContentEncoding: file.encoding,
+            ContentLength: file.size,
+            Key: key,
+            Body: file.buffer,
+        }).promise();
     }
 }

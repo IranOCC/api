@@ -1,17 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
-import { EstateStatusEum } from '../enum/estateStatus.enum';
-import { EstateVisibilityEum } from '../enum/estateVisibility.enum';
+import { EstateStatusEnum } from '../enum/estateStatus.enum';
+import { EstateVisibilityEnum } from '../enum/estateVisibility.enum';
 
 @Schema({ timestamps: true })
 export class Estate extends Document {
-  @Prop({ required: true, trim: true })
+  @Prop({ type: String, required: true, trim: true })
   title: string;
 
-  @Prop()
+  @Prop({ type: String })
   content: string;
 
-  @Prop()
+  @Prop({ type: String })
   excerpt: string;
 
   @Prop({ required: true, trim: true, unique: true })
@@ -25,27 +25,23 @@ export class Estate extends Document {
 
   @Prop({
     type: String,
-    enum: EstateStatusEum,
-    default: EstateStatusEum.Pending,
+    enum: EstateStatusEnum,
+    default: EstateStatusEnum.Pending,
   })
-  status: EstateStatusEum;
+  status: EstateStatusEnum;
 
   @Prop({
     type: String,
-    enum: EstateVisibilityEum,
-    default: EstateVisibilityEum.Public,
+    enum: EstateVisibilityEnum,
+    default: EstateVisibilityEnum.Public,
   })
-  visibility: EstateVisibilityEum;
-
-  @Prop({ select: false })
-  password: string;
+  visibility: EstateVisibilityEnum;
 
   @Prop({ default: false })
   pinned: boolean;
 
   @Prop({ default: Date.now })
   publishedAt: Date;
-
 
   @Prop({ select: false, })
   deletedAt: Date;
@@ -78,11 +74,18 @@ export class Estate extends Document {
   tags: string[];
 
   @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'EstateCategory',
-    default: []
+    default: null
   })
-  categories: any[];
+  category: any;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EstateType',
+    default: null
+  })
+  type: any;
 
   // @@@@
 
@@ -153,28 +156,28 @@ export class Estate extends Document {
 
   // ####
 
-  @Prop({ type: Number })
+  @Prop({ type: Number, default: null })
   constructionYear: number;
 
-  @Prop({ type: Number })
+  @Prop({ type: Number, default: null })
   roomsCount: number;
 
-  @Prop({ type: Number })
+  @Prop({ type: Number, default: null })
   mastersCount: number;
 
-  @Prop({ type: Number })
+  @Prop({ type: Number, default: null })
   buildingArea: number;
 
-  @Prop({ type: Number })
+  @Prop({ type: Number, default: null })
   floorsCount: number;
 
-  @Prop({ type: Number })
+  @Prop({ type: Number, default: null })
   unitsCount: number;
 
-  @Prop({ type: Number })
+  @Prop({ type: Number, default: null })
   floor: number;
 
-  @Prop({ type: Boolean })
+  @Prop({ type: Boolean, default: null })
   withOldBuilding: boolean;
 }
 

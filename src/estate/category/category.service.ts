@@ -25,7 +25,6 @@ export class EstateCategoryService {
         },
         { title: 1, value: 1 }
       )
-      .limit(20)
     ).map((doc) => ({ title: doc.title, value: doc._id }))
   }
 
@@ -35,14 +34,11 @@ export class EstateCategoryService {
   }
 
   findAll() {
-    return this.estateCategoryModel.find()
-      .populate(["icon", "parent"])
-      .exec();
+    return this.estateCategoryModel.find().populate(["icon", "parent"]).exec();
   }
 
   findOne(id: string) {
     return this.estateCategoryModel.findById(id).populate(["icon", "parent"]).exec();
-
   }
 
   update(id: string, data: UpdateEstateCategoryDto) {

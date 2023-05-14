@@ -37,19 +37,19 @@ export class StorageService {
       subject: subject,
       uploadedBy: user,
     })
+
     return storage
   }
 
 
-  // async list(perPage = 5, page = 1) {
-  //   return this.storageModel
-  //     .find()
-  //     .limit(perPage)
-  //     .skip(perPage * page)
-  //     .sort({
-  //       createdAt: 'asc',
-  //     });
-  // }
+  async findAll() {
+    return this.storageModel.find().exec()
+    // .limit(perPage)
+    // .skip(perPage * page)
+    // .sort({
+    //   createdAt: 'asc',
+    // });
+  }
 
   // async item(id: string) {
   //   return this.storageModel.findById(id);

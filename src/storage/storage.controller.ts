@@ -21,41 +21,56 @@ import { RoleEnum } from 'src/user/enum/role.enum';
 export class StorageController {
   constructor(private storageService: StorageService) { }
 
-  @Post("users")
+  @Post("user")
   @Roles(RoleEnum.User)
   @UseInterceptors(FileInterceptor('file'))
   async uploadUsersFiles(@UploadedFile() file: BufferedFile, @Request() { user }) {
-    return this.storageService.upload(file, "users", user)
+    return this.storageService.upload(file, "user", user)
   }
 
-  @Post("offices")
-  @Roles(RoleEnum.User)
+  @Post("office")
+  @Roles(RoleEnum.Agent)
   @UseInterceptors(FileInterceptor('file'))
   async uploadOfficesFiles(@UploadedFile() file: BufferedFile, @Request() { user }) {
-    return this.storageService.upload(file, "offices", user)
+    return this.storageService.upload(file, "office", user)
   }
 
-  @Post("estates")
+  @Post("estate")
   @Roles(RoleEnum.Agent)
-  @Public()
   @UseInterceptors(FileInterceptor('file'))
   async uploadEstatesFiles(@UploadedFile() file: BufferedFile, @Request() { user }) {
-    return this.storageService.upload(file, "estates", user)
+    return this.storageService.upload(file, "estate", user)
   }
 
-  @Post("posts")
+  @Post("post")
   @Roles(RoleEnum.Author)
-  @Public()
   @UseInterceptors(FileInterceptor('file'))
   async uploadPostsFiles(@UploadedFile() file: BufferedFile, @Request() { user }) {
-    return this.storageService.upload(file, "posts", user)
+    return this.storageService.upload(file, "post", user)
   }
 
-  @Post("others")
+  @Post("other")
   @Roles(RoleEnum.SuperAdmin)
-  @Public()
   @UseInterceptors(FileInterceptor('file'))
   async uploadOthersFiles(@UploadedFile() file: BufferedFile, @Request() { user }) {
-    return this.storageService.upload(file, "others", user)
+    return this.storageService.upload(file, "other", user)
   }
+
+  // ==
+  @Get()
+  findAll() {
+    return this.storageService.findAll();
+  }
+
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.storageService.findOne(id);
+  // }
+
+  // @Delete(':id')
+  // @Roles(RoleEnum.SuperAdmin)
+  // remove(@Param('id') id: string) {
+  //   return this.storageService.remove(id);
+  // }
+
 }

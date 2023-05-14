@@ -32,6 +32,9 @@ export class Storage {
     select: false,
   })
   uploadedBy: any;
+
+  @Prop({ type: Date, select: false, })
+  deletedAt: Date;
 }
 
 export const StorageSchema = SchemaFactory.createForClass(Storage);

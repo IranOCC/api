@@ -58,7 +58,6 @@ export class EstateFeatureService {
         },
         { title: 1, value: 1 }
       )
-      .limit(20)
     ).map((doc) => ({ title: doc.title, value: doc._id }))
   }
 }

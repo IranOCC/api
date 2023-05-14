@@ -1,5 +1,3 @@
-export enum EstateVisibilityEum {
+export enum EstateVisibilityEnum {
   Public = 'Public',
-  Private = 'Private',
-  Protect = 'Protect',
 }

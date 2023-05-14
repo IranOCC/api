@@ -3,8 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateEstateDto } from './dto/createEstate.dto';
 import { UpdateEstateDto } from './dto/updateEstate.dto';
-import { EstateStatusEum } from './enum/estateStatus.enum';
-import { EstateVisibilityEum } from './enum/estateVisibility.enum';
+import { EstateStatusEnum } from './enum/estateStatus.enum';
+import { EstateVisibilityEnum } from './enum/estateVisibility.enum';
 import { Estate, EstateDocument } from './schemas/estate.schema';
 @Injectable()
 export class EstateService {
@@ -14,8 +14,8 @@ export class EstateService {
 
   statics(subject: string) {
     return {
-      status: EstateStatusEum,
-      visibility: EstateVisibilityEum,
+      status: EstateStatusEnum,
+      visibility: EstateVisibilityEnum,
     }[subject]
   }
 
