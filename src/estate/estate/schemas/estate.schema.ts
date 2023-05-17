@@ -110,8 +110,16 @@ export class Estate extends Document {
   @Prop({ type: String, })
   address: string;
 
-  @Prop({ index: '2dsphere' })
-  location: [number, number];
+  @Prop({
+    index: '2dsphere',
+    set: (value) => {
+      return value.split(",").map((v: string) => +v)
+    },
+    get: (value) => {
+      return value.join(",")
+    }
+  })
+  location: [number, number] | string;
 
   @Prop({ type: Number })
   price: number;

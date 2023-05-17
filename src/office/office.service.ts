@@ -50,7 +50,7 @@ export class OfficeService {
   }
 
   findAll(): Promise<Office[]> {
-    return this.officeModel.find().exec();
+    return this.officeModel.find().populate(['members']).exec();
   }
 
   findOne(id: string) {
@@ -108,6 +108,7 @@ export class OfficeService {
     }
   }
 
+
   // ======> management
   async setManagement(office: Office, management: User | string) {
 
@@ -144,7 +145,15 @@ export class OfficeService {
 
 
 
-
-
-
+  async assignList(search: string = "") {
+    return (await this.officeModel
+      .find(
+        {
+          name: { $regex: search }
+        },
+        { phone: 0, email: 0, logo: 0, }
+      )
+      .limit(20)
+    ).map((doc) => ({ title: doc.name, value: doc._id }))
+  }
 }

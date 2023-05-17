@@ -22,6 +22,14 @@ export class OfficeController {
     private readonly memberService: MemberService,
   ) { }
 
+  @Get('assignList')
+  @Roles(RoleEnum.SuperAdmin)
+  assignList(@Query('search') search: string) {
+    return this.officeService.assignList(search);
+  }
+
+  // crud
+
   @Post()
   @Roles(RoleEnum.Admin)
   create(@Body() data: CreateOfficeDto) {
@@ -74,5 +82,6 @@ export class OfficeController {
     const office = await this.officeService.getOrCheck(id)
     return await this.memberService.remove(office, members)
   }
+
 
 }

@@ -22,7 +22,7 @@ const $ = 'validation.EmailDto';
 export class EmailDto {
   @ApiProperty()
   @Transform(({ value }) => value.toLowerCase())
-  @IsEmail({}, { message: i18nVM(`${$}.email.IsEmail`) })
+  @IsEmail()
   value: string;
 
   @ApiPropertyOptional()

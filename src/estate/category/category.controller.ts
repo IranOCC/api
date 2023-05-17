@@ -30,6 +30,7 @@ export class EstateCategoryController {
     return this.estateCategoryService.create(data);
   }
 
+
   @Get()
   findAll() {
     return this.estateCategoryService.findAll();

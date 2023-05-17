@@ -47,8 +47,16 @@ export class User extends Document {
   @Prop({ type: String, })
   address: string;
 
-  @Prop({ index: '2dsphere' })
-  location: [number, number];
+  @Prop({
+    index: '2dsphere',
+    set: (value) => {
+      return value.split(",").map((v: string) => +v)
+    },
+    get: (value) => {
+      return value.join(",")
+    }
+  })
+  location: [number, number] | string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
@@ -138,20 +146,4 @@ UserSchema.virtual('fullName')
     this.lastName = nameParts[nameParts.length - 1];
   });
 
-// UserSchema.virtual('isManagement', {
-//   ref: "Office",
-//   localField: "_id",
-//   foreignField: "management",
-//   justOne: true,
-// })
-
-UserSchema.virtual('phoneNumber')
-  .get(function () {
-    return this.phone ? this.phone.value : null;
-  })
-
-UserSchema.virtual('emailAddress')
-  .get(function () {
-    return this.email ? this.email.value : null;
-  })
 

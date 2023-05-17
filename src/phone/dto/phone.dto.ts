@@ -1,17 +1,8 @@
 import {
-  IsEmail,
   IsPhoneNumber,
   IsOptional,
-  MinLength,
-  IsNotEmpty,
-  IsMongoId,
-  IsInstance,
-  IsDefined,
-  IsNotEmptyObject,
-  ValidateNested
 } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
-import { Storage } from "src/storage/schemas/storage.schema"
+import { Transform, } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from '../../config/main';
@@ -25,9 +16,7 @@ export class PhoneDto {
     if (value.length === 10) value = '0' + value;
     return value.replace(/^0/, PHONE_COUNTRY_CODE);
   })
-  @IsPhoneNumber(PHONE_COUNTRY_REGION, {
-    message: i18nVM(`${$}.phone.IsPhoneNumber`),
-  })
+  @IsPhoneNumber(PHONE_COUNTRY_REGION)
   value: string;
 
   @ApiPropertyOptional()

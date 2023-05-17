@@ -6,8 +6,9 @@ import {
   IsEnum,
   IsNotEmpty,
   ValidateNested,
+  IsLatLong,
 } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
+import { Transform, Type, } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from '../../config/main';
@@ -63,7 +64,8 @@ export class CreateUserDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  location: [number, number];
+  @IsLatLong()
+  location: string;
 
   @ApiPropertyOptional()
   @IsOptional()

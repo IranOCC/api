@@ -70,6 +70,7 @@ export class UserService {
 
   async create(data: CreateUserDto): Promise<any> {
     const { phone, email, ...modelData } = data
+
     const _user = new this.userModel(modelData)
 
     if (phone) await this.setPhone(_user, phone)
@@ -84,11 +85,16 @@ export class UserService {
   }
 
   findOne(id: string) {
-    return this.userModel.findById(id);
+    return this.userModel.findById(id).populate(['phone']);
   }
 
   async update(id: string, data: UpdateUserDto): Promise<any> {
     const { phone, email, ...modelData } = data
+
+    // modelData.location = modelData.location.split(",").map((v: string) => +v)
+    console.log(modelData);
+
+
     const _user = await this.userModel.findById(id)
 
     if (phone) await this.setPhone(_user, phone)

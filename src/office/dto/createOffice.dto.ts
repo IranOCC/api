@@ -4,7 +4,8 @@ import {
   MinLength,
   IsNotEmpty,
   IsMongoId,
-  ValidateNested
+  ValidateNested,
+  IsLatLong
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { Storage } from "src/storage/schemas/storage.schema"
@@ -65,7 +66,8 @@ export class CreateOfficeDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  location: [number, number];
+  @IsLatLong()
+  location: string;
 
   @ApiPropertyOptional()
   @IsOptional()

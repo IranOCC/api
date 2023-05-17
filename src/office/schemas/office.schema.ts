@@ -56,8 +56,16 @@ export class Office extends Document {
   @Prop({ type: String, })
   address: string;
 
-  @Prop({ index: '2dsphere' })
-  location: [number, number];
+  @Prop({
+    index: '2dsphere',
+    set: (value) => {
+      return value.split(",").map((v: string) => +v)
+    },
+    get: (value) => {
+      return value.join(",")
+    }
+  })
+  location: [number, number] | string;
 
   @Prop({ default: false })
   verified: boolean;
@@ -85,21 +93,12 @@ OfficeSchema.set('toJSON', {
   getters: true,
 });
 
-OfficeSchema.virtual('phoneNumber')
-  .get(function () {
-    return this.phone ? this.phone.value : null;
-  })
-
-OfficeSchema.virtual('emailAddress')
-  .get(function () {
-    return this.email ? this.email.value : null;
-  })
-
 OfficeSchema.virtual('membersWithManagement', {
   ref: 'User',
   localField: 'members',
   foreignField: '_id',
   get: function () {
+    if (!this.members) return undefined
     return this.members.map((member) => {
       return {
         isManagement: member._id.equals(this.management._id),
@@ -114,6 +113,7 @@ OfficeSchema.virtual('membersCount', {
   localField: 'members',
   foreignField: '_id',
   get: function () {
+    if (!this.members) return undefined
     return this.members.length
   },
 })

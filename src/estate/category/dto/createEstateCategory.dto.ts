@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsMongoId, IsNotEmpty, IsOptional, MinLength, } from "class-validator";
+import { IsMongoId, IsNotEmpty, IsOptional, IsString, MinLength, } from "class-validator";
 import slugify from "slugify";
 
 export class CreateEstateCategoryDto {
@@ -35,6 +35,7 @@ export class CreateEstateCategoryDto {
 
     @ApiPropertyOptional()
     @IsOptional()
+    @IsString({ each: true })
     tags: string[];
 
     @ApiPropertyOptional()
