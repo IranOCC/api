@@ -90,11 +90,6 @@ export class UserService {
 
   async update(id: string, data: UpdateUserDto): Promise<any> {
     const { phone, email, ...modelData } = data
-
-    // modelData.location = modelData.location.split(",").map((v: string) => +v)
-    console.log(modelData);
-
-
     const _user = await this.userModel.findById(id)
 
     if (phone) await this.setPhone(_user, phone)

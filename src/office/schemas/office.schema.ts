@@ -58,11 +58,13 @@ export class Office extends Document {
 
   @Prop({
     index: '2dsphere',
+    type: [Number, Number],
     set: (value) => {
-      return value.split(",").map((v: string) => +v)
+      if (!value?.length) return null
+      return value?.split(",")?.map((v: string) => +v)
     },
     get: (value) => {
-      return value.join(",")
+      return value?.join(",")
     }
   })
   location: [number, number] | string;

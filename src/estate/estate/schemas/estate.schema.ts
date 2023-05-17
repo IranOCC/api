@@ -112,11 +112,13 @@ export class Estate extends Document {
 
   @Prop({
     index: '2dsphere',
+    type: [Number, Number],
     set: (value) => {
-      return value.split(",").map((v: string) => +v)
+      if (!value?.length) return null
+      return value?.split(",")?.map((v: string) => +v)
     },
     get: (value) => {
-      return value.join(",")
+      return value?.join(",")
     }
   })
   location: [number, number] | string;
@@ -191,3 +193,14 @@ export class Estate extends Document {
 
 export const EstateSchema = SchemaFactory.createForClass(Estate);
 export type EstateDocument = HydratedDocument<Estate>;
+
+
+
+EstateSchema.set('toObject', {
+  virtuals: true,
+  getters: true,
+});
+EstateSchema.set('toJSON', {
+  virtuals: true,
+  getters: true,
+});

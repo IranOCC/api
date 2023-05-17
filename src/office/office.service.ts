@@ -39,6 +39,10 @@ export class OfficeService {
 
   async update(id: string, data: UpdateOfficeDto): Promise<any> {
     const { phone, email, management, ...modelData } = data
+
+    console.log(modelData);
+
+
     const _office: Office = await this.officeModel.findById(id)
     // 
     if (phone) await this.setPhone(_office, phone)
