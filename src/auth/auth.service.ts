@@ -1,47 +1,29 @@
 import {
-  ForbiddenException,
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
 } from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/schemas/user.schema';
-
-import { PasswordResetConfirmDto } from './dto/passwordResetConfirm.dto';
-import { PasswordResetRequestDto } from './dto/passwordResetRequest.dto';
-import { RegistrationDto } from './dto/registration.dto';
-
-import { TokenConfirmEmailDto } from '../email/dto/tokenConfirmEmail.dto';
-import { TokenRequestEmailDto } from '../email/dto/tokenRequestEmail.dto';
-import { TokenConfirmPhoneDto } from '../phone/dto/tokenConfirmPhone.dto';
-import { TokenRequestPhoneDto } from '../phone/dto/tokenRequestPhone.dto';
-
 import { UserService } from '../user/user.service';
-import { PasswordResetMethods } from './enum/passwordResetMethod.enum';
-
-import { useForEnum } from './enum/useFor.enum';
-import { EmailService } from '../email/email.service';
-import { PhoneService } from '../phone/phone.service';
 import { PhoneOtpDto } from './dto/phoneOtp.dto';
-import { SmsService } from 'src/sms/sms.service';
-import { PhoneOtpConfirm } from './dto/phoneOtpConfirm.dto';
+import { PhoneOtpConfirmDto } from './dto/phoneOtpConfirm.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userService: UserService,
-    private emailService: EmailService,
-    private phoneService: PhoneService,
   ) { }
 
+  // =============================> login or register by phone & otp
+  // * login or create
   async phoneOtp(data: PhoneOtpDto) {
     // find or create 
     const user = await this.userService.findOrCreateByPhone(data);
     // send otp
     try {
-      await this.phoneService.sendOtpCode(user.phone.value)
+      await this.userService.sendPhoneOtpCode(user)
     } catch (error) {
       throw new InternalServerErrorException({ message: JSON.stringify(error) })
     }
@@ -49,36 +31,30 @@ export class AuthService {
     return { phone: user.phone.value };
   }
 
-  async loginByOtp(data: PhoneOtpConfirm) {
+  // * confirm & login
+  async loginByOtp(data: PhoneOtpConfirmDto) {
     // confirm otp
-    const isValid = await this.phoneService.confirmOtpCode(data)
-    if (!isValid) {
-      throw new ForbiddenException({ message: "Token is wrong" })
-    }
-
-    const phoneQ = await this.phoneService.find(data.phone, useForEnum.User)
-    const user = await this.userService.findOne(phoneQ.user).select(["_id", "roles", "firstName", "lastName", "fullName", "emailAddress", "phoneNumber", "avatar"])
-    const payload = user.toJSON();
+    const user = await this.userService.findOrCreateByPhone({ phone: data.phone });
+    await this.userService.confirmPhoneOtpCode(user, data.token)
+    // get login
+    const payload = (await this.userService.getUserPayload(user._id)).toJSON()
     const accessToken = this.jwtService.sign(payload, { expiresIn: process.env.JWT_EXPIRE_IN });
     return {
       user,
       accessToken
     };
   }
+  // =============================> login or register by phone & otp
 
 
 
+  // =============================> after login
+  // * get user login
   async getMe(user: User) {
-    const _user = await this.userService.findOne(user._id)
-      .select(["_id", "roles", "firstName", "lastName", "fullName", "emailAddress", "phoneNumber", "avatar"])
-
+    const _user = await this.userService.getUserPayload(user._id)
     return _user as User;
   }
-
-  async registrationPhone(data: RegistrationDto) {
-    // return await this.userService.create(data);
-  }
-
+  // =============================> after login
 
 
 

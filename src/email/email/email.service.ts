@@ -1,20 +1,15 @@
 import { forwardRef, Inject, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { TokenConfirmEmailDto } from './dto/tokenConfirmEmail.dto';
-import { TokenRequestEmailDto } from './dto/tokenRequestEmail.dto';
-import { MUST_EMAIL_VERIFY } from '../config/main';
-import { EmailAddress, EmailAddressDocument } from './schemas/email.schema';
-import { User } from '../user/schemas/user.schema';
-import { Office } from '../office/schemas/office.schema';
-
 import * as speakeasy from 'speakeasy';
-import moment from 'moment';
-import { useForEnum } from '../auth/enum/useFor.enum';
 import { MailService } from '../mail/mail.service';
 import { UserService } from 'src/user/user.service';
+import { useForEnum } from 'src/auth/enum/useFor.enum';
+import { Office } from 'src/office/schemas/office.schema';
 import { GetMailLogs } from './dto/getMailLogs.dto';
 import { SendMailDto } from './dto/sendMail.dto';
+import { EmailAddress, EmailAddressDocument } from './schemas/email.schema';
+import { User } from 'src/user/schemas/user.schema';
 
 @Injectable()
 export class EmailService {
@@ -25,8 +20,10 @@ export class EmailService {
   ) { }
 
 
+  // * setup email
   async setup(value: string, useFor: useForEnum = useForEnum.User, owner: User | Office, verified = false): Promise<any> {
     const check = await this.model.findOne({ value }).select(["value", "verified", "user", "office"]).populate(['office', 'user']);
+
     let _query: EmailAddress;
 
     if (check) {

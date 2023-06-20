@@ -1,36 +1,36 @@
-import { IsOptional, IsPhoneNumber, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsMongoId, IsNotEmpty, IsOptional } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
-import { Transform } from 'class-transformer';
-import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from '../../config/main';
 
-const $ = 'validation.SendSmsDto';
 
 export class SendSmsDto {
   @ApiProperty()
-  @IsString({ message: i18nVM(`${$}.text.IsString`) })
+  @IsNotEmpty({ message: i18nVM('validation.IsNotEmpty') })
   text: string;
 
   @ApiProperty()
-  @IsOptional()
-  @Transform(({ value }) => {
-    if (value.length === 10) value = '0' + value;
-    return value.replace(/^0/, PHONE_COUNTRY_CODE);
-  })
-  @IsPhoneNumber(PHONE_COUNTRY_REGION, {
-    message: i18nVM(`${$}.phone.IsPhoneNumber`),
-  })
-  phoneNumber: string;
+  @IsNotEmpty({ message: i18nVM('validation.IsNotEmpty') })
+  subject: string;
 
   @ApiProperty()
-  @IsOptional()
-  phoneID: string;
+  @IsMongoId({ message: i18nVM('validation.IsMongoId') })
+  subjectID: string;
 
-  @ApiProperty()
+
+
+
+  @ApiPropertyOptional()
   @IsOptional()
+  @IsMongoId({ message: i18nVM('validation.IsMongoId') })
+  userID: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsMongoId({ message: i18nVM('validation.IsMongoId') })
   officeID: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
-  userID: string;
+  @IsMongoId({ message: i18nVM('validation.IsMongoId') })
+  phoneID: string;
 }

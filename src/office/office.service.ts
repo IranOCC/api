@@ -2,8 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { useForEnum } from 'src/auth/enum/useFor.enum';
-import { EmailDto } from 'src/email/dto/email.dto';
-import { EmailService } from 'src/email/email.service';
+import { EmailDto } from 'src/email/email/dto/email.dto';
+import { EmailService } from 'src/email/email/email.service';
 import { PhoneDto } from 'src/phone/dto/phone.dto';
 import { PhoneService } from 'src/phone/phone.service';
 import { User } from 'src/user/schemas/user.schema';
@@ -83,12 +83,11 @@ export class OfficeService {
       office.phone = phoneID
     } catch (error) {
       throw new BadRequestException({
-        errors: [
-          {
-            property: "phone.value",
-            constraints: { "IsAlreadyExists": "این شماره قبلا ثبت شده است" }
+        errors: {
+          "phone.value": {
+            "IsAlreadyExists": "این شماره قبلا ثبت شده است"
           }
-        ]
+        }
       })
     }
   }
@@ -99,12 +98,11 @@ export class OfficeService {
       office.email = emailID
     } catch (error) {
       throw new BadRequestException({
-        errors: [
-          {
-            property: "email.value",
-            constraints: { "IsAlreadyExists": "این ایمیل قبلا ثبت شده است" }
+        errors: {
+          "email.value": {
+            "IsAlreadyExists": "این ایمیل قبلا ثبت شده است"
           }
-        ]
+        }
       })
     }
   }

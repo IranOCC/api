@@ -1,18 +1,19 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 
 import { User, UserDocument } from './schemas/user.schema';
 
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
-import { PhoneService } from '../phone/phone.service';
-import { EmailService } from '../email/email.service';
 import { PhoneOtpDto } from 'src/auth/dto/phoneOtp.dto';
 import { RoleEnum } from './enum/role.enum';
 import { useForEnum } from 'src/auth/enum/useFor.enum';
+import { EmailDto } from 'src/email/email/dto/email.dto';
+import { EmailService } from 'src/email/email/email.service';
+import { PhoneService } from 'src/phone/phone.service';
 import { PhoneDto } from 'src/phone/dto/phone.dto';
-import { EmailDto } from 'src/email/dto/email.dto';
+import { FieldAlreadyExists } from 'src/utils/error';
 @Injectable()
 export class UserService {
   constructor(
@@ -21,27 +22,53 @@ export class UserService {
     private emailService: EmailService,
   ) { }
 
-  // ok
+
+  // *
   async findOrCreateByPhone({ phone }: PhoneOtpDto): Promise<User> {
     let user: User
     try {
       const phoneQ = await this.phoneService.find(phone, useForEnum.User)
-      user = await this.userModel.findById(phoneQ.user)
+      user = await this.userModel.findById(phoneQ.user).select(["_id", "roles", "firstName", "lastName", "fullName", "avatar"])
       return user
     } catch (error) {
-      const userData = {
-        active: true,
-        roles: [RoleEnum.User],
-      } as CreateUserDto
+      const userData = { active: true, roles: [RoleEnum.User] } as CreateUserDto
       user = new this.userModel(userData)
-      const phoneID = await this.phoneService.setup(phone, useForEnum.User, user)
-      user.phone = phoneID
-      await user.save()
-      return user
+      try {
+        const phoneID = await this.phoneService.setup(phone, useForEnum.User, user)
+        user.phone = phoneID
+        await user.save()
+        return user
+      } catch (error) {
+        FieldAlreadyExists("phone")
+      }
     }
   }
 
+  // *
+  async sendPhoneOtpCode(user: User) {
+    return await this.phoneService.sendOtpCode(user.phone.value)
+  }
+
+
+  // *
+  async confirmPhoneOtpCode(user: User, token: string) {
+    const isValid = await this.phoneService.confirmOtpCode({ phone: user.phone.value, token })
+    if (!isValid) {
+      throw new ForbiddenException({ message: "Token is wrong" })
+    }
+  }
+
+
+  // *
+  async getUserPayload(id: string) {
+    return await this.findOne(id)
+      .select(["_id", "roles", "firstName", "lastName", "fullName", "avatar"])
+  }
+
+
+
   async assignList(search: string = "") {
+    if (!search.length) return []
     return (await this.userModel
       .find(
         {
@@ -113,31 +140,24 @@ export class UserService {
       const phoneID = await this.phoneService.setup(phone.value, useForEnum.User, user, phone.verified)
       user.phone = phoneID
     } catch (error) {
-      throw new BadRequestException({
-        errors: [
-          {
-            property: "phone.value",
-            constraints: { "IsAlreadyExists": "این شماره قبلا ثبت شده است" }
-          }
-        ]
-      })
+      FieldAlreadyExists("phone.value")
     }
   }
   // ======> email
   async setEmail(user: User, email: EmailDto) {
-    try {
-      const emailID = await this.emailService.setup(email.value, useForEnum.User, user, email.verified)
-      user.email = emailID
-    } catch (error) {
-      throw new BadRequestException({
-        errors: [
-          {
-            property: "email.value",
-            constraints: { "IsAlreadyExists": "این ایمیل قبلا ثبت شده است" }
-          }
-        ]
-      })
-    }
+    // try {
+    //   const emailID = await this.emailService.setup(email.value, useForEnum.User, user, email.verified)
+    //   user.email = emailID
+    // } catch (error) {
+    //   throw new BadRequestException({
+    //     errors: [
+    //       {
+    //         property: "email.value",
+    //         constraints: { "IsAlreadyExists": "این ایمیل قبلا ثبت شده است" }
+    //       }
+    //     ]
+    //   })
+    // }
   }
 
 

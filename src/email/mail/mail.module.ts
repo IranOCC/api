@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { MailController } from './mail.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { EmailModule } from 'src/email/email.module';
-import { MailLog, MailLogSchema } from './schemas/mailLog.schema';
+import { MailLog, MailLogSchema } from './schemas/mail_log.schema';
 
 @Module({
   imports: [

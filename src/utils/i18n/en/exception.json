@@ -1,0 +1,5 @@
+{
+    "UnauthorizedException": "You need to login or register to perform this action",
+    "ForbiddenException": "You don't have necessary access to perform this action",
+    "NotFoundException": "The route not found"
+}

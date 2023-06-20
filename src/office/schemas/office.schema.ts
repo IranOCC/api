@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
-import { EmailAddress } from '../../email/schemas/email.schema';
+import { EmailAddress } from '../../email/email/schemas/email.schema';
 import { PhoneNumber } from '../../phone/schemas/phone.schema';
 
 @Schema({ timestamps: true })

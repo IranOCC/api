@@ -1,31 +1,33 @@
-import { Module } from '@nestjs/common';
+import * as path from 'path';
+
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { HeaderResolver, I18nModule, QueryResolver, } from 'nestjs-i18n';
+import { APP_GUARD } from '@nestjs/core';
+
+import { MongoModule } from './mongo/mongo.module';
+
+// app
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
-import { StorageModule } from './storage/storage.module';
-import { UserModule } from './user/user.module';
+
+// auth
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/roles.guard';
-import { MongoModule } from './mongo/mongo.module';
-import * as path from 'path';
-import {
-  // AcceptLanguageResolver,
-  // CookieResolver,
-  // HeaderResolver,
-  I18nModule,
-  QueryResolver,
-} from 'nestjs-i18n';
+
+// modules
+import { StorageModule } from './storage/storage.module';
+import { UserModule } from './user/user.module';
 import { EstateModule } from './estate/estate.module';
-import { OfficeModule } from './office/office.module';
+// import { OfficeModule } from './office/office.module';
 import { BlogModule } from './blog/blog.module';
 import { SettingModule } from './setting/setting.module';
 import { AwsModule } from './aws/aws.module';
-import { EmailModule } from './email/email.module';
-import { PhoneModule } from './phone/phone.module';
-import { MailModule } from './mail/mail.module';
-import { SmsModule } from './sms/sms.module';
+// import { EmailModule } from './email/email.module';
+// import { PhoneModule } from './phone/phone.module';
+// import { MailModule } from './mail/mail.module';
+// import { SmsModule } from './phone/sms/sms.module';
 import { IconModule } from './icon/icon.module';
 
 
@@ -36,26 +38,23 @@ import { IconModule } from './icon/icon.module';
     I18nModule.forRoot({
       fallbackLanguage: 'fa',
       loaderOptions: {
-        path: path.join(__dirname, '/i18n/'),
+        path: path.join(__dirname, '/utils/i18n/'),
         watch: true,
         includeSubfolders: true,
       },
-      // viewEngine: 'hbs',
       resolvers: [
         new QueryResolver(['lang', 'l']),
-        // new HeaderResolver(['x-custom-lang']),
-        // new CookieResolver(),
-        // AcceptLanguageResolver,
+        new HeaderResolver(['x-client-lang'])
       ],
     }),
     AuthModule,
     UserModule,
-    PhoneModule,
-    SmsModule,
-    EmailModule,
-    MailModule,
+    // PhoneModule,
+    // SmsModule,
+    // EmailModule,
+    // MailModulegetOrCheck,
     StorageModule,
-    OfficeModule,
+    // OfficeModule,
     EstateModule,
     BlogModule,
     SettingModule,
@@ -75,4 +74,8 @@ import { IconModule } from './icon/icon.module';
     },
   ],
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    // consumer.apply(LoggerMiddleware)
+  }
+}

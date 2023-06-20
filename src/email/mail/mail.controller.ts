@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
 import { Roles } from 'src/auth/roles.decorator';
-import { GetMailLogs } from 'src/email/dto/getMailLogs.dto';
-import { SendMailDto } from 'src/email/dto/sendMail.dto';
-import { EmailService } from 'src/email/email.service';
 import { RoleEnum } from 'src/user/enum/role.enum';
+import { GetMailLogs } from '../email/dto/getMailLogs.dto';
+import { SendMailDto } from '../email/dto/sendMail.dto';
+import { EmailService } from '../email/email.service';
 
 @Controller('mail')
 export class MailController {

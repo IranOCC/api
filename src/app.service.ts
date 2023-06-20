@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  homeAPI(): string {
-    return 'IRANOCC-api.v1.0';
+  home(): string {
+    return 'IranOcc API V1.0';
   }
 }

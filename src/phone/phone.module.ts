@@ -1,21 +1,27 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { SmsModule } from 'src/sms/sms.module';
-import { PhoneNumber, PhoneNumberSchema } from '../phone/schemas/phone.schema';
-import { PhoneService } from './phone.service';
-import { PhoneController } from './phone.controller';
+
+import { PhoneNumber, PhoneNumberSchema } from './schemas/phone.schema';
+import { SmsLog, SmsLogSchema } from './schemas/sms_log.schema';
+
 import { UserModule } from 'src/user/user.module';
+
+import { PhoneService } from './phone.service';
+import { SmsService } from './sms.service';
+import { SmsController } from './sms.controller';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: PhoneNumber.name, schema: PhoneNumberSchema },
     ]),
+    MongooseModule.forFeature([
+      { name: SmsLog.name, schema: SmsLogSchema },
+    ]),
     forwardRef(() => UserModule),
-    SmsModule,
   ],
-  providers: [PhoneService],
+  providers: [PhoneService, SmsService],
   exports: [PhoneService],
-  controllers: [PhoneController],
+  controllers: [SmsController],
 })
 export class PhoneModule { }

@@ -2,10 +2,10 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { EmailAddress } from 'src/email/schemas/email.schema';
-import { Office } from '../office/schemas/office.schema';
-import { User } from '../user/schemas/user.schema';
-import { MailLog, MailLogDocument } from './schemas/mailLog.schema';
+import { EmailAddress } from 'src/email/email/schemas/email.schema';
+import { Office } from 'src/office/schemas/office.schema';
+import { User } from 'src/user/schemas/user.schema';
+import { MailLog, MailLogDocument } from './schemas/mail_log.schema';
 import { Subject } from './subjects';
 
 @Injectable()

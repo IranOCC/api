@@ -7,13 +7,12 @@ import {
   ValidateNested,
   IsLatLong
 } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import { Storage } from "src/storage/schemas/storage.schema"
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
-import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from '../../config/main';
+import { EmailDto } from 'src/email/email/dto/email.dto';
 import { PhoneDto } from 'src/phone/dto/phone.dto';
-import { EmailDto } from 'src/email/dto/email.dto';
 
 
 

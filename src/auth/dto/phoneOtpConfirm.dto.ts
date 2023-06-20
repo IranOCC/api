@@ -1,23 +1,10 @@
-import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsPhoneNumber, IsString } from 'class-validator';
-import { PHONE_COUNTRY_CODE, PHONE_COUNTRY_REGION } from 'src/config/main';
+import { IsNotEmpty } from 'class-validator';
+import { PhoneNumberDto } from 'src/phone/dto/phoneNumber.dto';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 
-const $ = 'validation.phoneOtpConfirm';
-
-export class PhoneOtpConfirm {
+export class PhoneOtpConfirmDto extends PhoneNumberDto {
   @ApiProperty()
-  @Transform(({ value }) => {
-    if (value.length === 10) value = '0' + value;
-    return value.replace(/^0/, PHONE_COUNTRY_CODE);
-  })
-  @IsPhoneNumber(PHONE_COUNTRY_REGION, {
-    message: i18nVM(`${$}.phone.IsPhoneNumber`),
-  })
-  phone: string;
-
-  @ApiProperty()
-  @IsString()
+  @IsNotEmpty({ message: i18nVM('validation.IsNotEmpty') })
   token: string;
 }

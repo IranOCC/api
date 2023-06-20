@@ -1,0 +1,5 @@
+{
+    "UnauthorizedException": "لطفا ابتدا لاگین یا ثبت نام کنید",
+    "ForbiddenException": "شما دسترسی لازم برای انجام این کار ندارید",
+    "NotFoundException": "مسیر مورد نظر پیدا نشد"
+}
