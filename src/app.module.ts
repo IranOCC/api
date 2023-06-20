@@ -29,6 +29,9 @@ import { AwsModule } from './aws/aws.module';
 // import { MailModule } from './mail/mail.module';
 // import { SmsModule } from './phone/sms/sms.module';
 import { IconModule } from './icon/icon.module';
+import { OfficeModule } from './office/office.module';
+import { EmailModule } from './email/email.module';
+import { PhoneModule } from './phone/phone.module';
 
 
 @Module({
@@ -49,12 +52,11 @@ import { IconModule } from './icon/icon.module';
     }),
     AuthModule,
     UserModule,
-    // PhoneModule,
-    // SmsModule,
-    // EmailModule,
-    // MailModulegetOrCheck,
+    OfficeModule,
+    PhoneModule,
+    EmailModule,
     StorageModule,
-    // OfficeModule,
+
     EstateModule,
     BlogModule,
     SettingModule,

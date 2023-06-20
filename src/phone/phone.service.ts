@@ -14,16 +14,19 @@ import { PhoneNumber, PhoneNumberDocument } from './schemas/phone.schema';
 import { User } from 'src/user/schemas/user.schema';
 import { generateToken, validationToken } from 'src/utils/helper/token.helper';
 import { FieldNotFound } from 'src/utils/error';
+import { OfficeService } from 'src/office/office.service';
 
 @Injectable()
 export class PhoneService {
   constructor(
     @InjectModel(PhoneNumber.name) private model: Model<PhoneNumberDocument>,
     @Inject(forwardRef(() => UserService)) private userService: UserService,
+    @Inject(forwardRef(() => OfficeService)) private officeService: OfficeService,
     private smsService: SmsService,
   ) { }
 
-  // * setup phone
+
+  // setup phone
   async setup(value: string, useFor: useForEnum = useForEnum.User, owner: User | Office, verified = false): Promise<any> {
     const check = await this.model.findOne({ value }).select(["value", "verified", "user", "office"]).populate(['office', 'user']);
 
@@ -57,18 +60,19 @@ export class PhoneService {
 
 
 
-  // *
+  // find phone
   async find(value: string, useFor: useForEnum = useForEnum.User) {
     const data = await this.model
       .findOne({ value })
       .select(['user', 'office'])
       .exec();
-
     if (!data) throw 'Not found';
     return data;
   }
 
-  // *
+
+
+  // send otp
   async sendOtpCode(phone: string) {
     const _query = await this.model
       .findOne({ value: phone })
@@ -78,7 +82,7 @@ export class PhoneService {
     return await this.smsService.sendOtpCode(_query, token);
   }
 
-  // *
+  // confirm otp
   async confirmOtpCode({ phone, token }: PhoneOtpConfirmDto) {
     const _query = await this.model
       .findOne({ value: phone })
@@ -90,7 +94,7 @@ export class PhoneService {
     return isValid
   }
 
-  // *
+  // verify phone
   async doVerify(phone: string) {
     const _query = await this.model
       .findOne({ value: phone })
@@ -105,7 +109,7 @@ export class PhoneService {
 
 
 
-  // --> send sms
+  // send sms
   async sendSms(data: SendSmsDto, user: User) {
     let _phone = null
     if (data.userID) {
@@ -116,7 +120,11 @@ export class PhoneService {
       _phone = u.phone
     }
     else if (data.officeID) {
-      // TODO: for office
+      const o = await this.officeService.findOne(data.officeID)
+      if (!o || !o?.phone) {
+        throw new NotFoundException({ error: "PhoneNumberNotFound", message: "Phone number not found" })
+      }
+      _phone = o.phone
     }
     else if (data.phoneID) {
       const phone = await this.model.findById(data.phoneID)
@@ -131,7 +139,7 @@ export class PhoneService {
     return await this.smsService.sendTextMessage(_phone, data.text, user, data.subject, data.subjectID)
   }
 
-  // --> get sms logs
+  // get sms logs
   async getSmsLogs(data: GetSmsLogsDto) {
     let _phone = null
     if (data.userID) {
@@ -142,7 +150,11 @@ export class PhoneService {
       _phone = u.phone
     }
     else if (data.officeID) {
-      // TODO: for office
+      const o = await this.officeService.findOne(data.officeID)
+      if (!o || !o?.phone) {
+        throw new NotFoundException({ error: "PhoneNumberNotFound", message: "Phone number not found" })
+      }
+      _phone = o.phone
     }
     else if (data.phoneID) {
       const phone = await this.model.findById(data.phoneID)

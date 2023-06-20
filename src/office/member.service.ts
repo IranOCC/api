@@ -1,7 +1,7 @@
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { User } from 'src/user/schemas/user.schema';
-import { OfficeService } from '../office.service';
-import { Office } from '../schemas/office.schema';
+import { OfficeService } from './office.service';
+import { Office } from './schemas/office.schema';
 
 @Injectable()
 export class MemberService {

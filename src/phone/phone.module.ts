@@ -9,6 +9,7 @@ import { UserModule } from 'src/user/user.module';
 import { PhoneService } from './phone.service';
 import { SmsService } from './sms.service';
 import { SmsController } from './sms.controller';
+import { OfficeModule } from 'src/office/office.module';
 
 @Module({
   imports: [
@@ -18,7 +19,9 @@ import { SmsController } from './sms.controller';
     MongooseModule.forFeature([
       { name: SmsLog.name, schema: SmsLogSchema },
     ]),
-    forwardRef(() => UserModule),
+    forwardRef(() => OfficeModule),
+    // forwardRef(() => UserModule),
+
   ],
   providers: [PhoneService, SmsService],
   exports: [PhoneService],

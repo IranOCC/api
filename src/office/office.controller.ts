@@ -13,13 +13,13 @@ import { CreateOfficeDto } from './dto/createOffice.dto';
 import { UpdateOfficeDto } from './dto/updateOffice.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
-import { MemberService } from './member/member.service';
+// import { MemberService } from './member.service';
 
 @Controller('office')
 export class OfficeController {
   constructor(
     private readonly officeService: OfficeService,
-    private readonly memberService: MemberService,
+    // private readonly memberService: MemberService,
   ) { }
 
   @Get('assignList')
@@ -62,26 +62,26 @@ export class OfficeController {
 
 
   // members
-  @Get(':id/member')
-  @Roles(RoleEnum.Admin)
-  async getMember(@Param('id') id: string) {
-    const office = await this.officeService.getOrCheck(id)
-    return await this.memberService.find(office)
-  }
+  // @Get(':id/member')
+  // @Roles(RoleEnum.Admin)
+  // async getMember(@Param('id') id: string) {
+  //   const office = await this.officeService.getOrCheck(id)
+  //   return await this.memberService.find(office)
+  // }
 
-  @Post(':id/member')
-  @Roles(RoleEnum.Admin)
-  async addMember(@Param('id') id: string, @Body() members: string[]) {
-    const office = await this.officeService.getOrCheck(id)
-    return await this.memberService.add(office, members)
-  }
+  // @Post(':id/member')
+  // @Roles(RoleEnum.Admin)
+  // async addMember(@Param('id') id: string, @Body() members: string[]) {
+  //   const office = await this.officeService.getOrCheck(id)
+  //   return await this.memberService.add(office, members)
+  // }
 
-  @Delete(':id/member')
-  @Roles(RoleEnum.Admin)
-  async removeMember(@Param('id') id: string, @Query('members') members: string[]) {
-    const office = await this.officeService.getOrCheck(id)
-    return await this.memberService.remove(office, members)
-  }
+  // @Delete(':id/member')
+  // @Roles(RoleEnum.Admin)
+  // async removeMember(@Param('id') id: string, @Query('members') members: string[]) {
+  //   const office = await this.officeService.getOrCheck(id)
+  //   return await this.memberService.remove(office, members)
+  // }
 
 
 }

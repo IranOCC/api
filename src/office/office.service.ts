@@ -8,9 +8,10 @@ import { PhoneDto } from 'src/phone/dto/phone.dto';
 import { PhoneService } from 'src/phone/phone.service';
 import { User } from 'src/user/schemas/user.schema';
 import { UserService } from 'src/user/user.service';
+import { FieldAlreadyExists } from 'src/utils/error';
 import { CreateOfficeDto } from './dto/createOffice.dto';
 import { UpdateOfficeDto } from './dto/updateOffice.dto';
-import { MemberService } from './member/member.service';
+import { MemberService } from './member.service';
 import { Office, OfficeDocument } from './schemas/office.schema';
 
 @Injectable()
@@ -19,10 +20,12 @@ export class OfficeService {
     @InjectModel(Office.name) private officeModel: Model<OfficeDocument>,
     private phoneService: PhoneService,
     private emailService: EmailService,
-    private userService: UserService,
-    private memberService: MemberService,
+    // private userService: UserService,
+    // private memberService: MemberService,
   ) { }
 
+  // =============================> Admin Crud <===========================
+  // *
   async create(data: CreateOfficeDto): Promise<Office> {
     const { phone, email, management, ...modelData } = data
     const _office: Office = new this.officeModel(modelData)
@@ -37,6 +40,7 @@ export class OfficeService {
     return _office;
   }
 
+  // *
   async update(id: string, data: UpdateOfficeDto): Promise<any> {
     const { phone, email, management, ...modelData } = data
 
@@ -82,29 +86,17 @@ export class OfficeService {
       const phoneID = await this.phoneService.setup(phone.value, useForEnum.Office, office, phone.verified)
       office.phone = phoneID
     } catch (error) {
-      throw new BadRequestException({
-        errors: {
-          "phone.value": {
-            "IsAlreadyExists": "این شماره قبلا ثبت شده است"
-          }
-        }
-      })
+      FieldAlreadyExists("phone.value")
     }
   }
   // ======> email
   async setEmail(office: Office, email: EmailDto) {
-    try {
-      const emailID = await this.emailService.setup(email.value, useForEnum.Office, office, email.verified)
-      office.email = emailID
-    } catch (error) {
-      throw new BadRequestException({
-        errors: {
-          "email.value": {
-            "IsAlreadyExists": "این ایمیل قبلا ثبت شده است"
-          }
-        }
-      })
-    }
+    // try {
+    //   const emailID = await this.emailService.setup(email.value, useForEnum.Office, office, email.verified)
+    //   office.email = emailID
+    // } catch (error) {
+    //   FieldAlreadyExists("email.value")
+    // }
   }
 
 
@@ -112,30 +104,24 @@ export class OfficeService {
   async setManagement(office: Office, management: User | string) {
 
     // is admin?
-    const u = await this.userService.hasAdminRole(management)
-    if (!u) {
-      throw new BadRequestException({
-        errors: [
-          {
-            property: "management",
-            constraints: { "MustBeAdmin": "کاربر نیاز است حداقل دسترسی ادمین را دارا باشد" }
-          }
-        ]
-      })
-    }
-    if (!((u as User).active)) {
-      throw new BadRequestException({
-        errors: [
-          {
-            property: "management",
-            constraints: { "NotActive": "کاربر غیرفعال است" }
-          }
-        ]
-      })
-    }
+    // const u = await this.userService.hasAdminRole(management)
+    // if (!u) {
+    //   throw new BadRequestException({
+    //     errors: {
+    //       "management": { "MustBeAdmin": "کاربر نیاز است حداقل دسترسی ادمین را دارا باشد" }
+    //     }
+    //   })
+    // }
+    // if (!((u as User).active)) {
+    //   throw new BadRequestException({
+    //     errors: {
+    //       "management": { "NotActive": "کاربر غیرفعال است" }
+    //     }
+    //   })
+    // }
 
     // add member
-    await this.memberService.add(office, management)
+    // await this.memberService.add(office, management)
 
     // set admin
     office.management = management

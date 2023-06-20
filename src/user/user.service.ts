@@ -49,7 +49,6 @@ export class UserService {
     return await this.phoneService.sendOtpCode(user.phone.value)
   }
 
-
   // *
   async confirmPhoneOtpCode(user: User, token: string) {
     const isValid = await this.phoneService.confirmOtpCode({ phone: user.phone.value, token })
@@ -95,26 +94,20 @@ export class UserService {
     }[subject]
   }
 
+  // *
   async create(data: CreateUserDto): Promise<any> {
     const { phone, email, ...modelData } = data
-
     const _user = new this.userModel(modelData)
 
     if (phone) await this.setPhone(_user, phone)
     if (email) await this.setEmail(_user, email)
 
+    // save
     await _user.save()
     return _user;
   }
 
-  findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
-  }
-
-  findOne(id: string) {
-    return this.userModel.findById(id).populate(['phone']);
-  }
-
+  // *
   async update(id: string, data: UpdateUserDto): Promise<any> {
     const { phone, email, ...modelData } = data
     const _user = await this.userModel.findById(id)
@@ -125,6 +118,13 @@ export class UserService {
     return this.userModel.updateOne({ _id: id }, modelData).exec();
   }
 
+  findAll(): Promise<User[]> {
+    return this.userModel.find().exec();
+  }
+
+  findOne(id: string) {
+    return this.userModel.findById(id).populate(['phone']);
+  }
 
   async remove(id: string) {
     const o = await this.findOne(id)
@@ -149,14 +149,7 @@ export class UserService {
     //   const emailID = await this.emailService.setup(email.value, useForEnum.User, user, email.verified)
     //   user.email = emailID
     // } catch (error) {
-    //   throw new BadRequestException({
-    //     errors: [
-    //       {
-    //         property: "email.value",
-    //         constraints: { "IsAlreadyExists": "این ایمیل قبلا ثبت شده است" }
-    //       }
-    //     ]
-    //   })
+    //   FieldAlreadyExists("email.value")
     // }
   }
 
