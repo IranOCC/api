@@ -11,7 +11,7 @@ import { Type } from 'class-transformer';
 import { Storage } from "src/storage/schemas/storage.schema"
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
-import { EmailDto } from 'src/email/email/dto/email.dto';
+import { EmailDto } from 'src/email/dto/email.dto';
 import { PhoneDto } from 'src/phone/dto/phone.dto';
 
 

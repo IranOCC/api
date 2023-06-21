@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { OfficeService } from './office.service';
 import { OfficeController } from './office.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -11,8 +11,8 @@ import { Office, OfficeSchema } from './schemas/office.schema';
   imports: [
     MongooseModule.forFeature([{ name: Office.name, schema: OfficeSchema }]),
     // forwardRef(() => UserModule),
-    PhoneModule,
-    EmailModule,
+    forwardRef(() => PhoneModule),
+    forwardRef(() => EmailModule),
   ],
   controllers: [OfficeController],
   providers: [OfficeService],

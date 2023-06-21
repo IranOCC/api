@@ -7,8 +7,36 @@ export class MailLog extends Document {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'EmailAddress',
+    select: false,
   })
   emailID: any;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    select: false,
+  })
+  userID: any;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Office',
+    select: false,
+  })
+  officeID: any;
+
+
+  @Prop({
+    type: mongoose.Schema.Types.String,
+  })
+  subject: string;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+  })
+  subjectID: any;
+
+
 
   @Prop({
     type: mongoose.Schema.Types.String,

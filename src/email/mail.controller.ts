@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
 import { Roles } from 'src/auth/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
-import { GetMailLogs } from '../email/dto/getMailLogs.dto';
-import { SendMailDto } from '../email/dto/sendMail.dto';
-import { EmailService } from '../email/email.service';
+import { GetMailLogsDto } from './dto/getMailLogs.dto';
+import { SendMailDto } from './dto/sendMail.dto';
+import { EmailService } from './email.service';
 
 @Controller('mail')
 export class MailController {
@@ -21,7 +21,7 @@ export class MailController {
 
     @Get("logs")
     @Roles(RoleEnum.Admin)
-    logs(@Query() data: GetMailLogs) {
+    logs(@Query() data: GetMailLogsDto) {
         return this.emailService.getMailLogs(data);
     }
 }

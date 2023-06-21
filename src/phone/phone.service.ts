@@ -13,15 +13,14 @@ import { SmsService } from './sms.service';
 import { PhoneNumber, PhoneNumberDocument } from './schemas/phone.schema';
 import { User } from 'src/user/schemas/user.schema';
 import { generateToken, validationToken } from 'src/utils/helper/token.helper';
-import { FieldNotFound } from 'src/utils/error';
 import { OfficeService } from 'src/office/office.service';
 
 @Injectable()
 export class PhoneService {
   constructor(
     @InjectModel(PhoneNumber.name) private model: Model<PhoneNumberDocument>,
-    @Inject(forwardRef(() => UserService)) private userService: UserService,
     @Inject(forwardRef(() => OfficeService)) private officeService: OfficeService,
+    @Inject(forwardRef(() => UserService)) private userService: UserService,
     private smsService: SmsService,
   ) { }
 
@@ -76,7 +75,7 @@ export class PhoneService {
   async sendOtpCode(phone: string) {
     const _query = await this.model
       .findOne({ value: phone })
-      .select(['secret', 'value'])
+      .select(['secret', 'value', 'user', 'office'])
       .exec();
     const token = generateToken(_query.secret);
     return await this.smsService.sendOtpCode(_query, token);
@@ -110,24 +109,24 @@ export class PhoneService {
 
 
   // send sms
-  async sendSms(data: SendSmsDto, user: User) {
-    let _phone = null
+  async sendSms(data: SendSmsDto, sentBy: User) {
+    let _phone: PhoneNumber | null = null
     if (data.userID) {
-      const u = await this.userService.findOne(data.userID)
+      const u = await this.userService.findOne(data.userID).populate("phone", ["user"])
       if (!u || !u?.phone) {
         throw new NotFoundException({ error: "PhoneNumberNotFound", message: "Phone number not found" })
       }
       _phone = u.phone
     }
     else if (data.officeID) {
-      const o = await this.officeService.findOne(data.officeID)
+      const o = await this.officeService.findOne(data.officeID).populate("phone", ["user"])
       if (!o || !o?.phone) {
         throw new NotFoundException({ error: "PhoneNumberNotFound", message: "Phone number not found" })
       }
       _phone = o.phone
     }
     else if (data.phoneID) {
-      const phone = await this.model.findById(data.phoneID)
+      const phone = await this.model.findById(data.phoneID).select(["user"])
       if (!phone) throw new NotFoundException({ error: "PhoneNumberNotFound", message: "Phone number not found" })
       _phone = phone
     }
@@ -136,7 +135,7 @@ export class PhoneService {
     }
 
     // ==> send
-    return await this.smsService.sendTextMessage(_phone, data.text, user, data.subject, data.subjectID)
+    return await this.smsService.sendTextMessage(_phone, data.text, sentBy, data.subject, data.subjectID)
   }
 
   // get sms logs
