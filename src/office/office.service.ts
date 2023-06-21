@@ -1,6 +1,8 @@
-import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable, } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { ValidationError } from 'class-validator';
 import { Model } from 'mongoose';
+import { I18nService, I18nValidationException } from 'nestjs-i18n';
 import { useForEnum } from 'src/auth/enum/useFor.enum';
 import { EmailDto } from 'src/email/dto/email.dto';
 import { EmailService } from 'src/email/email.service';
@@ -8,7 +10,6 @@ import { PhoneDto } from 'src/phone/dto/phone.dto';
 import { PhoneService } from 'src/phone/phone.service';
 import { User } from 'src/user/schemas/user.schema';
 import { UserService } from 'src/user/user.service';
-import { FieldAlreadyExists } from 'src/utils/error';
 import { CreateOfficeDto } from './dto/createOffice.dto';
 import { UpdateOfficeDto } from './dto/updateOffice.dto';
 import { MemberService } from './member.service';
@@ -17,6 +18,7 @@ import { Office, OfficeDocument } from './schemas/office.schema';
 @Injectable()
 export class OfficeService {
   constructor(
+    private i18n: I18nService,
     @InjectModel(Office.name) private officeModel: Model<OfficeDocument>,
     @Inject(forwardRef(() => PhoneService)) private phoneService: PhoneService,
     @Inject(forwardRef(() => EmailService)) private emailService: EmailService,
@@ -86,7 +88,13 @@ export class OfficeService {
       const phoneID = await this.phoneService.setup(phone.value, useForEnum.Office, office, phone.verified)
       office.phone = phoneID
     } catch (error) {
-      FieldAlreadyExists("phone.value")
+      const _error = new ValidationError();
+      _error.property = 'phone';
+      _error.constraints = {
+        PhoneNumberInUsed: this.i18n.t("exception.PhoneNumberInUsed")
+      };
+      _error.value = phone;
+      throw new I18nValidationException([_error])
     }
   }
   // ======> email
@@ -95,7 +103,13 @@ export class OfficeService {
       const emailID = await this.emailService.setup(email.value, useForEnum.Office, office, email.verified)
       office.email = emailID
     } catch (error) {
-      FieldAlreadyExists("email.value")
+      const _error = new ValidationError();
+      _error.property = 'email';
+      _error.constraints = {
+        EmailAddressInUsed: this.i18n.t("exception.EmailAddressInUsed")
+      };
+      _error.value = email;
+      throw new I18nValidationException([_error])
     }
   }
 

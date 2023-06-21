@@ -11,7 +11,7 @@ import { User } from 'src/user/schemas/user.schema';
 import { OfficeService } from 'src/office/office.service';
 import { MailService } from './mail.service';
 import { generateToken, validationToken } from 'src/utils/helper/token.helper';
-import { EmailOtpConfirmDto } from 'src/auth/dto/emailOtpConfirm.dto';
+import { EmailOtpConfirmRequestDto } from 'src/auth/dto/emailOtpConfirm.dto';
 
 @Injectable()
 export class EmailService {
@@ -82,7 +82,7 @@ export class EmailService {
   }
 
   // confirm otp
-  async confirmOtpCode({ email, token }: EmailOtpConfirmDto) {
+  async confirmOtpCode({ email, token }: EmailOtpConfirmRequestDto) {
     const _query = await this.model
       .findOne({ value: email })
       .select(['secret'])

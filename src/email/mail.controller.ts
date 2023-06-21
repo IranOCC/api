@@ -1,10 +1,13 @@
 import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
 import { GetMailLogsDto } from './dto/getMailLogs.dto';
 import { SendMailDto } from './dto/sendMail.dto';
 import { EmailService } from './email.service';
 
+
+@ApiTags('Mail')
 @Controller('mail')
 export class MailController {
 

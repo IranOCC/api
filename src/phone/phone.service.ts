@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 
-import { PhoneOtpConfirmDto } from 'src/auth/dto/phoneOtpConfirm.dto';
+import { PhoneOtpConfirmRequestDto } from 'src/auth/dto/phoneOtpConfirm.dto';
 import { SendSmsDto } from './dto/sendSms.dto';
 import { UserService } from 'src/user/user.service';
 import { GetSmsLogsDto } from './dto/getSmsLogs.dto';
@@ -82,7 +82,7 @@ export class PhoneService {
   }
 
   // confirm otp
-  async confirmOtpCode({ phone, token }: PhoneOtpConfirmDto) {
+  async confirmOtpCode({ phone, token }: PhoneOtpConfirmRequestDto) {
     const _query = await this.model
       .findOne({ value: phone })
       .select(['secret'])

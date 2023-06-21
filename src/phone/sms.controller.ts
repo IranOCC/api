@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Query, Post, Request } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
 import { GetSmsLogsDto } from '../phone/dto/getSmsLogs.dto';
@@ -6,6 +7,8 @@ import { SendSmsDto } from '../phone/dto/sendSms.dto';
 import { PhoneService } from './phone.service';
 
 
+
+@ApiTags('Sms')
 @Controller('sms')
 export class SmsController {
     constructor(

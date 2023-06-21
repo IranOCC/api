@@ -23,13 +23,12 @@ async function bootstrap() {
     .setTitle('iranocc-api')
     .setDescription('The API of iranocc.com')
     .setVersion('1.0')
-    .addTag('iranocc')
     .addBearerAuth()
     .build();
 
   // implant swagger
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('swagger', app, document);
+  SwaggerModule.setup('swagger', app, document, { customSiteTitle: "IranOcc Api" });
 
 
   // global middleware

@@ -19,14 +19,13 @@ export class SmsService {
 
 
   async sendOtpCode(phone: PhoneNumber, token: string) {
+    await this.sendService.SendVerifyCode(phone.value, process.env.SMSIR_TEMPLATE, [{ name: "CODE", value: token }])
     this.logModel.create({ phoneID: phone._id, userID: phone?.user || null, officeID: phone?.office || null, text: ("CODE " + token), subject: "otp" })
-    return await this.sendService.SendVerifyCode(phone.value, process.env.SMSIR_TEMPLATE, [{ name: "CODE", value: token }])
   }
 
   async sendTextMessage(phone: PhoneNumber, text: string, sentBy: User, subject: string, subjectID: string) {
-    this.logModel.create({ phoneID: phone._id, userID: phone?.user || null, officeID: phone?.office || null, text, sentBy, subject, subjectID })
     await this.sendService.SendBulk(text, [phone.value])
-    return true
+    this.logModel.create({ phoneID: phone._id, userID: phone?.user || null, officeID: phone?.office || null, text, sentBy, subject, subjectID })
   }
 
   async logs(phone: PhoneNumber, subject: string, subjectID: string) {

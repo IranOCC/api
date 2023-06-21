@@ -31,18 +31,18 @@ import { MailService } from './mail.service';
               user: configService.get('MAIL_SMTP_USER'),
               pass: configService.get('MAIL_SMTP_PASSWORD'),
             },
-            tls: { rejectUnauthorized: false },
+            tls: true,
           },
           defaults: {
             from: configService.get('MAIL_SMTP_FROM'),
           },
-          template: {
-            dir: join(__dirname, 'templates'),
-            adapter: new HandlebarsAdapter(),
-            options: {
-              strict: true,
-            },
-          },
+          // template: {
+          //   dir: join(__dirname, '/templates'),
+          //   adapter: new HandlebarsAdapter(),
+          //   options: {
+          //     strict: true,
+          //   },
+          // },
         };
       },
       inject: [ConfigService],

@@ -1,3 +1,5 @@
 import { EmailAddressDto } from "src/email/dto/emailAddress.dto";
 
-export class EmailOtpDto extends EmailAddressDto { }
+
+export class EmailOtpDtoRequestDto extends EmailAddressDto { }
+export class EmailOtpDtoResponseDto extends EmailAddressDto { }

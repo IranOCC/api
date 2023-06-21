@@ -1,5 +1,7 @@
 {
     "UnauthorizedException": "لطفا ابتدا لاگین یا ثبت نام کنید",
     "ForbiddenException": "شما دسترسی لازم برای انجام این کار ندارید",
-    "NotFoundException": "مسیر مورد نظر پیدا نشد"
+    "NotFoundException": "مسیر مورد نظر پیدا نشد",
+    "PhoneNumberInUsed": "شماره وارد شده در اینجا قابل استفاده نیست",
+    "EmailAddressInUsed": "ایمیل وارد شده در اینجا قابل استفاده نیست"
 }

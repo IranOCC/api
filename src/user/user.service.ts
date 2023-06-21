@@ -1,24 +1,30 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
-import { BadRequestException, ForbiddenException, forwardRef, Inject, Injectable } from '@nestjs/common';
-
+import { Model } from 'mongoose';
+import { BadRequestException, ForbiddenException, forwardRef, Inject, Injectable, UnprocessableEntityException, } from '@nestjs/common';
 import { User, UserDocument } from './schemas/user.schema';
-
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
-import { PhoneOtpDto } from 'src/auth/dto/phoneOtp.dto';
+import { PhoneOtpDtoRequestDto } from 'src/auth/dto/phoneOtp.dto';
 import { RoleEnum } from './enum/role.enum';
 import { useForEnum } from 'src/auth/enum/useFor.enum';
 import { EmailDto } from 'src/email/dto/email.dto';
 import { EmailService } from 'src/email/email.service';
 import { PhoneService } from 'src/phone/phone.service';
 import { PhoneDto } from 'src/phone/dto/phone.dto';
-import { FieldAlreadyExists } from 'src/utils/error';
 import { OfficeService } from 'src/office/office.service';
-import { EmailOtpDto } from 'src/auth/dto/emailOtp.dto';
+import { EmailOtpDtoRequestDto } from 'src/auth/dto/emailOtp.dto';
+import { ValidationError } from 'class-validator';
+import { I18nValidationException, I18nContext, I18nService } from 'nestjs-i18n';
+
+
+
+
+
+
 @Injectable()
 export class UserService {
   constructor(
+    private i18n: I18nService,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @Inject(forwardRef(() => PhoneService)) private phoneService: PhoneService,
     @Inject(forwardRef(() => EmailService)) private emailService: EmailService,
@@ -27,11 +33,12 @@ export class UserService {
 
 
   // *
-  async findOrCreateByPhone({ phone }: PhoneOtpDto): Promise<User> {
+  async findOrCreateByPhone({ phone }: PhoneOtpDtoRequestDto): Promise<User> {
     let user: User
     try {
       const phoneQ = await this.phoneService.find(phone, useForEnum.User)
       user = await this.userModel.findById(phoneQ.user).select(["_id", "roles", "firstName", "lastName", "fullName", "avatar"])
+      if (!user) throw 'Not found'
       return user
     } catch (error) {
       const userData = { active: true, roles: [RoleEnum.User] } as CreateUserDto
@@ -42,7 +49,13 @@ export class UserService {
         await user.save()
         return user
       } catch (error) {
-        FieldAlreadyExists("phone")
+        const _error = new ValidationError();
+        _error.property = 'phone';
+        _error.constraints = {
+          PhoneNumberInUsed: this.i18n.t("exception.PhoneNumberInUsed")
+        };
+        _error.value = phone;
+        throw new I18nValidationException([_error])
       }
     }
   }
@@ -56,7 +69,7 @@ export class UserService {
   async confirmPhoneOtpCode(user: User, token: string) {
     const isValid = await this.phoneService.confirmOtpCode({ phone: user.phone.value, token })
     if (!isValid) {
-      throw new ForbiddenException({ message: "Token is wrong" })
+      throw new ForbiddenException("Otp token is wrong", "TokenWrong")
     }
   }
 
@@ -64,11 +77,12 @@ export class UserService {
   // *********************
 
   // *
-  async findOrCreateByEmail({ email }: EmailOtpDto): Promise<User> {
+  async findOrCreateByEmail({ email }: EmailOtpDtoRequestDto): Promise<User> {
     let user: User
     try {
       const emailQ = await this.emailService.find(email, useForEnum.User)
       user = await this.userModel.findById(emailQ.user).select(["_id", "roles", "firstName", "lastName", "fullName", "avatar"])
+      if (!user) throw 'Not found'
       return user
     } catch (error) {
       const userData = { active: true, roles: [RoleEnum.User] } as CreateUserDto
@@ -79,7 +93,13 @@ export class UserService {
         await user.save()
         return user
       } catch (error) {
-        FieldAlreadyExists("email")
+        const _error = new ValidationError();
+        _error.property = 'email';
+        _error.constraints = {
+          EmailAddressInUsed: this.i18n.t("exception.EmailAddressInUsed")
+        };
+        _error.value = email;
+        throw new I18nValidationException([_error])
       }
     }
   }
@@ -93,7 +113,7 @@ export class UserService {
   async confirmEmailOtpCode(user: User, token: string) {
     const isValid = await this.emailService.confirmOtpCode({ email: user.email.value, token })
     if (!isValid) {
-      throw new ForbiddenException({ message: "Token is wrong" })
+      throw new ForbiddenException("Otp token is wrong", "TokenWrong")
     }
   }
 
@@ -184,7 +204,13 @@ export class UserService {
       const phoneID = await this.phoneService.setup(phone.value, useForEnum.User, user, phone.verified)
       user.phone = phoneID
     } catch (error) {
-      FieldAlreadyExists("phone.value")
+      const _error = new ValidationError();
+      _error.property = 'phone';
+      _error.constraints = {
+        PhoneNumberInUsed: this.i18n.t("exception.PhoneNumberInUsed")
+      };
+      _error.value = phone;
+      throw new I18nValidationException([_error])
     }
   }
   // ======> email
@@ -193,7 +219,13 @@ export class UserService {
       const emailID = await this.emailService.setup(email.value, useForEnum.User, user, email.verified)
       user.email = emailID
     } catch (error) {
-      FieldAlreadyExists("email.value")
+      const _error = new ValidationError();
+      _error.property = 'email';
+      _error.constraints = {
+        EmailAddressInUsed: this.i18n.t("exception.EmailAddressInUsed")
+      };
+      _error.value = email;
+      throw new I18nValidationException([_error])
     }
   }
 

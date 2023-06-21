@@ -16,14 +16,13 @@ export class MailService {
 
 
   async sendOtpCode(email: EmailAddress, token: string) {
+    await this.mailerService.sendMail({ to: email.value, text: ("CODE " + token), })
     this.logModel.create({ emailID: email._id, userID: email?.user || null, officeID: email?.office || null, text: ("CODE " + token), subject: "otp" })
-    return await this.mailerService.sendMail({ to: email.value, text: "CODE " + token })
   }
 
   async sendTextMessage(email: EmailAddress, text: string, sentBy: User, subject: string, subjectID: string) {
-    this.logModel.create({ emailID: email._id, userID: email?.user || null, officeID: email?.office || null, text, sentBy, subject, subjectID })
     await this.mailerService.sendMail({ to: email.value, text: text })
-    return true
+    this.logModel.create({ emailID: email._id, userID: email?.user || null, officeID: email?.office || null, text, sentBy, subject, subjectID })
   }
 
   async logs(email: EmailAddress, subject: string, subjectID: string) {
