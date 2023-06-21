@@ -23,7 +23,6 @@ import { EstateModule } from './estate/estate.module';
 // import { OfficeModule } from './office/office.module';
 import { BlogModule } from './blog/blog.module';
 import { SettingModule } from './setting/setting.module';
-import { AwsModule } from './aws/aws.module';
 // import { EmailModule } from './email/email.module';
 // import { PhoneModule } from './phone/phone.module';
 // import { MailModule } from './mail/mail.module';
@@ -60,7 +59,6 @@ import { PhoneModule } from './phone/phone.module';
     EstateModule,
     BlogModule,
     SettingModule,
-    AwsModule,
     IconModule,
   ],
   controllers: [AppController],

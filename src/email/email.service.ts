@@ -2,7 +2,6 @@ import { forwardRef, Inject, Injectable, NotAcceptableException, NotFoundExcepti
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserService } from 'src/user/user.service';
-import { useForEnum } from 'src/auth/enum/useFor.enum';
 import { Office } from 'src/office/schemas/office.schema';
 import { GetMailLogsDto } from './dto/getMailLogs.dto';
 import { SendMailDto } from './dto/sendMail.dto';
@@ -12,6 +11,7 @@ import { OfficeService } from 'src/office/office.service';
 import { MailService } from './mail.service';
 import { generateToken, validationToken } from 'src/utils/helper/token.helper';
 import { EmailOtpConfirmRequestDto } from 'src/auth/dto/emailOtpConfirm.dto';
+import { useForEnum } from 'src/utils/enum/useFor.enum';
 
 @Injectable()
 export class EmailService {

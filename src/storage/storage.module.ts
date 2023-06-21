@@ -8,10 +8,6 @@ import { S3 } from 'aws-sdk';
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-
-
-
-
 @Module({
   imports: [
     S3ManagerModule,

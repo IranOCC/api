@@ -1,19 +1,17 @@
-import { BadRequestException, forwardRef, Inject, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
-
 import { PhoneOtpConfirmRequestDto } from 'src/auth/dto/phoneOtpConfirm.dto';
 import { SendSmsDto } from './dto/sendSms.dto';
 import { UserService } from 'src/user/user.service';
 import { GetSmsLogsDto } from './dto/getSmsLogs.dto';
-import { useForEnum } from 'src/auth/enum/useFor.enum';
 import { Office } from 'src/office/schemas/office.schema';
 import { SmsService } from './sms.service';
 import { PhoneNumber, PhoneNumberDocument } from './schemas/phone.schema';
 import { User } from 'src/user/schemas/user.schema';
 import { generateToken, validationToken } from 'src/utils/helper/token.helper';
 import { OfficeService } from 'src/office/office.service';
+import { useForEnum } from 'src/utils/enum/useFor.enum';
 
 @Injectable()
 export class PhoneService {

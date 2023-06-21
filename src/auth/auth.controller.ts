@@ -20,6 +20,8 @@ import { BadRequestDto } from 'src/utils/dto/badRequest.dto';
 import { ForbiddenDto } from 'src/utils/dto/forbidden.dto';
 import { UnauthorizedDto } from 'src/utils/dto/unauthorized.dto';
 import { GetMeResponseDto } from './dto/getMeResponse.dto';
+import { Roles } from './roles.decorator';
+import { RoleEnum } from 'src/user/enum/role.enum';
 
 
 @ApiTags('Auth')
@@ -94,5 +96,30 @@ export class AuthController {
   // =============================> get me
 
 
+  @Get("test")
+  @ApiBearerAuth()
+  @Roles(RoleEnum.SuperAdmin)
+  async test2(@Request() { user }) {
+    return RoleEnum.SuperAdmin
+  }
+
+
+  @Get("test")
+  @ApiBearerAuth()
+  @Roles(RoleEnum.Admin)
+  async test1(@Request() { user }) {
+    return RoleEnum.Admin
+  }
+
+
+
+
+
+  @Get("test")
+  @ApiBearerAuth()
+  @Roles(RoleEnum.User)
+  async test3(@Request() { user }) {
+    return RoleEnum.User
+  }
 
 }
