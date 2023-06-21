@@ -16,7 +16,7 @@ export class MailService {
 
 
   async sendOtpCode(email: EmailAddress, token: string) {
-    await this.mailerService.sendMail({ to: email.value, text: ("CODE " + token), })
+    await this.mailerService.sendMail({ to: email.value, subject: "Otp Code", text: ("CODE " + token), })
     this.logModel.create({ emailID: email._id, userID: email?.user || null, officeID: email?.office || null, text: ("CODE " + token), subject: "otp" })
   }
 

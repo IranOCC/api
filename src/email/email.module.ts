@@ -25,7 +25,6 @@ import { MailService } from './mail.service';
         return {
           transport: {
             host: configService.get('MAIL_SMTP_HOST'),
-            secure: configService.get<boolean>('MAIL_SMTP_SECURE'),
             port: configService.get('MAIL_SMTP_PORT'),
             auth: {
               user: configService.get('MAIL_SMTP_USER'),
@@ -34,15 +33,24 @@ import { MailService } from './mail.service';
             tls: true,
           },
           defaults: {
-            from: configService.get('MAIL_SMTP_FROM'),
+            from: "Iran Occasion <noreply@iranocc.com>",
           },
-          // template: {
-          //   dir: join(__dirname, '/templates'),
-          //   adapter: new HandlebarsAdapter(),
-          //   options: {
-          //     strict: true,
-          //   },
-          // },
+          preview: true,
+          template: {
+            dir: join(__dirname, 'templates'),
+            adapter: new HandlebarsAdapter(),
+            options: {
+              strict: true,
+            },
+          },
+          options: {
+            partials: {
+              dir: join(__dirname, 'templates', 'partials'),
+              options: {
+                strict: true,
+              },
+            },
+          },
         };
       },
       inject: [ConfigService],

@@ -41,7 +41,14 @@ export class MailLog extends Document {
   @Prop({
     type: mongoose.Schema.Types.String,
   })
-  text: string;
+  template: string;
+
+  @Prop({
+    type: mongoose.Schema.Types.Mixed,
+  })
+  parameters: any;
+
+
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
