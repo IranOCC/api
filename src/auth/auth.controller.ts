@@ -11,6 +11,8 @@ import { AuthService } from './auth.service';
 import { Public } from './jwt-auth.guard';
 import { PhoneOtpDto } from './dto/phoneOtp.dto';
 import { PhoneOtpConfirmDto } from './dto/phoneOtpConfirm.dto';
+import { EmailOtpDto } from './dto/emailOtp.dto';
+import { EmailOtpConfirmDto } from './dto/emailOtpConfirm.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -22,17 +24,32 @@ export class AuthController {
   @Post('phoneOtp')
   @Public()
   async phoneOtp(@Body() data: PhoneOtpDto) {
-    console.log(data);
-
-    // return this.authService.phoneOtp(data);
+    return this.authService.phoneOtp(data);
   }
   // *confirm & login
-  @Post('loginByOtp')
+  @Post('loginByPhoneOtp')
   @Public()
-  async loginByOtp(@Body() data: PhoneOtpConfirmDto) {
-    return this.authService.loginByOtp(data);
+  async loginByPhoneOtp(@Body() data: PhoneOtpConfirmDto) {
+    return this.authService.loginByPhoneOtp(data);
   }
   // =============================> login or register by phone & otp
+
+
+
+  // =============================> login or register by email & otp
+  // *login or create
+  @Post('emailOtp')
+  @Public()
+  async emailOtp(@Body() data: EmailOtpDto) {
+    return this.authService.emailOtp(data);
+  }
+  // *confirm & login
+  @Post('loginByEmailOtp')
+  @Public()
+  async loginByEmailOtp(@Body() data: EmailOtpConfirmDto) {
+    return this.authService.loginByEmailOtp(data);
+  }
+  // =============================> login or register by email & otp
 
 
 

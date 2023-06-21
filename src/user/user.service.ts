@@ -15,6 +15,7 @@ import { PhoneService } from 'src/phone/phone.service';
 import { PhoneDto } from 'src/phone/dto/phone.dto';
 import { FieldAlreadyExists } from 'src/utils/error';
 import { OfficeService } from 'src/office/office.service';
+import { EmailOtpDto } from 'src/auth/dto/emailOtp.dto';
 @Injectable()
 export class UserService {
   constructor(
@@ -58,6 +59,47 @@ export class UserService {
       throw new ForbiddenException({ message: "Token is wrong" })
     }
   }
+
+
+  // *********************
+
+  // *
+  async findOrCreateByEmail({ email }: EmailOtpDto): Promise<User> {
+    let user: User
+    try {
+      const emailQ = await this.emailService.find(email, useForEnum.User)
+      user = await this.userModel.findById(emailQ.user).select(["_id", "roles", "firstName", "lastName", "fullName", "avatar"])
+      return user
+    } catch (error) {
+      const userData = { active: true, roles: [RoleEnum.User] } as CreateUserDto
+      user = new this.userModel(userData)
+      try {
+        const emailID = await this.emailService.setup(email, useForEnum.User, user)
+        user.email = emailID
+        await user.save()
+        return user
+      } catch (error) {
+        FieldAlreadyExists("email")
+      }
+    }
+  }
+
+  // *
+  async sendEmailOtpCode(user: User) {
+    return await this.emailService.sendOtpCode(user.email.value)
+  }
+
+  // *
+  async confirmEmailOtpCode(user: User, token: string) {
+    const isValid = await this.emailService.confirmOtpCode({ email: user.email.value, token })
+    if (!isValid) {
+      throw new ForbiddenException({ message: "Token is wrong" })
+    }
+  }
+
+
+
+  // ===============================
 
 
   // *
