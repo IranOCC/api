@@ -17,11 +17,10 @@ import { RoleEnum } from './enum/role.enum';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/auth/jwt-auth.guard';
 
-
+@Controller('user')
+@Roles(RoleEnum.SuperAdmin)
 @ApiTags('User')
 @ApiBearerAuth()
-@Controller('user')
-@Public()
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
