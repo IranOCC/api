@@ -11,6 +11,7 @@ import { MailLog, MailLogSchema } from './schemas/mail_log.schema';
 import { ConfigService } from '@nestjs/config';
 import { MailController } from './mail.controller';
 import { MailService } from './mail.service';
+import { I18nService } from 'nestjs-i18n';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { MailService } from './mail.service';
       { name: MailLog.name, schema: MailLogSchema },
     ]),
     MailerModule.forRootAsync({
-      useFactory: (configService: ConfigService) => {
+      useFactory: (configService: ConfigService, i18n: I18nService) => {
         return {
           transport: {
             host: configService.get('MAIL_SMTP_HOST'),
@@ -38,22 +39,14 @@ import { MailService } from './mail.service';
           preview: true,
           template: {
             dir: join(__dirname, 'templates'),
-            adapter: new HandlebarsAdapter(),
+            adapter: new HandlebarsAdapter({ t: i18n.hbsHelper }),
             options: {
               strict: true,
             },
           },
-          options: {
-            partials: {
-              dir: join(__dirname, 'templates', 'partials'),
-              options: {
-                strict: true,
-              },
-            },
-          },
         };
       },
-      inject: [ConfigService],
+      inject: [ConfigService, I18nService],
     }),
     forwardRef(() => OfficeModule),
     forwardRef(() => UserModule),
