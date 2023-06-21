@@ -19,8 +19,8 @@ export class AuthService {
     private userService: UserService,
   ) { }
 
-  // =============================> login or register by phone & otp
-  // * login or create
+  // =============================> login or register by PHONE & otp
+  // login or create
   async phoneOtp(data: PhoneOtpDtoRequestDto) {
     // find or create 
     const user = await this.userService.findOrCreateByPhone(data);
@@ -34,7 +34,7 @@ export class AuthService {
     return { phone: user.phone.value };
   }
 
-  // * confirm & login
+  // confirm & login
   async loginByPhoneOtp(data: PhoneOtpConfirmRequestDto) {
     // confirm otp
     const user = await this.userService.findOrCreateByPhone({ phone: data.phone });
@@ -44,13 +44,16 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload, { expiresIn: process.env.JWT_EXPIRE_IN });
     return { accessToken };
   }
-  // =============================> login or register by phone & otp
+  // =============================> login or register by PHONE & otp
 
 
 
 
-  // =============================> login or register by email & otp
-  // * login or create
+
+
+
+  // =============================> login or register by EMAIL & otp
+  // login or create
   async emailOtp(data: EmailOtpDtoRequestDto) {
     // find or create 
     const user = await this.userService.findOrCreateByEmail(data);
@@ -64,7 +67,7 @@ export class AuthService {
     return { email: user.email.value };
   }
 
-  // * confirm & login
+  // confirm & login
   async loginByEmailOtp(data: EmailOtpConfirmRequestDto) {
     // confirm otp
     const user = await this.userService.findOrCreateByEmail({ email: data.email });
@@ -74,17 +77,20 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload, { expiresIn: process.env.JWT_EXPIRE_IN });
     return { accessToken };
   }
-  // =============================> login or register by email & otp
+  // =============================> login or register by EMAIL & otp
 
 
 
-  // =============================> after login
+
+
+
+  // =============================> getMe
   // * get user login
   async getMe(user: User) {
     const _user = await this.userService.getUserPayload(user._id)
     return _user as User;
   }
-  // =============================> after login
+  // =============================> getMe
 
 
 

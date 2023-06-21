@@ -1,6 +1,6 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BadRequestException, ForbiddenException, forwardRef, Inject, Injectable, UnprocessableEntityException, } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, forwardRef, Inject, Injectable, UnauthorizedException, UnprocessableEntityException, } from '@nestjs/common';
 import { User, UserDocument } from './schemas/user.schema';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
@@ -69,7 +69,7 @@ export class UserService {
   async confirmPhoneOtpCode(user: User, token: string) {
     const isValid = await this.phoneService.confirmOtpCode({ phone: user.phone.value, token })
     if (!isValid) {
-      throw new ForbiddenException("Otp token is wrong", "TokenWrong")
+      throw new UnauthorizedException("Otp token is wrong", "TokenWrong")
     }
   }
 
@@ -113,7 +113,7 @@ export class UserService {
   async confirmEmailOtpCode(user: User, token: string) {
     const isValid = await this.emailService.confirmOtpCode({ email: user.email.value, token })
     if (!isValid) {
-      throw new ForbiddenException("Otp token is wrong", "TokenWrong")
+      throw new UnauthorizedException("Otp token is wrong", "TokenWrong")
     }
   }
 

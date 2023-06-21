@@ -29,7 +29,7 @@ export class AuthController {
 
 
   // =============================> login or register by phone & otp
-  // *login or create
+  // login or create
   @Post('phoneOtp')
   @Public()
   @ApiOperation({ summary: "Request for send otp phone", description: "No Description" })
@@ -41,7 +41,7 @@ export class AuthController {
   }
 
 
-  // *confirm & login
+  // confirm & login
   @Post('loginByPhoneOtp')
   @Public()
   @ApiOperation({ summary: "Login by phone & otp token", description: "No Description" })
@@ -56,7 +56,7 @@ export class AuthController {
 
 
   // =============================> login or register by email & otp
-  // *login or create
+  // login or create
   @Post('emailOtp')
   @Public()
   @ApiOperation({ summary: "Request for send otp email", description: "No Description" })
@@ -66,7 +66,9 @@ export class AuthController {
   async emailOtp(@Body() data: EmailOtpDtoRequestDto) {
     return this.authService.emailOtp(data);
   }
-  // *confirm & login
+
+
+  // confirm & login
   @Post('loginByEmailOtp')
   @Public()
   @ApiOperation({ summary: "Login by email & otp token", description: "No Description" })
@@ -80,16 +82,16 @@ export class AuthController {
 
 
 
-  // =============================> get user
+  // =============================> get me
   @Get()
   @ApiBearerAuth()
-  @ApiOperation({ summary: "Get Me (Current user login)", description: "No Description" })
+  @ApiOperation({ summary: "Get me (current user login)", description: "No Description" })
   @ApiResponse({ status: 200, type: GetMeResponseDto })
   @ApiResponse({ status: 401, type: UnauthorizedDto })
   async getMe(@Request() { user }) {
-    return this.authService.getMe(user);
+    return this.authService.getMe(user)
   }
-  // =============================> get user
+  // =============================> get me
 
 
 
