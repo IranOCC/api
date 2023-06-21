@@ -1,11 +1,11 @@
 import * as path from 'path';
 
+// tools
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HeaderResolver, I18nModule, QueryResolver, } from 'nestjs-i18n';
+import { MongooseModule } from '@nestjs/mongoose';
 import { APP_GUARD } from '@nestjs/core';
-
-import { MongoModule } from './mongo/mongo.module';
 
 // app
 import { AppController } from './app.controller';
@@ -16,27 +16,28 @@ import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { RolesGuard } from './auth/roles.guard';
 
+
 // modules
-import { StorageModule } from './storage/storage.module';
 import { UserModule } from './user/user.module';
+import { OfficeModule } from './office/office.module';
+import { StorageModule } from './storage/storage.module';
 import { EstateModule } from './estate/estate.module';
-// import { OfficeModule } from './office/office.module';
 import { BlogModule } from './blog/blog.module';
 import { SettingModule } from './setting/setting.module';
-// import { EmailModule } from './email/email.module';
-// import { PhoneModule } from './phone/phone.module';
-// import { MailModule } from './mail/mail.module';
-// import { SmsModule } from './phone/sms/sms.module';
 import { IconModule } from './icon/icon.module';
-import { OfficeModule } from './office/office.module';
-import { EmailModule } from './email/email.module';
-import { PhoneModule } from './phone/phone.module';
+
+
 
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, expandVariables: true }),
-    MongoModule,
+    MongooseModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get('MONGODB_URL'),
+      }),
+      inject: [ConfigService],
+    }),
     I18nModule.forRoot({
       fallbackLanguage: 'fa',
       loaderOptions: {
@@ -47,15 +48,13 @@ import { PhoneModule } from './phone/phone.module';
       resolvers: [
         new QueryResolver(['lang', 'l']),
         new HeaderResolver(['x-client-lang'])
+        // TODO: add based on user selection in db (not important for now)
       ],
     }),
     AuthModule,
     UserModule,
     OfficeModule,
-    PhoneModule,
-    EmailModule,
     StorageModule,
-
     EstateModule,
     BlogModule,
     SettingModule,
