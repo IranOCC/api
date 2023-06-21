@@ -91,12 +91,12 @@ export class OfficeService {
   }
   // ======> email
   async setEmail(office: Office, email: EmailDto) {
-    // try {
-    //   const emailID = await this.emailService.setup(email.value, useForEnum.Office, office, email.verified)
-    //   office.email = emailID
-    // } catch (error) {
-    //   FieldAlreadyExists("email.value")
-    // }
+    try {
+      const emailID = await this.emailService.setup(email.value, useForEnum.Office, office, email.verified)
+      office.email = emailID
+    } catch (error) {
+      FieldAlreadyExists("email.value")
+    }
   }
 
 
@@ -104,24 +104,24 @@ export class OfficeService {
   async setManagement(office: Office, management: User | string) {
 
     // is admin?
-    // const u = await this.userService.hasAdminRole(management)
-    // if (!u) {
-    //   throw new BadRequestException({
-    //     errors: {
-    //       "management": { "MustBeAdmin": "کاربر نیاز است حداقل دسترسی ادمین را دارا باشد" }
-    //     }
-    //   })
-    // }
-    // if (!((u as User).active)) {
-    //   throw new BadRequestException({
-    //     errors: {
-    //       "management": { "NotActive": "کاربر غیرفعال است" }
-    //     }
-    //   })
-    // }
+    const u = await this.userService.hasAdminRole(management)
+    if (!u) {
+      throw new BadRequestException({
+        errors: {
+          "management": { "MustBeAdmin": "کاربر نیاز است حداقل دسترسی ادمین را دارا باشد" }
+        }
+      })
+    }
+    if (!((u as User).active)) {
+      throw new BadRequestException({
+        errors: {
+          "management": { "NotActive": "کاربر غیرفعال است" }
+        }
+      })
+    }
 
     // add member
-    // await this.memberService.add(office, management)
+    await this.memberService.add(office, management)
 
     // set admin
     office.management = management

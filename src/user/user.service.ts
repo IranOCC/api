@@ -147,12 +147,12 @@ export class UserService {
   }
   // ======> email
   async setEmail(user: User, email: EmailDto) {
-    // try {
-    //   const emailID = await this.emailService.setup(email.value, useForEnum.User, user, email.verified)
-    //   user.email = emailID
-    // } catch (error) {
-    //   FieldAlreadyExists("email.value")
-    // }
+    try {
+      const emailID = await this.emailService.setup(email.value, useForEnum.User, user, email.verified)
+      user.email = emailID
+    } catch (error) {
+      FieldAlreadyExists("email.value")
+    }
   }
 
 
