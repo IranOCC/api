@@ -19,8 +19,8 @@ import { OfficeService } from 'src/office/office.service';
 export class PhoneService {
   constructor(
     @InjectModel(PhoneNumber.name) private model: Model<PhoneNumberDocument>,
-    @Inject(forwardRef(() => OfficeService)) private officeService: OfficeService,
     @Inject(forwardRef(() => UserService)) private userService: UserService,
+    @Inject(forwardRef(() => OfficeService)) private officeService: OfficeService,
     private smsService: SmsService,
   ) { }
 

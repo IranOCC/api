@@ -10,12 +10,11 @@ import { Office, OfficeSchema } from './schemas/office.schema';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Office.name, schema: OfficeSchema }]),
-    // forwardRef(() => UserModule),
     forwardRef(() => PhoneModule),
     forwardRef(() => EmailModule),
   ],
   controllers: [OfficeController],
   providers: [OfficeService],
-  // exports: [OfficeService],
+  exports: [OfficeService],
 })
 export class OfficeModule { }

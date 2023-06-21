@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { useForEnum } from 'src/auth/enum/useFor.enum';
@@ -18,8 +18,8 @@ import { Office, OfficeDocument } from './schemas/office.schema';
 export class OfficeService {
   constructor(
     @InjectModel(Office.name) private officeModel: Model<OfficeDocument>,
-    private phoneService: PhoneService,
-    private emailService: EmailService,
+    @Inject(forwardRef(() => PhoneService)) private phoneService: PhoneService,
+    @Inject(forwardRef(() => EmailService)) private emailService: EmailService,
     // private userService: UserService,
     // private memberService: MemberService,
   ) { }

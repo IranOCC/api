@@ -17,8 +17,8 @@ import { EmailOtpConfirmDto } from 'src/auth/dto/emailOtpConfirm.dto';
 export class EmailService {
   constructor(
     @InjectModel(EmailAddress.name) private model: Model<EmailAddressDocument>,
-    @Inject(forwardRef(() => OfficeService)) private officeService: OfficeService,
     @Inject(forwardRef(() => UserService)) private userService: UserService,
+    @Inject(forwardRef(() => OfficeService)) private officeService: OfficeService,
     private mailService: MailService,
   ) { }
 

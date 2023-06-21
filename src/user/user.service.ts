@@ -1,6 +1,6 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, forwardRef, Inject, Injectable } from '@nestjs/common';
 
 import { User, UserDocument } from './schemas/user.schema';
 
@@ -18,8 +18,8 @@ import { FieldAlreadyExists } from 'src/utils/error';
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
-    private phoneService: PhoneService,
-    private emailService: EmailService,
+    @Inject(forwardRef(() => PhoneService)) private phoneService: PhoneService,
+    @Inject(forwardRef(() => EmailService)) private emailService: EmailService,
   ) { }
 
 

@@ -23,7 +23,8 @@ import { OfficeModule } from 'src/office/office.module';
     forwardRef(() => UserModule),
   ],
   providers: [PhoneService, SmsService],
-  exports: [PhoneService],
   controllers: [SmsController],
+  exports: [PhoneService],
+
 })
 export class PhoneModule { }
