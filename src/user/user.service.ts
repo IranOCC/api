@@ -14,12 +14,14 @@ import { EmailService } from 'src/email/email.service';
 import { PhoneService } from 'src/phone/phone.service';
 import { PhoneDto } from 'src/phone/dto/phone.dto';
 import { FieldAlreadyExists } from 'src/utils/error';
+import { OfficeService } from 'src/office/office.service';
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @Inject(forwardRef(() => PhoneService)) private phoneService: PhoneService,
     @Inject(forwardRef(() => EmailService)) private emailService: EmailService,
+    @Inject(forwardRef(() => OfficeService)) private officeService: OfficeService,
   ) { }
 
 

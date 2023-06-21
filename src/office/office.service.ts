@@ -20,8 +20,8 @@ export class OfficeService {
     @InjectModel(Office.name) private officeModel: Model<OfficeDocument>,
     @Inject(forwardRef(() => PhoneService)) private phoneService: PhoneService,
     @Inject(forwardRef(() => EmailService)) private emailService: EmailService,
-    // private userService: UserService,
-    // private memberService: MemberService,
+    @Inject(forwardRef(() => UserService)) private userService: UserService,
+    private memberService: MemberService,
   ) { }
 
   // =============================> Admin Crud <===========================
