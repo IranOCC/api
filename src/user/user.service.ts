@@ -125,7 +125,9 @@ export class UserService {
   // *
   async getUserPayload(id: string) {
     return await this.findOne(id)
-      .select(["_id", "roles", "firstName", "lastName", "fullName", "avatar"])
+      .select(["_id", "roles", "firstName", "lastName", "fullName", "avatar", "accountToken", "verified", "active", "province", "city", "address", "location"])
+      .populate("phone", ["value", "verified"])
+      .populate("email", ["value", "verified"])
   }
 
 

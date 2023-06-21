@@ -55,11 +55,11 @@ export class AuthService {
     // find or create 
     const user = await this.userService.findOrCreateByEmail(data);
     // send otp
-    // try {
-    await this.userService.sendEmailOtpCode(user)
-    // } catch (error) {
-    //   throw new NotAcceptableException("Send otp code failed", "SendOtpFailed")
-    // }
+    try {
+      await this.userService.sendEmailOtpCode(user)
+    } catch (error) {
+      throw new NotAcceptableException("Send otp code failed", "SendOtpFailed")
+    }
     // return
     return { email: user.email.value };
   }
@@ -72,10 +72,7 @@ export class AuthService {
     // get login
     const payload = (await this.userService.getUserPayload(user._id)).toJSON()
     const accessToken = this.jwtService.sign(payload, { expiresIn: process.env.JWT_EXPIRE_IN });
-    return {
-      user,
-      accessToken
-    };
+    return { accessToken };
   }
   // =============================> login or register by email & otp
 

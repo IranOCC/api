@@ -14,10 +14,12 @@ import { PhoneOtpConfirmRequestDto, } from './dto/phoneOtpConfirm.dto';
 import { EmailOtpDtoRequestDto, EmailOtpDtoResponseDto } from './dto/emailOtp.dto';
 import { EmailOtpConfirmRequestDto } from './dto/emailOtpConfirm.dto';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserLoginResponseDto } from './dto/userLoginResponse.dt';
+import { UserLoginResponseDto } from './dto/userLoginResponse.dto';
 import { NotAcceptableDto } from 'src/utils/dto/notAcceptable.dto';
 import { BadRequestDto } from 'src/utils/dto/badRequest.dto';
 import { ForbiddenDto } from 'src/utils/dto/forbidden.dto';
+import { UnauthorizedDto } from 'src/utils/dto/unauthorized.dto';
+import { GetMeResponseDto } from './dto/getMeResponse.dto';
 
 
 @ApiTags('Auth')
@@ -81,9 +83,9 @@ export class AuthController {
   // =============================> get user
   @Get()
   @ApiBearerAuth()
-  @ApiOperation({ summary: "Get login user data", description: "No Description" })
-  // @ApiOkResponse({ type: AuthUserDto })
-  // @ApiUnauthorizedResponse({ type: UnauthorizedDto })
+  @ApiOperation({ summary: "Get Me (Current user login)", description: "No Description" })
+  @ApiResponse({ status: 200, type: GetMeResponseDto })
+  @ApiResponse({ status: 401, type: UnauthorizedDto })
   async getMe(@Request() { user }) {
     return this.authService.getMe(user);
   }

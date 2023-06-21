@@ -1,7 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
-import { PhoneOtpDtoResponseDto } from './auth/dto/phoneOtp.dto';
 import { Public } from './auth/jwt-auth.guard';
 
 

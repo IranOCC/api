@@ -36,7 +36,7 @@ import { I18nService } from 'nestjs-i18n';
           defaults: {
             from: "Iran Occasion <noreply@iranocc.com>",
           },
-          preview: true,
+          // preview: true,
           template: {
             dir: join(__dirname, 'templates'),
             adapter: new HandlebarsAdapter({ t: i18n.hbsHelper }),
