@@ -64,7 +64,7 @@ export class UserServiceTools {
 
   statics(subject: string) {
     const data = { roles: RoleEnum }
-    return this.i18n.t(data[subject]) || {}
+    return data[subject] || {}
   }
 
 }
