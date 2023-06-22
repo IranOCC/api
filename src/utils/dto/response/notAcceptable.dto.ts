@@ -1,16 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose } from "class-transformer";
 
-export class ForbiddenDto {
-    @ApiProperty({ example: 403 })
+export class NotAcceptableResponseDto {
+    @ApiProperty({ example: 406 })
     @Expose()
     statusCode: number;
 
-    @ApiProperty({ example: "You don't have access" })
+    @ApiProperty({ example: "Parameter is wrong" })
     @Expose()
     message: string;
 
-    @ApiProperty({ example: "Forbidden" })
+    @ApiProperty({ example: "NotAcceptable" })
     @Expose()
     error: string;
 }

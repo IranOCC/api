@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose } from "class-transformer";
 
-export class BadRequestDto {
+export class BadRequestResponseDto {
     @ApiProperty({ example: 400 })
     @Expose()
     statusCode: number;

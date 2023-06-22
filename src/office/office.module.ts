@@ -7,7 +7,6 @@ import { PhoneModule } from 'src/phone/phone.module';
 import { Office, OfficeSchema } from './schemas/office.schema';
 import { UserModule } from 'src/user/user.module';
 import { MemberService } from './member.service';
-import { UserService } from 'src/user/user.service';
 
 @Module({
   imports: [

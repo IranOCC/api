@@ -10,10 +10,18 @@ import * as speakeasy from 'speakeasy';
 @Schema({ timestamps: true })
 export class User extends Document {
 
-  @Prop({ trim: true, select: true, })
+  @Prop({
+    trim: true,
+    select: true,
+    // text: true,
+  })
   firstName: string;
 
-  @Prop({ trim: true, select: true, })
+  @Prop({
+    trim: true,
+    select: true,
+    // text: true
+  })
   lastName: string;
 
   fullName: string;
@@ -26,7 +34,7 @@ export class User extends Document {
     type: mongoose.Schema.Types.ObjectId,
     select: true,
     ref: 'EmailAddress',
-    autopopulate: true
+    autopopulate: true,
   })
   email: any;
 

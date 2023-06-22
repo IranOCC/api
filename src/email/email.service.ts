@@ -1,7 +1,6 @@
 import { forwardRef, Inject, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UserService } from 'src/user/user.service';
 import { Office } from 'src/office/schemas/office.schema';
 import { GetMailLogsDto } from './dto/getMailLogs.dto';
 import { SendMailDto } from './dto/sendMail.dto';
@@ -10,8 +9,9 @@ import { User } from 'src/user/schemas/user.schema';
 import { OfficeService } from 'src/office/office.service';
 import { MailService } from './mail.service';
 import { generateToken, validationToken } from 'src/utils/helper/token.helper';
-import { EmailOtpConfirmRequestDto } from 'src/auth/dto/emailOtpConfirm.dto';
+import { EmailOtpConfirmDto } from 'src/auth/dto/emailOtpConfirm.dto';
 import { useForEnum } from 'src/utils/enum/useFor.enum';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class EmailService {
@@ -82,7 +82,7 @@ export class EmailService {
   }
 
   // confirm otp
-  async confirmOtpCode({ email, token }: EmailOtpConfirmRequestDto) {
+  async confirmOtpCode({ email, token }: EmailOtpConfirmDto) {
     const _query = await this.model
       .findOne({ value: email })
       .select(['secret'])

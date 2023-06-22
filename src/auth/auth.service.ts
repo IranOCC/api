@@ -7,10 +7,10 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/schemas/user.schema';
 import { UserService } from '../user/user.service';
-import { EmailOtpDtoRequestDto } from './dto/emailOtp.dto';
-import { EmailOtpConfirmRequestDto } from './dto/emailOtpConfirm.dto';
-import { PhoneOtpDtoRequestDto } from './dto/phoneOtp.dto';
-import { PhoneOtpConfirmRequestDto } from './dto/phoneOtpConfirm.dto';
+import { EmailOtpDto } from './dto/emailOtp.dto';
+import { EmailOtpConfirmDto } from './dto/emailOtpConfirm.dto';
+import { PhoneOtpDtoDto } from './dto/phoneOtp.dto';
+import { PhoneOtpConfirmDto } from './dto/phoneOtpConfirm.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +21,7 @@ export class AuthService {
 
   // =============================> login or register by PHONE & otp
   // login or create
-  async phoneOtp(data: PhoneOtpDtoRequestDto) {
+  async phoneOtp(data: PhoneOtpDtoDto) {
     // find or create 
     const user = await this.userService.findOrCreateByPhone(data);
     // send otp
@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   // confirm & login
-  async loginByPhoneOtp(data: PhoneOtpConfirmRequestDto) {
+  async loginByPhoneOtp(data: PhoneOtpConfirmDto) {
     // confirm otp
     const user = await this.userService.findOrCreateByPhone({ phone: data.phone });
     await this.userService.confirmPhoneOtpCode(user, data.token)
@@ -54,7 +54,7 @@ export class AuthService {
 
   // =============================> login or register by EMAIL & otp
   // login or create
-  async emailOtp(data: EmailOtpDtoRequestDto) {
+  async emailOtp(data: EmailOtpDto) {
     // find or create 
     const user = await this.userService.findOrCreateByEmail(data);
     // send otp
@@ -68,7 +68,7 @@ export class AuthService {
   }
 
   // confirm & login
-  async loginByEmailOtp(data: EmailOtpConfirmRequestDto) {
+  async loginByEmailOtp(data: EmailOtpConfirmDto) {
     // confirm otp
     const user = await this.userService.findOrCreateByEmail({ email: data.email });
     await this.userService.confirmEmailOtpCode(user, data.token)

@@ -1,9 +1,8 @@
 import { forwardRef, Inject, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PhoneOtpConfirmRequestDto } from 'src/auth/dto/phoneOtpConfirm.dto';
+import { PhoneOtpConfirmDto } from 'src/auth/dto/phoneOtpConfirm.dto';
 import { SendSmsDto } from './dto/sendSms.dto';
-import { UserService } from 'src/user/user.service';
 import { GetSmsLogsDto } from './dto/getSmsLogs.dto';
 import { Office } from 'src/office/schemas/office.schema';
 import { SmsService } from './sms.service';
@@ -12,6 +11,7 @@ import { User } from 'src/user/schemas/user.schema';
 import { generateToken, validationToken } from 'src/utils/helper/token.helper';
 import { OfficeService } from 'src/office/office.service';
 import { useForEnum } from 'src/utils/enum/useFor.enum';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class PhoneService {
@@ -80,7 +80,7 @@ export class PhoneService {
   }
 
   // confirm otp
-  async confirmOtpCode({ phone, token }: PhoneOtpConfirmRequestDto) {
+  async confirmOtpCode({ phone, token }: PhoneOtpConfirmDto) {
     const _query = await this.model
       .findOne({ value: phone })
       .select(['secret'])

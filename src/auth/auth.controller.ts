@@ -3,25 +3,23 @@ import {
   Post,
   Request,
   Body,
-  UseGuards,
   Get,
-  Patch,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from './jwt-auth.guard';
-import { PhoneOtpDtoResponseDto, PhoneOtpDtoRequestDto } from './dto/phoneOtp.dto';
-import { PhoneOtpConfirmRequestDto, } from './dto/phoneOtpConfirm.dto';
-import { EmailOtpDtoRequestDto, EmailOtpDtoResponseDto } from './dto/emailOtp.dto';
-import { EmailOtpConfirmRequestDto } from './dto/emailOtpConfirm.dto';
+import { PhoneOtpDtoDto } from './dto/phoneOtp.dto';
+import { PhoneOtpConfirmDto, } from './dto/phoneOtpConfirm.dto';
+import { EmailOtpDto } from './dto/emailOtp.dto';
+import { EmailOtpConfirmDto } from './dto/emailOtpConfirm.dto';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserLoginResponseDto } from './dto/userLoginResponse.dto';
-import { NotAcceptableDto } from 'src/utils/dto/notAcceptable.dto';
-import { BadRequestDto } from 'src/utils/dto/badRequest.dto';
-import { ForbiddenDto } from 'src/utils/dto/forbidden.dto';
-import { UnauthorizedDto } from 'src/utils/dto/unauthorized.dto';
-import { GetMeResponseDto } from './dto/getMeResponse.dto';
-import { Roles } from './roles.decorator';
-import { RoleEnum } from 'src/user/enum/role.enum';
+import { UserLoginResponseDto } from './dto/response/userLogin.dto';
+import { UnauthorizedResponseDto } from 'src/utils/dto/response/unauthorized.dto';
+import { GetMeResponseDto } from './dto/response/getMe.dto';
+import { EmailOtpResponseDto } from './dto/response/emailOtp.dto';
+import { PhoneOtpResponseDto } from './dto/response/phoneOtp.dto';
+import { BadRequestResponseDto } from 'src/utils/dto/response/badRequest.dto';
+import { ForbiddenResponseDto } from 'src/utils/dto/response/forbidden.dto';
+import { NotAcceptableResponseDto } from 'src/utils/dto/response/notAcceptable.dto';
 
 
 @ApiTags('Auth')
@@ -35,10 +33,10 @@ export class AuthController {
   @Post('phoneOtp')
   @Public()
   @ApiOperation({ summary: "Request for send otp phone", description: "No Description" })
-  @ApiResponse({ status: 201, type: PhoneOtpDtoResponseDto })
-  @ApiResponse({ status: 400, type: BadRequestDto })
-  @ApiResponse({ status: 406, type: NotAcceptableDto })
-  async phoneOtp(@Body() data: PhoneOtpDtoRequestDto) {
+  @ApiResponse({ status: 201, type: PhoneOtpResponseDto })
+  @ApiResponse({ status: 400, type: BadRequestResponseDto })
+  @ApiResponse({ status: 406, type: NotAcceptableResponseDto })
+  async phoneOtp(@Body() data: PhoneOtpDtoDto) {
     return this.authService.phoneOtp(data);
   }
 
@@ -48,9 +46,9 @@ export class AuthController {
   @Public()
   @ApiOperation({ summary: "Login by phone & otp token", description: "No Description" })
   @ApiResponse({ status: 201, type: UserLoginResponseDto })
-  @ApiResponse({ status: 400, type: BadRequestDto })
-  @ApiResponse({ status: 403, type: ForbiddenDto })
-  async loginByPhoneOtp(@Body() data: PhoneOtpConfirmRequestDto) {
+  @ApiResponse({ status: 400, type: BadRequestResponseDto })
+  @ApiResponse({ status: 403, type: ForbiddenResponseDto })
+  async loginByPhoneOtp(@Body() data: PhoneOtpConfirmDto) {
     return this.authService.loginByPhoneOtp(data);
   }
   // =============================> login or register by phone & otp
@@ -62,10 +60,10 @@ export class AuthController {
   @Post('emailOtp')
   @Public()
   @ApiOperation({ summary: "Request for send otp email", description: "No Description" })
-  @ApiResponse({ status: 201, type: EmailOtpDtoResponseDto })
-  @ApiResponse({ status: 400, type: BadRequestDto })
-  @ApiResponse({ status: 406, type: NotAcceptableDto })
-  async emailOtp(@Body() data: EmailOtpDtoRequestDto) {
+  @ApiResponse({ status: 201, type: EmailOtpResponseDto })
+  @ApiResponse({ status: 400, type: BadRequestResponseDto })
+  @ApiResponse({ status: 406, type: NotAcceptableResponseDto })
+  async emailOtp(@Body() data: EmailOtpDto) {
     return this.authService.emailOtp(data);
   }
 
@@ -75,9 +73,9 @@ export class AuthController {
   @Public()
   @ApiOperation({ summary: "Login by email & otp token", description: "No Description" })
   @ApiResponse({ status: 201, type: UserLoginResponseDto })
-  @ApiResponse({ status: 400, type: BadRequestDto })
-  @ApiResponse({ status: 403, type: ForbiddenDto })
-  async loginByEmailOtp(@Body() data: EmailOtpConfirmRequestDto) {
+  @ApiResponse({ status: 400, type: BadRequestResponseDto })
+  @ApiResponse({ status: 403, type: ForbiddenResponseDto })
+  async loginByEmailOtp(@Body() data: EmailOtpConfirmDto) {
     return this.authService.loginByEmailOtp(data);
   }
   // =============================> login or register by email & otp
@@ -89,37 +87,10 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOperation({ summary: "Get me (current user login)", description: "No Description" })
   @ApiResponse({ status: 200, type: GetMeResponseDto })
-  @ApiResponse({ status: 401, type: UnauthorizedDto })
+  @ApiResponse({ status: 401, type: UnauthorizedResponseDto })
   async getMe(@Request() { user }) {
     return this.authService.getMe(user)
   }
   // =============================> get me
-
-
-  @Get("test")
-  @ApiBearerAuth()
-  @Roles(RoleEnum.SuperAdmin)
-  async test2(@Request() { user }) {
-    return RoleEnum.SuperAdmin
-  }
-
-
-  @Get("test")
-  @ApiBearerAuth()
-  @Roles(RoleEnum.Admin)
-  async test1(@Request() { user }) {
-    return RoleEnum.Admin
-  }
-
-
-
-
-
-  @Get("test")
-  @ApiBearerAuth()
-  @Roles(RoleEnum.User)
-  async test3(@Request() { user }) {
-    return RoleEnum.User
-  }
 
 }
