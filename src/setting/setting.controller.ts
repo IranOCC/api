@@ -13,7 +13,10 @@ import { Roles } from 'src/auth/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
 import { SettingsKeys } from './enum/settingKeys.enum';
 import { InitialSettingDto } from './dto/initialSetting.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+
+@ApiTags('Setting')
 @Controller('setting')
 export class SettingController {
   constructor(private readonly settingService: SettingService) {

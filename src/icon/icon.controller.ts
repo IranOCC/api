@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { IconService } from './icon.service';
 import { CreateIconDto } from './dto/createIcon.dto';
 import { UpdateIconDto } from './dto/updateIcon.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Icon')
 @Controller('icon')
 export class IconController {
   constructor(private readonly iconService: IconService) { }

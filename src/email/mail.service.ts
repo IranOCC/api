@@ -30,9 +30,9 @@ export class MailService {
       context,
     })
     this.logModel.create({
-      emailID: email._id,
-      userID: email?.user || null,
-      officeID: email?.office || null,
+      email: email._id,
+      user: email?.user || null,
+      office: email?.office || null,
       template: MailTemplatesEnum.Otp,
       context,
       relatedTo: RelatedToEnum.Otp || null
@@ -48,9 +48,9 @@ export class MailService {
       context,
     })
     this.logModel.create({
-      emailID: email._id,
-      userID: email?.user || null,
-      officeID: email?.office || null,
+      email: email._id,
+      user: email?.user || null,
+      office: email?.office || null,
       template,
       context,
       relatedTo: relatedTo || undefined,
@@ -59,10 +59,22 @@ export class MailService {
     })
   }
 
+
   async logs(email: EmailAddress, relatedTo?: RelatedToEnum, relatedToID?: string) {
-    return await this.logModel
-      .find({ emailID: email._id })
-      .find({ relatedTo, relatedToID })
-      .populate("sentBy", ["fullName"])
+    console.log("*tttt*");
+
+    if (relatedTo && relatedToID) {
+      return await this.logModel.find({ email: email._id }).find({ relatedTo, relatedToID }).populate("sentBy", ["fullName"])
+    }
+    console.log("*ppp*");
+
+    if (relatedTo) {
+      return await this.logModel.find({ email: email._id }).find({ relatedTo }).populate("sentBy", ["fullName"])
+    }
+    console.log("***");
+
+    return await this.logModel.find({ email: email._id }).populate("sentBy", ["fullName"])
   }
+
+
 }

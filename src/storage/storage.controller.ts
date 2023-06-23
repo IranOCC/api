@@ -16,7 +16,11 @@ import { BufferedFile } from './file.type';
 import { Public } from 'src/auth/jwt-auth.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
+import { ApiTags } from '@nestjs/swagger';
 
+
+
+@ApiTags('Storage')
 @Controller('storage')
 export class StorageController {
   constructor(private storageService: StorageService) { }

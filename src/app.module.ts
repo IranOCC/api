@@ -55,10 +55,12 @@ import { IconModule } from './icon/icon.module';
     UserModule,
     OfficeModule,
     StorageModule,
-    EstateModule,
+    IconModule,
     BlogModule,
     SettingModule,
-    IconModule,
+
+    EstateModule,
+
   ],
   controllers: [AppController],
   providers: [

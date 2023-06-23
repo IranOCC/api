@@ -39,9 +39,9 @@ export class SmsService {
       [{ name: "token", value: token }]
     )
     this.logModel.create({
-      phoneID: phone._id,
-      userID: phone?.user || null,
-      officeID: phone?.office || null,
+      phone: phone._id,
+      user: phone?.user || null,
+      office: phone?.office || null,
       template: SmsTemplatesEnum.Otp,
       context,
       relatedTo: RelatedToEnum.Otp || null
@@ -63,9 +63,9 @@ export class SmsService {
       [phone.value]
     );
     this.logModel.create({
-      phoneID: phone._id,
-      userID: phone?.user || null,
-      officeID: phone?.office || null,
+      phone: phone._id,
+      user: phone?.user || null,
+      office: phone?.office || null,
       template,
       context,
       relatedTo: relatedTo || undefined,
@@ -75,9 +75,15 @@ export class SmsService {
   }
 
   async logs(phone: PhoneNumber, relatedTo?: RelatedToEnum, relatedToID?: string) {
-    return await this.logModel
-      .find({ phoneID: phone._id })
-      .find({ relatedTo, relatedToID })
-      .populate("sentBy", ["fullName"])
+    if (relatedTo && relatedToID) {
+      return await this.logModel.find({ phone: phone._id }).find({ relatedTo, relatedToID }).populate("sentBy", ["fullName"])
+    }
+    if (relatedTo) {
+      return await this.logModel.find({ phone: phone._id }).find({ relatedTo }).populate("sentBy", ["fullName"])
+    }
+    return await this.logModel.find({ phone: phone._id }).populate("sentBy", ["fullName"])
   }
+
+
+
 }
