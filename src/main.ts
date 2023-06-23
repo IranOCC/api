@@ -24,6 +24,10 @@ async function bootstrap() {
     .setDescription('The API of iranocc.com')
     .setVersion('1.0')
     .addBearerAuth()
+    // .addGlobalParameters(
+    //   { name: "lang", in: "query" },
+    //   { name: "x-client-lang", in: "header" },
+    // )
     .build();
 
   // implant swagger
