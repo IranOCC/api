@@ -10,8 +10,8 @@ import {
 import { EstateService } from './estate.service';
 import { CreateEstateDto } from './dto/createEstate.dto';
 import { UpdateEstateDto } from './dto/updateEstate.dto';
+import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
-import { Roles } from 'src/auth/roles.decorator';
 
 @Controller('estate')
 export class EstateController {

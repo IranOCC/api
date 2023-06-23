@@ -1,9 +1,7 @@
 import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PhoneOtpResponseDto } from 'src/auth/dto/response/phoneOtp.dto';
-import { Public } from 'src/auth/jwt-auth.guard';
-import { Roles } from 'src/auth/roles.decorator';
-import { RoleEnum } from 'src/user/enum/role.enum';
+import { Public } from 'src/auth/guard/jwt-auth.guard';
 import { GetMailLogsDto } from './dto/getMailLogs.dto';
 import { SendMailDto } from './dto/sendMail.dto';
 import { EmailService } from './email.service';

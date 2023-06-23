@@ -8,7 +8,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { Roles } from 'src/auth/roles.decorator';
+import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
 import { EstateDocumentTypeService } from './documentType.service';
 import { CreateEstateDocumentTypeDto } from './dto/createEstateDocumentType.dto';

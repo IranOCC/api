@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Query, Post, Request } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Public } from 'src/auth/jwt-auth.guard';
-import { Roles } from 'src/auth/roles.decorator';
+import { Public } from 'src/auth/guard/jwt-auth.guard';
+import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
 import { GetSmsLogsDto } from '../phone/dto/getSmsLogs.dto';
 import { SendSmsDto } from '../phone/dto/sendSms.dto';

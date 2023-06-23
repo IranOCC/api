@@ -1,10 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/auth/roles.decorator';
 import { AutoCompleteDto } from 'src/utils/dto/autoComplete.dto';
-import { RoleEnum } from '../enum/role.enum';
 import { UserServiceTools } from '../services/user.tools.service';
-
+import { Roles } from 'src/auth/guard/roles.decorator';
+import { RoleEnum } from 'src/user/enum/role.enum';
 @Controller('user/tools')
 @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
 @ApiTags('User')

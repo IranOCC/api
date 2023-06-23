@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Public } from 'src/auth/jwt-auth.guard';
-import { Roles } from 'src/auth/roles.decorator';
+import { Public } from 'src/auth/guard/jwt-auth.guard';
+import { Roles } from 'src/auth/guard/roles.decorator';
+import { RoleEnum } from 'src/user/enum/role.enum';
 import { MongoIDQueryDto } from 'src/utils/dto/mongoIDQuery.dto';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { CreateUserDto } from '../dto/createUser.dto';
 import { UpdateUserDto } from '../dto/updateUser.dto';
-import { RoleEnum } from '../enum/role.enum';
 import { UserServiceAdmin } from '../services/user.admin.service';
 
 

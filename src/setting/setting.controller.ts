@@ -8,8 +8,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { SettingService } from './setting.service';
-import { Public } from 'src/auth/jwt-auth.guard';
-import { Roles } from 'src/auth/roles.decorator';
+import { Public } from 'src/auth/guard/jwt-auth.guard';
+import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
 import { SettingsKeys } from './enum/settingKeys.enum';
 import { InitialSettingDto } from './dto/initialSetting.dto';

@@ -6,7 +6,7 @@ import {
   Get,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Public } from './jwt-auth.guard';
+import { Public } from './guard/jwt-auth.guard';
 import { PhoneOtpDtoDto } from './dto/phoneOtp.dto';
 import { PhoneOtpConfirmDto, } from './dto/phoneOtpConfirm.dto';
 import { EmailOtpDto } from './dto/emailOtp.dto';
