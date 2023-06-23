@@ -43,9 +43,6 @@ export class Estate extends Document {
   @Prop({ default: Date.now })
   publishedAt: Date;
 
-  @Prop({ select: false, })
-  deletedAt: Date;
-
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

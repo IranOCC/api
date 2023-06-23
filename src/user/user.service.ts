@@ -16,6 +16,8 @@ import { ValidationError } from 'class-validator';
 import { I18nValidationException, I18nService } from 'nestjs-i18n';
 import { useForEnum } from 'src/utils/enum/useFor.enum';
 import { AutoCompleteDto } from 'src/utils/dto/autoComplete.dto';
+import { PhoneNumber } from 'src/phone/schemas/phone.schema';
+import { EmailAddress } from 'src/email/schemas/email.schema';
 
 
 
@@ -37,8 +39,10 @@ export class UserService {
     async findOrCreateByPhone({ phone }: PhoneOtpDtoDto): Promise<User> {
         let user: User
         try {
+            // get phone
             const phoneQ = await this.phoneService.find(phone, useForEnum.User)
-            user = await this.userModel.findById(phoneQ.user).select(["_id", "roles", "firstName", "lastName", "fullName", "avatar"])
+            // get user
+            user = await this.getUserForLogin((phoneQ.user as string))
             if (!user) throw 'Not found'
             return user
         } catch (error) {
@@ -63,12 +67,12 @@ export class UserService {
 
     // *
     async sendPhoneOtpCode(user: User) {
-        return await this.phoneService.sendOtpCode(user.phone.value)
+        return await this.phoneService.sendOtpCode((user.phone as PhoneNumber).value)
     }
 
     // *
     async confirmPhoneOtpCode(user: User, token: string) {
-        const isValid = await this.phoneService.confirmOtpCode({ phone: user.phone.value, token })
+        const isValid = await this.phoneService.confirmOtpCode({ phone: (user.phone as PhoneNumber).value, token })
         if (!isValid) {
             throw new UnauthorizedException("Otp token is wrong", "TokenWrong")
         }
@@ -107,12 +111,12 @@ export class UserService {
 
     // *
     async sendEmailOtpCode(user: User) {
-        return await this.emailService.sendOtpCode(user.email.value)
+        return await this.emailService.sendOtpCode((user.email as EmailAddress).value)
     }
 
     // *
     async confirmEmailOtpCode(user: User, token: string) {
-        const isValid = await this.emailService.confirmOtpCode({ email: user.email.value, token })
+        const isValid = await this.emailService.confirmOtpCode({ email: (user.email as EmailAddress).value, token })
         if (!isValid) {
             throw new UnauthorizedException("Otp token is wrong", "TokenWrong")
         }
@@ -120,195 +124,75 @@ export class UserService {
 
 
 
-    // ===============================
+    // ======================================================
+
+    // get user for login
+    async getUserForLogin(id: string) {
+        return await this.userModel.findById(id)
+            .select([
+                "_id",
+                "roles",
+                "firstName",
+                "lastName",
+                "fullName",
+                "active",
+                "phone",
+                "email",
+                "avatar"
+            ])
+    }
 
 
-    // *
+    // after login & get Me
     async getUserPayload(id: string) {
-        return await this.findOne(id)
-            .select(["_id", "roles", "firstName", "lastName", "fullName", "avatar", "accountToken", "verified", "active", "province", "city", "address", "location"])
-            .populate("phone", ["value", "verified"])
-            .populate("email", ["value", "verified"])
+        return this.userModel.findById(id)
+            .select([
+                "_id",
+                "roles",
+                "firstName",
+                "lastName",
+                "fullName",
+                "phone",
+                "email",
+                "avatar",
+
+                "verified",
+                "active",
+
+                "accountToken",
+
+                "province",
+                "city",
+                "address",
+                "location"
+            ])
     }
 
 
-
-    async autoComplete({ initial, search, current, size }: AutoCompleteDto) {
-        return await this.userModel.aggregate([
-            // {
-            //     $lookup: {
-            //         from: 'phonenumbers',
-            //         localField: 'phone',
-            //         foreignField: '_id',
-            //         as: 'phone',
-            //         pipeline: [
-            //             {
-            //                 $project: {
-            //                     value: true
-            //                 }
-            //             }
-            //         ]
-            //     }
-            // },
-            // {
-            //     $lookup: {
-            //         from: 'emailaddresses',
-            //         localField: 'email',
-            //         foreignField: '_id',
-            //         as: 'email',
-            //         pipeline: [
-            //             {
-            //                 $project: {
-            //                     value: true
-            //                 }
-            //             }
-            //         ]
-            //     }
-            // },
-            // { $unwind: '$phone' },
-            // { $unwind: '$email' },
-            { $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } },
-            {
-                $match: {
-                    $or: [
-                        { fullName: { $regex: search, $options: "i" } },
-                        { _id: new mongoose.Types.ObjectId(initial) }
-                    ]
-                }
-            },
-            {
-                $project: {
-                    _id: 0,
-                    title: "$fullName",
-                    value: "$_id",
-                    isInitial: {
-                        $cond: [
-                            { $eq: ["$_id", new mongoose.Types.ObjectId(initial)] },
-                            1,
-                            0
-                        ]
-                    }
-                }
-            },
-            { $skip: (current - 1) * size },
-            { $limit: size },
-            { $sort: { isInitial: -1 } },
-            { $project: { isInitial: 0 } }
-        ])
-    }
-
-    statics(subject: string) {
-        const data = { roles: RoleEnum }
-        return data[subject]
-    }
-
-    // *
-    async create(data: CreateUserDto): Promise<any> {
-        const { phone, email, ...modelData } = data
-        const _user = new this.userModel(modelData)
-
-        if (phone) await this.setPhone(_user, phone)
-        if (email) await this.setEmail(_user, email)
-
-        // save
-        await _user.save()
-        return _user;
-    }
-
-    // *
-    async update(id: string, data: UpdateUserDto): Promise<any> {
-        const { phone, email, ...modelData } = data
-        const _user = await this.userModel.findById(id)
-
-        if (phone) await this.setPhone(_user, phone)
-        if (email) await this.setEmail(_user, email)
-
-        return this.userModel.updateOne({ _id: id }, modelData).exec();
-    }
-
-    findAll(): Promise<User[]> {
-        return this.userModel.find().exec();
-    }
-
-    findOne(id: string) {
-        return this.userModel.findById(id).populate(['phone']);
-    }
-
-    async remove(id: string) {
-        const o = await this.findOne(id)
-        if (o.phone) this.phoneService.remove(o.phone?._id);
-        if (o.email) this.emailService.remove(o.email?._id);
-        await o.remove();
+    // find by ID
+    findOne(id: string, ...arg) {
+        return this.userModel.findById(id, ...arg);
     }
 
 
-    // ======> phone
-    async setPhone(user: User, phone: PhoneDto) {
-        try {
-            const phoneID = await this.phoneService.setup(phone.value, useForEnum.User, user, phone.verified)
-            user.phone = phoneID
-        } catch (error) {
-            const _error = new ValidationError();
-            _error.property = 'phone';
-            _error.constraints = {
-                PhoneNumberInUsed: this.i18n.t("exception.PhoneNumberInUsed")
-            };
-            _error.value = phone;
-            throw new I18nValidationException([_error])
-        }
+    // 
+    getUserForMailService = (id: string) => {
+        return this.findOne(id, {}, { autopopulate: false })
+            .populate({
+                path: "email",
+                select: "value verified user",
+                populate: { path: "user", select: "-phone" }
+            })
     }
-    // ======> email
-    async setEmail(user: User, email: EmailDto) {
-        try {
-            const emailID = await this.emailService.setup(email.value, useForEnum.User, user, email.verified)
-            user.email = emailID
-        } catch (error) {
-            const _error = new ValidationError();
-            _error.property = 'email';
-            _error.constraints = {
-                EmailAddressInUsed: this.i18n.t("exception.EmailAddressInUsed")
-            };
-            _error.value = email;
-            throw new I18nValidationException([_error])
-        }
+    getUserForSmsService = (id: string) => {
+        return this.findOne(id, {}, { autopopulate: false })
+            .populate({
+                path: "phone",
+                select: "value verified user",
+                populate: { path: "user", select: "-email" }
+            })
     }
 
 
-    // ==>
-    async getOrCheck(data: User | string): Promise<User> {
-        let _data: User
-        if (typeof data === 'string')
-            _data = await this.findOne(data)
-        else
-            _data = data
-
-        return _data
-    }
-
-
-    async hasSuperAdminRole(user: User | string): Promise<boolean | User> {
-        let _user: User = await this.getOrCheck(user)
-        return _user.roles.includes(RoleEnum.SuperAdmin) && _user
-    }
-
-    async hasAdminRole(user: User | string): Promise<boolean | User> {
-        let _user: User = await this.getOrCheck(user)
-        return _user.roles.includes(RoleEnum.Admin) && _user
-    }
-
-    async hasAgentRole(user: User | string): Promise<boolean | User> {
-        let _user: User = await this.getOrCheck(user)
-        return _user.roles.includes(RoleEnum.Agent) && _user
-    }
-
-    async hasAuthorRole(user: User | string): Promise<boolean | User> {
-        let _user: User = await this.getOrCheck(user)
-        return _user.roles.includes(RoleEnum.Author) && _user
-    }
-
-    async hasUserRole(user: User | string): Promise<boolean | User> {
-        let _user: User = await this.getOrCheck(user)
-        return _user.roles.includes(RoleEnum.User) && _user
-    }
 
 }

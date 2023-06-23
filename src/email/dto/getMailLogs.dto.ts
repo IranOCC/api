@@ -1,32 +1,32 @@
-import { IsEmail, IsMongoId, IsNotEmpty, IsOptional, } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsEnum, IsMongoId, IsOptional, ValidateIf, } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
+import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
 
-const $ = 'validation.GetMailLogs';
 
 export class GetMailLogsDto {
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ enum: RelatedToEnum })
   @IsOptional()
-  @IsNotEmpty({ message: i18nVM('validation.IsNotEmpty') })
-  subject: string;
+  @IsEnum(RelatedToEnum)
+  relatedTo: RelatedToEnum = null;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsMongoId({ message: i18nVM('validation.IsMongoId') })
-  subjectID: string;
+  @IsMongoId()
+  relatedToID: string;
 
   @ApiPropertyOptional()
-  @IsOptional()
-  @IsMongoId({ message: i18nVM('validation.IsMongoId') })
-  userID: string;
+  @ValidateIf((obj, val) => (!val && !obj.office && !obj.email))
+  @IsMongoId()
+  user: string;
 
   @ApiPropertyOptional()
-  @IsOptional()
-  @IsMongoId({ message: i18nVM('validation.IsMongoId') })
-  officeID: string;
+  @ValidateIf((obj, val) => (!val && !obj.user && !obj.email))
+  @IsMongoId()
+  office: string;
 
   @ApiPropertyOptional()
-  @IsOptional()
-  @IsMongoId({ message: i18nVM('validation.IsMongoId') })
-  emailID: string;
+  @ValidateIf((obj, val) => (!val && !obj.office && !obj.user))
+  @IsMongoId()
+  email: string;
 }

@@ -63,9 +63,31 @@ export class OfficeService {
     return this.officeModel.find().populate(['members']).exec();
   }
 
-  findOne(id: string) {
-    return this.officeModel.findById(id);
+  findOne(id: string, ...arg) {
+    return this.officeModel.findById(id, ...arg);
   }
+
+  // 
+  getOfficeForMailService = (id: string) => {
+    return this.findOne(id, {}, { autopopulate: false })
+      .populate({
+        path: "email",
+        select: "value verified office",
+        populate: { path: "office", select: "-phone" }
+      })
+  }
+  getOfficeForSmsService = (id: string) => {
+    return this.findOne(id, {}, { autopopulate: false })
+      .populate({
+        path: "phone",
+        select: "value verified office",
+        populate: { path: "office", select: "-email" }
+      })
+  }
+
+
+
+
 
   async remove(id: string) {
     const o = await this.findOne(id)
@@ -121,21 +143,21 @@ export class OfficeService {
   async setManagement(office: Office, management: User | string) {
 
     // is admin?
-    const u = await this.userService.hasAdminRole(management)
-    if (!u) {
-      throw new BadRequestException({
-        errors: {
-          "management": { "MustBeAdmin": "کاربر نیاز است حداقل دسترسی ادمین را دارا باشد" }
-        }
-      })
-    }
-    if (!((u as User).active)) {
-      throw new BadRequestException({
-        errors: {
-          "management": { "NotActive": "کاربر غیرفعال است" }
-        }
-      })
-    }
+    // const u = await this.userService.hasAdminRole(management)
+    // if (!u) {
+    //   throw new BadRequestException({
+    //     errors: {
+    //       "management": { "MustBeAdmin": "کاربر نیاز است حداقل دسترسی ادمین را دارا باشد" }
+    //     }
+    //   })
+    // }
+    // if (!((u as User).active)) {
+    //   throw new BadRequestException({
+    //     errors: {
+    //       "management": { "NotActive": "کاربر غیرفعال است" }
+    //     }
+    //   })
+    // }
 
     // add member
     await this.memberService.add(office, management)

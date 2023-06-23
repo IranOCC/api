@@ -1,7 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
-import { EmailAddress } from '../../email/schemas/email.schema';
-import { PhoneNumber } from '../../phone/schemas/phone.schema';
+import { User } from 'src/user/schemas/user.schema';
+import { EmailAddress } from 'src/email/schemas/email.schema';
+import { PhoneNumber } from 'src/phone/schemas/phone.schema';
+import { Storage } from 'src/storage/schemas/storage.schema';
+
+
 
 @Schema({ timestamps: true })
 export class Office extends Document {
@@ -20,22 +24,19 @@ export class Office extends Document {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    autopopulate: true
   })
-  management: any;
+  management: User | string | null;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Storage',
-    autopopulate: true
   })
-  logo: any;
+  logo: Storage | string | null;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     select: true,
     ref: 'EmailAddress',
-    autopopulate: true
   })
   email: any;
 
@@ -43,7 +44,6 @@ export class Office extends Document {
     type: mongoose.Schema.Types.ObjectId,
     select: true,
     ref: 'PhoneNumber',
-    autopopulate: true
   })
   phone: any;
 
@@ -119,7 +119,3 @@ OfficeSchema.virtual('membersCount', {
     return this.members.length
   },
 })
-
-
-
-OfficeSchema.plugin(require('mongoose-autopopulate'));

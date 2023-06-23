@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import * as mongoose from 'mongoose';
+import { User } from 'src/user/schemas/user.schema';
 
 
 @Schema({ timestamps: true })
@@ -31,10 +32,7 @@ export class Storage {
     ref: 'User',
     select: false,
   })
-  uploadedBy: any;
-
-  @Prop({ type: Date, select: false, })
-  deletedAt: Date;
+  uploadedBy: User | string | null;
 }
 
 export const StorageSchema = SchemaFactory.createForClass(Storage);

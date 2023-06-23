@@ -16,6 +16,7 @@ import { ValidationError } from 'class-validator';
 import { I18nValidationException, I18nService } from 'nestjs-i18n';
 import { useForEnum } from 'src/utils/enum/useFor.enum';
 import { AutoCompleteDto } from 'src/utils/dto/autoComplete.dto';
+import { translateStatics } from 'src/utils/helper/translateStatics.helper';
 
 
 
@@ -64,7 +65,7 @@ export class UserServiceTools {
 
   statics(subject: string) {
     const data = { roles: RoleEnum }
-    return data[subject] || {}
+    return translateStatics(this.i18n, `user.${subject}`, data[subject]) || {}
   }
 
 }

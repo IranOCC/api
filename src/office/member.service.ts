@@ -81,18 +81,19 @@ export class MemberService {
         else {
 
 
+
             if (members instanceof User) {
                 if (d.members.includes(members._id)) {
-                    if (office.management.equals(members._id)) this.removeManagementException()
-                    const _index = d.members.indexOf(members._id)
-                    d.members.splice(_index, 1)
+                    // if (office.management.equals(members._id)) this.removeManagementException()
+                    // const _index = d.members.indexOf(members._id)
+                    // d.members.splice(_index, 1)
                 }
             }
             else {
                 if (d.members.includes(members)) {
-                    if (office.management.equals(members)) this.removeManagementException()
-                    const _index = d.members.indexOf(members)
-                    d.members.splice(_index, 1)
+                    // if (office.management.equals(members)) this.removeManagementException()
+                    // const _index = d.members.indexOf(members)
+                    // d.members.splice(_index, 1)
                 }
             }
         }

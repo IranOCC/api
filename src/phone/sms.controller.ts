@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Query, Post, Request } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/auth/jwt-auth.guard';
 import { Roles } from 'src/auth/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
 import { GetSmsLogsDto } from '../phone/dto/getSmsLogs.dto';
@@ -10,6 +11,7 @@ import { PhoneService } from './phone.service';
 
 @ApiTags('Sms')
 @Controller('sms')
+@Public()
 export class SmsController {
     constructor(
         private readonly phoneService: PhoneService
@@ -17,13 +19,15 @@ export class SmsController {
 
 
     @Post("send")
-    @Roles(RoleEnum.Admin)
+    // @Roles(RoleEnum.Admin)
+    @ApiOperation({ summary: "Send single sms to user", description: "No Description", })
+    @ApiResponse({ status: 201 })
     send(@Body() data: SendSmsDto, @Request() { user }) {
         return this.phoneService.sendSms(data, user);
     }
 
     @Get("logs")
-    @Roles(RoleEnum.Admin)
+    // @Roles(RoleEnum.Admin)
     logs(@Query() data: GetSmsLogsDto) {
         return this.phoneService.getSmsLogs(data);
     }

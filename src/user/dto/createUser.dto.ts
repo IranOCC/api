@@ -18,15 +18,14 @@ import { PhoneDto } from 'src/phone/dto/phone.dto';
 
 
 
-const $ = 'validation.CreateUserDto';
 
 export class CreateUserDto {
   @ApiProperty()
-  @IsNotEmpty({ message: i18nVM(`${$}.firstName.IsNotEmpty`) })
+  @IsNotEmpty()
   firstName: string;
 
   @ApiProperty()
-  @IsNotEmpty({ message: i18nVM(`${$}.lastName.IsNotEmpty`) })
+  @IsNotEmpty()
   lastName: string;
 
   @ApiPropertyOptional()
@@ -34,8 +33,8 @@ export class CreateUserDto {
   avatar: Storage;
 
   @ApiProperty()
-  @IsEnum(RoleEnum, { each: true, message: i18nVM(`${$}.roles.IsEnum`) })
-  roles: string[];
+  @IsEnum(RoleEnum, { each: true, })
+  roles: RoleEnum[];
 
   @ApiPropertyOptional()
   @IsOptional()

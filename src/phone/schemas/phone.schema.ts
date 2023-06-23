@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
 import * as speakeasy from 'speakeasy';
+import { Office } from 'src/office/schemas/office.schema';
+import { User } from 'src/user/schemas/user.schema';
 
 @Schema({ timestamps: true })
 export class PhoneNumber extends Document {
@@ -12,14 +14,14 @@ export class PhoneNumber extends Document {
     ref: 'User',
     select: false,
   })
-  user: any;
+  user: User | string | null;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Office',
     select: false,
   })
-  office: any;
+  office: Office | string | null;
 
   @Prop({ default: false })
   verified: boolean;

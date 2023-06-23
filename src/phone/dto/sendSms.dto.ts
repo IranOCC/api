@@ -1,36 +1,46 @@
-import { IsMongoId, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsEnum, IsMongoId, IsObject, IsOptional, ValidateIf } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
+import { SmsTemplatesEnum } from '../enum/templates';
+import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
 
 
 export class SendSmsDto {
-  @ApiProperty()
-  @IsNotEmpty({ message: i18nVM('validation.IsNotEmpty') })
-  text: string;
+  @ApiProperty({ enum: SmsTemplatesEnum })
+  @IsEnum(SmsTemplatesEnum)
+  template: SmsTemplatesEnum = SmsTemplatesEnum.NoTemplate;
 
-  @ApiProperty()
-  @IsNotEmpty({ message: i18nVM('validation.IsNotEmpty') })
-  subject: string;
+  @ApiProperty({ default: {} })
+  @IsObject()
+  context: any;
 
-  @ApiProperty()
-  @IsMongoId({ message: i18nVM('validation.IsMongoId') })
-  subjectID: string;
 
+
+
+  @ApiPropertyOptional({ enum: RelatedToEnum })
+  @IsOptional()
+  @IsEnum(RelatedToEnum)
+  relatedTo: RelatedToEnum = null;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsMongoId()
+  relatedToID: string;
 
 
 
   @ApiPropertyOptional()
-  @IsOptional()
-  @IsMongoId({ message: i18nVM('validation.IsMongoId') })
-  userID: string;
+  @ValidateIf((obj, val) => (!val && !obj.office && !obj.phone))
+  @IsMongoId()
+  user: string;
 
   @ApiPropertyOptional()
-  @IsOptional()
-  @IsMongoId({ message: i18nVM('validation.IsMongoId') })
-  officeID: string;
+  @ValidateIf((obj, val) => (!val && !obj.user && !obj.phone))
+  @IsMongoId()
+  office: string;
 
   @ApiPropertyOptional()
-  @IsOptional()
-  @IsMongoId({ message: i18nVM('validation.IsMongoId') })
-  phoneID: string;
+  @ValidateIf((obj, val) => (!val && !obj.office && !obj.user))
+  @IsMongoId()
+  phone: string;
 }

@@ -25,24 +25,24 @@ export class EmailService {
 
   // setup email
   async setup(value: string, useFor: useForEnum = useForEnum.User, owner: User | Office, verified = false): Promise<any> {
-    const check = await this.model.findOne({ value }).select(["value", "verified", "user", "office"]).populate(['office', 'user']);
+    const check = await this.model.findOne({ value })
+      .select(["value", "verified", "user", "office"])
+      .populate(['office', 'user']);
 
     let _query: EmailAddress;
 
     if (check) {
-      if (useFor === useForEnum.Office && ((!check.user && !check.office) || owner._id.equals(check.office._id))) {
+      if (useFor === useForEnum.Office && ((!check.user && !check.office) || owner._id.equals((check.office as Office)._id))) {
         _query = check;
         _query.office = owner._id
         _query.user = null
       }
-      else if (useFor === useForEnum.User && ((!check.user && !check.office) || owner._id.equals(check.user._id))) {
+      else if (useFor === useForEnum.User && ((!check.user && !check.office) || owner._id.equals((check.user as User)._id))) {
         _query = check;
         _query.office = null
         _query.user = owner._id
       }
-      else {
-        throw 'Exists';
-      }
+      else throw 'InUsed';
     } else {
       _query = new this.model({ value, verified });
       if (useFor === useForEnum.User) _query.user = owner._id;
@@ -71,11 +71,17 @@ export class EmailService {
 
 
 
+
+
+
+
+
   // send otp
   async sendOtpCode(email: string) {
     const _query = await this.model
       .findOne({ value: email })
       .select(['secret', 'value', 'user', 'office'])
+      .populate("user", "-email")
       .exec();
     const token = generateToken(_query.secret);
     return await this.mailService.sendOtpCode(_query, token);
@@ -108,65 +114,107 @@ export class EmailService {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // ===================================================================================
+
   // send mail
   async sendMail(data: SendMailDto, sentBy: User) {
     let _email: EmailAddress | null = null
-    if (data.userID) {
-      const u = await this.userService.findOne(data.userID).populate("email", ["user"])
+    if (data.user) {
+      const u = await this.userService.getUserForMailService(data.user)
       if (!u || !u?.email) {
-        throw new NotFoundException({ error: "EmailAddressNotFound", message: "Email address not found" })
+        throw new NotFoundException("Email address not found", "EmailAddressNotFound")
       }
-      _email = u.email
+      _email = (u.email as EmailAddress)
     }
-    else if (data.officeID) {
-      const o = await this.officeService.findOne(data.officeID).populate("email", ["user"])
+    else if (data.office) {
+      const o = await this.officeService.getOfficeForMailService(data.office)
       if (!o || !o?.email) {
-        throw new NotFoundException({ error: "EmailAddressNotFound", message: "Email address not found" })
+        throw new NotFoundException("Email address not found", "EmailAddressNotFound")
       }
-      _email = o.email
+      _email = (o.email as EmailAddress)
     }
-    else if (data.emailID) {
-      const email = await this.model.findById(data.emailID).select(["user"])
-      if (!email) throw new NotFoundException({ error: "EmailAddressNotFound", message: "Email address not found" })
+    else if (data.email) {
+      const email = await this.model.findById(data.email).populate("user", "-email")
+      if (!email) {
+        throw new NotFoundException("Email address not found", "EmailAddressNotFound")
+      }
       _email = email
     }
     else {
-      throw new NotAcceptableException({ error: "EmailAddressInvalid", message: "Email address invalid" })
+      throw new NotAcceptableException("Email address invalid", "EmailAddressInvalid")
     }
 
     // ==> send
-    return await this.mailService.sendTextMessage(_email, data.text, sentBy, data.subject, data.subjectID)
+    return await this.mailService.sendSingleMail(_email, data.template, data.context, sentBy, data.relatedTo, data.relatedToID)
   }
 
   // --> get mail logs
   async getMailLogs(data: GetMailLogsDto) {
-    let _email = null
-    if (data.userID) {
-      const u = await this.userService.findOne(data.userID)
+    let _email: EmailAddress | null = null
+    if (data.user) {
+      const u = await this.userService.getUserForMailService(data.user)
       if (!u || !u?.email) {
-        throw new NotFoundException({ error: "EmailAddressNotFound", message: "Email address not found" })
+        throw new NotFoundException("Email address not found", "EmailAddressNotFound")
       }
-      _email = u.email
+      _email = (u.email as EmailAddress)
     }
-    else if (data.officeID) {
-      const o = await this.officeService.findOne(data.officeID)
+    else if (data.office) {
+      const o = await this.officeService.getOfficeForMailService(data.office)
       if (!o || !o?.email) {
-        throw new NotFoundException({ error: "EmailAddressNotFound", message: "Email address not found" })
+        throw new NotFoundException("Email address not found", "EmailAddressNotFound")
       }
-      _email = o.email
+      _email = (o.email as EmailAddress)
     }
-    else if (data.emailID) {
-      const email = await this.model.findById(data.emailID)
-      if (!email) throw new NotFoundException({ error: "EmailAddressNotFound", message: "Email address not found" })
+    else if (data.email) {
+      const email = await this.model.findById(data.email).populate("user", "-email")
+      if (!email) {
+        throw new NotFoundException("Email address not found", "EmailAddressNotFound")
+      }
       _email = email
     }
     else {
-      throw new NotAcceptableException({ error: "EmailAddressInvalid", message: "Phone number invalid" })
+      throw new NotAcceptableException("Email address invalid", "EmailAddressInvalid")
     }
 
     // logs
-    return await this.mailService.logs(_email, data.subject, data.subjectID)
+    return await this.mailService.logs(_email, data.relatedTo, data.relatedToID)
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   // remove

@@ -1,5 +1,5 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { forwardRef, Inject, Injectable, UnauthorizedException, } from '@nestjs/common';
 import { User, UserDocument } from '../schemas/user.schema';
 import { CreateUserDto } from '../dto/createUser.dto';
@@ -15,6 +15,7 @@ import { EmailOtpDto } from 'src/auth/dto/emailOtp.dto';
 import { ValidationError } from 'class-validator';
 import { I18nValidationException, I18nService } from 'nestjs-i18n';
 import { useForEnum } from 'src/utils/enum/useFor.enum';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
 
 
 
@@ -55,7 +56,163 @@ export class UserServiceAdmin {
     return this.userModel.updateOne({ _id: id }, modelData).exec();
   }
 
-  findAll(): Promise<User[]> {
+  findAll({ current, size, search, filter }: PaginationDto): Promise<User[]> {
+
+
+
+    const _search = ['fullName']
+    const _filter = []
+
+
+
+
+    return this.userModel.aggregate([
+      {
+        $lookup: {
+          from: "phonenumbers",
+          as: "phone",
+          localField: "phone",
+          foreignField: "_id",
+          pipeline: [
+            {
+              $project: {
+                value: true,
+                verified: true
+              }
+            }
+          ]
+        }
+      },
+      {
+        $lookup: {
+          from: "emailaddresses",
+          as: "email",
+          localField: "email",
+          foreignField: "_id",
+          pipeline: [
+            {
+              $project: {
+                value: true,
+                verified: true
+              }
+            }
+          ]
+        }
+      },
+      {
+        $lookup: {
+          from: "storage",
+          as: "avatar",
+          localField: "avatar",
+          foreignField: "_id",
+          pipeline: [
+            {
+              $project: {
+                value: true,
+                verified: true
+              }
+            }
+          ]
+        }
+      },
+      {
+        $project: {
+          firstName: 1,
+          lastName: 1,
+          phone: { $first: "$phone" },
+          email: { $first: "$email" },
+          avatar: { $first: "$avatar" },
+          verified: 1,
+          active: 1,
+          roles: 1,
+        }
+      },
+
+      {
+        $addFields: {
+          fullName: { $concat: ["$firstName", " ", "$lastName"] }
+        }
+      },
+      {
+        $match: {
+          $or: [
+            { fullName: { $regex: search, $options: "i" } },
+            // { _id: new mongoose.Types.ObjectId(initial) }
+          ]
+        }
+      },
+      // {
+      //   $project: {
+      //     _id: 0,
+      //     title: "$fullName",
+      //     value: "$_id",
+      //     isInitial: {
+      //       $cond: [
+      //         // { $eq: ["$_id", new mongoose.Types.ObjectId(initial)] },
+      //         1,
+      //         0
+      //       ]
+      //     }
+      //   }
+      // },
+      { $skip: (current - 1) * size },
+      { $limit: size },
+      { $sort: { createdAt: -1 } },
+
+    ]).exec()
+
+
+
+
+
+
+
+
+
+
+    const myCustomLabels = {
+      totalDocs: 'count',
+      docs: 'items',
+      limit: 'size',
+      page: 'current',
+      nextPage: 'next',
+      prevPage: 'prev',
+      totalPages: 'pageCount',
+      pagingCounter: 'slNo',
+      meta: 'paginator',
+    };
+    const searchPath = [
+      'fullName',
+
+    ]
+    const query = { firstName: { $regex: search, $options: "i" } };
+    const options = {
+      select: 'firstName lastName verified active roles',
+      sort: 'createdAt',
+      projection: {
+        full_Name: { $concat: ["$firstName", " ", "$lastName"] }
+      },
+      populate: [
+        {
+          path: "phone",
+          select: "value verified",
+        },
+        {
+          path: "email",
+          select: "value verified",
+        },
+        {
+          path: "avatar"
+        }
+      ],
+      lean: true,
+      page: current,
+      limit: size,
+      customLabels: myCustomLabels,
+    };
+
+    // @ts-ignore
+    return this.userModel.paginate(query, options)
     return this.userModel.find().exec();
   }
 
@@ -64,10 +221,10 @@ export class UserServiceAdmin {
   }
 
   async remove(id: string) {
-    const o = await this.findOne(id)
-    if (o.phone) this.phoneService.remove(o.phone?._id);
-    if (o.email) this.emailService.remove(o.email?._id);
-    await o.remove();
+    // const o = await this.findOne(id)
+    // if (o.phone) this.phoneService.remove(o.phone?._id);
+    // if (o.email) this.emailService.remove(o.email?._id);
+    // await o.remove();
   }
 
 

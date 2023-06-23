@@ -1,52 +1,69 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
-import * as speakeasy from 'speakeasy';
+import { Office } from 'src/office/schemas/office.schema';
+import { User } from 'src/user/schemas/user.schema';
+import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
+import { MailTemplatesEnum } from '../enum/templates';
+import { EmailAddress } from './email.schema';
 
 @Schema({ timestamps: true })
 export class MailLog extends Document {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'EmailAddress',
-    select: false,
+    select: true,
   })
-  emailID: any;
+  email: EmailAddress | string | null;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     select: false,
   })
-  userID: any;
+  user: User | string | null;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Office',
     select: false,
   })
-  officeID: any;
+  office: Office | string | null;
+
+
 
 
   @Prop({
     type: mongoose.Schema.Types.String,
+    enum: RelatedToEnum,
+    default: undefined,
+    select: true,
   })
-  subject: string;
+  relatedTo: RelatedToEnum;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
+    select: true
   })
-  subjectID: any;
+  relatedToID: string | null;
+
 
 
 
   @Prop({
     type: mongoose.Schema.Types.String,
+    enum: MailTemplatesEnum,
+    default: MailTemplatesEnum.NoTemplate,
+    select: true
   })
-  template: string;
+  template: MailTemplatesEnum;
 
   @Prop({
     type: mongoose.Schema.Types.Mixed,
+    select: true
   })
-  parameters: any;
+  context: any;
+
+
 
 
 
@@ -54,7 +71,7 @@ export class MailLog extends Document {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   })
-  sentBy: any;
+  sentBy: User | string | null;
 }
 
 export const MailLogSchema = SchemaFactory.createForClass(MailLog);

@@ -1,9 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document, } from 'mongoose';
 import { RoleEnum } from '../../user/enum/role.enum';
-import * as bcrypt from 'bcrypt';
-const saltRounds = 10;
 import * as speakeasy from 'speakeasy';
+import { PhoneNumber } from 'src/phone/schemas/phone.schema';
+import { EmailAddress } from 'src/email/schemas/email.schema';
+import { Storage } from 'src/storage/schemas/storage.schema';
 
 
 
@@ -13,46 +14,81 @@ export class User extends Document {
   @Prop({
     trim: true,
     select: true,
-    // text: true,
   })
   firstName: string;
 
   @Prop({
     trim: true,
     select: true,
-    // text: true
   })
   lastName: string;
 
   fullName: string;
 
-
-  @Prop({ select: false })
-  password: string;
-
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     select: true,
     ref: 'EmailAddress',
-    autopopulate: true,
+    autopopulate: { select: 'value verified' }
   })
-  email: any;
+  email: EmailAddress | string | null;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     select: true,
     ref: 'PhoneNumber',
-    autopopulate: true
+    autopopulate: { select: 'value verified' }
   })
-  phone: any;
+  phone: PhoneNumber | string | null;
 
-  @Prop({ type: String, })
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Storage',
+    select: true,
+    autopopulate: { select: 'path alt title' }
+  })
+  avatar: Storage | string | null;
+
+  @Prop({ default: false, select: true, })
+  verified: boolean;
+
+  @Prop({ default: true, select: true, })
+  active: boolean;
+
+  @Prop({
+    default: () => speakeasy.generateSecret({ length: 10 }).base32,
+    immutable: true,
+    unique: true,
+    select: true,
+  })
+  accountToken: string;
+
+  @Prop({
+    type: [{ type: String, enum: RoleEnum }],
+    default: [RoleEnum.User],
+    required: true,
+    select: true,
+  })
+  roles: RoleEnum[];
+
+
+
+  @Prop({
+    type: String,
+    select: false,
+  })
   province: string;
 
-  @Prop({ type: String, })
+  @Prop({
+    type: String,
+    select: false,
+  })
   city: string;
 
-  @Prop({ type: String, })
+  @Prop({
+    type: String,
+    select: false,
+  })
   address: string;
 
   @Prop({
@@ -64,75 +100,23 @@ export class User extends Document {
     },
     get: (value) => {
       return value?.join(",")
-    }
+    },
+    select: false,
   })
   location: [number, number] | string;
 
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Storage',
-    autopopulate: true
-  })
-  avatar: any;
 
-  @Prop({ default: false })
-  verified: boolean;
 
-  @Prop({ default: true })
-  active: boolean;
-
-  @Prop({
-    default: () => speakeasy.generateSecret({ length: 10 }).base32,
-    immutable: true,
-    unique: true,
-  })
-  accountToken: string;
-
-  @Prop({ default: Date.now })
+  @Prop({ default: Date.now, select: false, })
   lastLogin: Date;
 
-  @Prop({ default: Date.now })
+  @Prop({ default: Date.now, select: false, })
   lastOnline: Date;
-
-  @Prop()
-  deletedAt: Date;
-
-  @Prop({
-    type: [{ type: String, enum: RoleEnum }],
-    default: [RoleEnum.User],
-    required: true,
-  })
-  roles: RoleEnum[];
-
-  checkPassword: any;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
 export type UserDocument = HydratedDocument<User>;
 
-UserSchema.pre('save', function (next) {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const _this = this;
-  if (this.isModified('password')) {
-    bcrypt.hash(this.password, saltRounds, function (err: any, hashed: string) {
-      if (err) return next(Error('SYSTEM_ERROR'));
-      _this.password = hashed;
-      return next();
-    });
-  } else return next();
-});
-
-UserSchema.methods.checkPassword = async function (password: string) {
-  return new Promise((resolve, reject) => {
-    bcrypt.compare(password, this.password, (err: any, isMatch: boolean) => {
-      if (err) return reject(err);
-      resolve(isMatch);
-    });
-  });
-};
-
-
-UserSchema.plugin(require('mongoose-autopopulate'));
 
 
 
@@ -146,6 +130,9 @@ UserSchema.set('toJSON', {
   getters: true,
 });
 
+
+
+// get & set fullName
 UserSchema.virtual('fullName')
   .get(function () {
     return this.firstName ? this.firstName + ' ' + this.lastName : null;
@@ -156,4 +143,9 @@ UserSchema.virtual('fullName')
     this.lastName = nameParts[nameParts.length - 1];
   });
 
+
+
+
+// plugins
+UserSchema.plugin(require('mongoose-autopopulate'));
 

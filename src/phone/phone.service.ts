@@ -25,24 +25,24 @@ export class PhoneService {
 
   // setup phone
   async setup(value: string, useFor: useForEnum = useForEnum.User, owner: User | Office, verified = false): Promise<any> {
-    const check = await this.model.findOne({ value }).select(["value", "verified", "user", "office"]).populate(['office', 'user']);
+    const check = await this.model.findOne({ value })
+      .select(["value", "verified", "user", "office"])
+      .populate(['office', 'user']);
 
     let _query: PhoneNumber;
 
     if (check) {
-      if (useFor === useForEnum.Office && ((!check.user && !check.office) || owner._id.equals(check.office._id))) {
+      if (useFor === useForEnum.Office && ((!check.user && !check.office) || owner._id.equals((check.office as Office)._id))) {
         _query = check;
         _query.office = owner._id
         _query.user = null
       }
-      else if (useFor === useForEnum.User && ((!check.user && !check.office) || owner._id.equals(check.user._id))) {
+      else if (useFor === useForEnum.User && ((!check.user && !check.office) || owner._id.equals((check.user as User)._id))) {
         _query = check;
         _query.office = null
         _query.user = owner._id
       }
-      else {
-        throw 'Exists';
-      }
+      else throw 'InUsed';
     } else {
       _query = new this.model({ value, verified });
       if (useFor === useForEnum.User) _query.user = owner._id;
@@ -74,6 +74,7 @@ export class PhoneService {
     const _query = await this.model
       .findOne({ value: phone })
       .select(['secret', 'value', 'user', 'office'])
+      .populate("user", "-phone")
       .exec();
     const token = generateToken(_query.secret);
     return await this.smsService.sendOtpCode(_query, token);
@@ -106,65 +107,91 @@ export class PhoneService {
 
 
 
+
+
+
+
+
+
+  // ===================================================================================
+
+
   // send sms
   async sendSms(data: SendSmsDto, sentBy: User) {
     let _phone: PhoneNumber | null = null
-    if (data.userID) {
-      const u = await this.userService.findOne(data.userID).populate("phone", ["user"])
+    if (data.user) {
+      const u = await this.userService.getUserForSmsService(data.user)
       if (!u || !u?.phone) {
-        throw new NotFoundException({ error: "PhoneNumberNotFound", message: "Phone number not found" })
+        throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
       }
-      _phone = u.phone
+      _phone = (u.phone as PhoneNumber)
     }
-    else if (data.officeID) {
-      const o = await this.officeService.findOne(data.officeID).populate("phone", ["user"])
+    else if (data.office) {
+      const o = await this.officeService.getOfficeForSmsService(data.office)
       if (!o || !o?.phone) {
-        throw new NotFoundException({ error: "PhoneNumberNotFound", message: "Phone number not found" })
+        throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
       }
-      _phone = o.phone
+      _phone = (o.phone as PhoneNumber)
     }
-    else if (data.phoneID) {
-      const phone = await this.model.findById(data.phoneID).select(["user"])
-      if (!phone) throw new NotFoundException({ error: "PhoneNumberNotFound", message: "Phone number not found" })
+    else if (data.phone) {
+      const phone = await this.model.findById(data.phone).populate("user", "-phone")
+      if (!phone) {
+        throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
+      }
       _phone = phone
     }
     else {
-      throw new NotAcceptableException({ error: "PhoneNumberInvalid", message: "Phone number invalid" })
+      throw new NotAcceptableException("Phone address invalid", "PhoneNumberInvalid")
     }
 
     // ==> send
-    return await this.smsService.sendTextMessage(_phone, data.text, sentBy, data.subject, data.subjectID)
+    return await this.smsService.sendSingleSms(_phone, data.template, data.context, sentBy, data.relatedTo, data.relatedToID)
   }
 
   // get sms logs
   async getSmsLogs(data: GetSmsLogsDto) {
-    let _phone = null
-    if (data.userID) {
-      const u = await this.userService.findOne(data.userID)
+    let _phone: PhoneNumber | null = null
+    if (data.user) {
+      const u = await this.userService.findOne(data.user)
       if (!u || !u?.phone) {
-        throw new NotFoundException({ error: "PhoneNumberNotFound", message: "Phone number not found" })
+        throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
       }
-      _phone = u.phone
+      _phone = (u.phone as PhoneNumber)
     }
-    else if (data.officeID) {
-      const o = await this.officeService.findOne(data.officeID)
+    else if (data.office) {
+      const o = await this.officeService.findOne(data.office)
       if (!o || !o?.phone) {
-        throw new NotFoundException({ error: "PhoneNumberNotFound", message: "Phone number not found" })
+        throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
       }
-      _phone = o.phone
+      _phone = (o.phone as PhoneNumber)
     }
-    else if (data.phoneID) {
-      const phone = await this.model.findById(data.phoneID)
-      if (!phone) throw new NotFoundException({ error: "PhoneNumberNotFound", message: "Phone number not found" })
+    else if (data.phone) {
+      const phone = await this.model.findById(data.phone).populate("user", "-phone")
+      if (!phone) {
+        throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
+      }
       _phone = phone
     }
     else {
-      throw new NotAcceptableException({ error: "PhoneNumberInvalid", message: "Phone number invalid" })
+      throw new NotAcceptableException("Phone number invalid", "PhoneNumberInvalid")
     }
 
     // logs
-    return await this.smsService.logs(_phone, data.subject, data.subjectID)
+    return await this.smsService.logs(_phone, data.relatedTo, data.relatedToID)
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   // remove

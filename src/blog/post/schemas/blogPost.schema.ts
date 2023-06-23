@@ -42,9 +42,6 @@ export class BlogPost extends Document {
   @Prop({ default: Date.now })
   publishedAt: Date;
 
-  @Prop()
-  deletedAt: Date;
-
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

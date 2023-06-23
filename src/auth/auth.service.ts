@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 
 import { JwtService } from '@nestjs/jwt';
+import { EmailAddress } from 'src/email/schemas/email.schema';
+import { PhoneNumber } from 'src/phone/schemas/phone.schema';
 import { User } from '../user/schemas/user.schema';
 import { UserService } from '../user/user.service';
 import { EmailOtpDto } from './dto/emailOtp.dto';
@@ -24,6 +26,7 @@ export class AuthService {
   async phoneOtp(data: PhoneOtpDtoDto) {
     // find or create 
     const user = await this.userService.findOrCreateByPhone(data);
+    if (!user.active) throw new NotAcceptableException("Your account is inactive", "UserInactivated")
     // send otp
     try {
       await this.userService.sendPhoneOtpCode(user)
@@ -31,13 +34,14 @@ export class AuthService {
       throw new NotAcceptableException("Send otp code failed", "SendOtpFailed")
     }
     // return
-    return { phone: user.phone.value };
+    return { phone: (user.phone as PhoneNumber).value };
   }
 
   // confirm & login
   async loginByPhoneOtp(data: PhoneOtpConfirmDto) {
     // confirm otp
     const user = await this.userService.findOrCreateByPhone({ phone: data.phone });
+    if (!user.active) throw new NotAcceptableException("Your account is inactive", "UserInactivated")
     await this.userService.confirmPhoneOtpCode(user, data.token)
     // get login
     const payload = (await this.userService.getUserPayload(user._id)).toJSON()
@@ -57,6 +61,7 @@ export class AuthService {
   async emailOtp(data: EmailOtpDto) {
     // find or create 
     const user = await this.userService.findOrCreateByEmail(data);
+    if (!user.active) throw new NotAcceptableException("Your account is inactive", "UserInactivated")
     // send otp
     try {
       await this.userService.sendEmailOtpCode(user)
@@ -64,13 +69,14 @@ export class AuthService {
       throw new NotAcceptableException("Send otp code failed", "SendOtpFailed")
     }
     // return
-    return { email: user.email.value };
+    return { email: (user.email as EmailAddress).value };
   }
 
   // confirm & login
   async loginByEmailOtp(data: EmailOtpConfirmDto) {
     // confirm otp
     const user = await this.userService.findOrCreateByEmail({ email: data.email });
+    if (!user.active) throw new NotAcceptableException("Your account is inactive", "UserInactivated")
     await this.userService.confirmEmailOtpCode(user, data.token)
     // get login
     const payload = (await this.userService.getUserPayload(user._id)).toJSON()

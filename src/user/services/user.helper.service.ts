@@ -62,15 +62,15 @@ export class UserService {
 
   // *
   async sendPhoneOtpCode(user: User) {
-    return await this.phoneService.sendOtpCode(user.phone.value)
+    // return await this.phoneService.sendOtpCode(user.phone.value)
   }
 
   // *
   async confirmPhoneOtpCode(user: User, token: string) {
-    const isValid = await this.phoneService.confirmOtpCode({ phone: user.phone.value, token })
-    if (!isValid) {
-      throw new UnauthorizedException("Otp token is wrong", "TokenWrong")
-    }
+    // const isValid = await this.phoneService.confirmOtpCode({ phone: user.phone.value, token })
+    // if (!isValid) {
+    //   throw new UnauthorizedException("Otp token is wrong", "TokenWrong")
+    // }
   }
 
 
@@ -106,15 +106,15 @@ export class UserService {
 
   // *
   async sendEmailOtpCode(user: User) {
-    return await this.emailService.sendOtpCode(user.email.value)
+    // return await this.emailService.sendOtpCode(user.email.value)
   }
 
   // *
   async confirmEmailOtpCode(user: User, token: string) {
-    const isValid = await this.emailService.confirmOtpCode({ email: user.email.value, token })
-    if (!isValid) {
-      throw new UnauthorizedException("Otp token is wrong", "TokenWrong")
-    }
+    // const isValid = await this.emailService.confirmOtpCode({ email: user.email.value, token })
+    // if (!isValid) {
+    //   throw new UnauthorizedException("Otp token is wrong", "TokenWrong")
+    // }
   }
 
 
