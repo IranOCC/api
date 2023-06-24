@@ -1,3 +1,3 @@
 import { PhoneNumberDto } from "src/phone/dto/phoneNumber.dto";
 
-export class PhoneOtpDtoDto extends PhoneNumberDto { }
+export class PhoneOtpDto extends PhoneNumberDto { }

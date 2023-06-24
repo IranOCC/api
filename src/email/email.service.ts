@@ -17,20 +17,17 @@ import { UserService } from 'src/user/user.service';
 export class EmailService {
   constructor(
     @InjectModel(EmailAddress.name) private model: Model<EmailAddressDocument>,
-    @Inject(forwardRef(() => UserService)) private userService: UserService,
-    @Inject(forwardRef(() => OfficeService)) private officeService: OfficeService,
     private mailService: MailService,
   ) { }
 
 
-  // setup email
+  // Setup Email
   async setup(value: string, useFor: useForEnum = useForEnum.User, owner: User | Office, verified = false): Promise<any> {
     const check = await this.model.findOne({ value })
       .select(["value", "verified", "user", "office"])
       .populate(['office', 'user']);
 
     let _query: EmailAddress;
-
     if (check) {
       if (useFor === useForEnum.Office && ((!check.user && !check.office) || owner._id.equals((check.office as Office)._id))) {
         _query = check;
@@ -43,14 +40,14 @@ export class EmailService {
         _query.user = owner._id
       }
       else throw 'InUsed';
-    } else {
+    }
+    else {
       _query = new this.model({ value, verified });
       if (useFor === useForEnum.User) _query.user = owner._id;
       if (useFor === useForEnum.Office) _query.office = owner._id;
     }
 
     _query.verified = !!verified
-
     await _query.save();
     return _query;
   }
@@ -58,13 +55,13 @@ export class EmailService {
 
 
 
-  // find email
-  async find(value: string, useFor: useForEnum = useForEnum.User) {
+  // Find Email
+  async find(value: string) {
     const data = await this.model
       .findOne({ value })
-      .select(['user', 'office'])
+      .select(['user', 'office', 'value', 'verified'])
       .exec();
-    if (!data) throw 'Not found';
+    if (!data) throw 'NotFound';
     return data;
   }
 
@@ -76,7 +73,7 @@ export class EmailService {
 
 
 
-  // send otp
+  // Send Otp
   async sendOtpCode(email: string) {
     const _query = await this.model
       .findOne({ value: email })
@@ -87,7 +84,7 @@ export class EmailService {
     return await this.mailService.sendOtpCode(_query, token);
   }
 
-  // confirm otp
+  // Confirm Otp
   async confirmOtpCode({ email, token }: EmailOtpConfirmDto) {
     const _query = await this.model
       .findOne({ value: email })
@@ -96,10 +93,11 @@ export class EmailService {
     const isValid = validationToken(_query.secret, token);
     // if not verified => do verify
     if (isValid) await this.doVerify(email)
+    // 
     return isValid
   }
 
-  // verify email
+  // Verify Email
   async doVerify(email: string) {
     const _query = await this.model
       .findOne({ value: email })
@@ -133,22 +131,22 @@ export class EmailService {
 
   // ===================================================================================
 
-  // send mail
+  // Send Mail
   async sendMail(data: SendMailDto, sentBy: User) {
     let _email: EmailAddress | null = null
     if (data.user) {
-      const u = await this.userService.getUserForMailService(data.user)
-      if (!u || !u?.email) {
-        throw new NotFoundException("Email address not found", "EmailAddressNotFound")
-      }
-      _email = (u.email as EmailAddress)
+      // const u = await this.userService.getUserForMailService(data.user)
+      // if (!u || !u?.email) {
+      //   throw new NotFoundException("Email address not found", "EmailAddressNotFound")
+      // }
+      // _email = (u.email as EmailAddress)
     }
     else if (data.office) {
-      const o = await this.officeService.getOfficeForMailService(data.office)
-      if (!o || !o?.email) {
-        throw new NotFoundException("Email address not found", "EmailAddressNotFound")
-      }
-      _email = (o.email as EmailAddress)
+      // const o = await this.officeService.getOfficeForMailService(data.office)
+      // if (!o || !o?.email) {
+      //   throw new NotFoundException("Email address not found", "EmailAddressNotFound")
+      // }
+      // _email = (o.email as EmailAddress)
     }
     else if (data.email) {
       const email = await this.model.findById(data.email).populate("user", "-email")
@@ -169,18 +167,18 @@ export class EmailService {
   async getMailLogs(data: GetMailLogsDto) {
     let _email: EmailAddress | null = null
     if (data.user) {
-      const u = await this.userService.getUserForMailService(data.user)
-      if (!u || !u?.email) {
-        throw new NotFoundException("Email address not found", "EmailAddressNotFound")
-      }
-      _email = (u.email as EmailAddress)
+      // const u = await this.userService.getUserForMailService(data.user)
+      // if (!u || !u?.email) {
+      //   throw new NotFoundException("Email address not found", "EmailAddressNotFound")
+      // }
+      // _email = (u.email as EmailAddress)
     }
     else if (data.office) {
-      const o = await this.officeService.getOfficeForMailService(data.office)
-      if (!o || !o?.email) {
-        throw new NotFoundException("Email address not found", "EmailAddressNotFound")
-      }
-      _email = (o.email as EmailAddress)
+      // const o = await this.officeService.getOfficeForMailService(data.office)
+      // if (!o || !o?.email) {
+      //   throw new NotFoundException("Email address not found", "EmailAddressNotFound")
+      // }
+      // _email = (o.email as EmailAddress)
     }
     else if (data.email) {
       const email = await this.model.findById(data.email).populate("user", "-email")
@@ -197,30 +195,6 @@ export class EmailService {
     return await this.mailService.logs(_email, data.relatedTo, data.relatedToID)
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // remove
-  async remove(id: string): Promise<any> {
-    return this.model.deleteOne({ _id: id })
-  }
 
 
 

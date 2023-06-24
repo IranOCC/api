@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from './guard/jwt-auth.guard';
-import { PhoneOtpDtoDto } from './dto/phoneOtp.dto';
+import { PhoneOtpDto } from './dto/phoneOtp.dto';
 import { PhoneOtpConfirmDto, } from './dto/phoneOtpConfirm.dto';
 import { EmailOtpDto } from './dto/emailOtp.dto';
 import { EmailOtpConfirmDto } from './dto/emailOtpConfirm.dto';
@@ -36,8 +36,8 @@ export class AuthController {
   @ApiResponse({ status: 201, type: PhoneOtpResponseDto })
   @ApiResponse({ status: 400, type: BadRequestResponseDto })
   @ApiResponse({ status: 406, type: NotAcceptableResponseDto })
-  async phoneOtp(@Body() data: PhoneOtpDtoDto) {
-    return this.authService.phoneOtp(data);
+  async phoneOtp(@Body() data: PhoneOtpDto) {
+    return this.authService.requestLogin(data);
   }
 
 
@@ -49,7 +49,7 @@ export class AuthController {
   @ApiResponse({ status: 400, type: BadRequestResponseDto })
   @ApiResponse({ status: 403, type: ForbiddenResponseDto })
   async loginByPhoneOtp(@Body() data: PhoneOtpConfirmDto) {
-    return this.authService.loginByPhoneOtp(data);
+    return this.authService.confirmLogin(data);
   }
   // =============================> login or register by phone & otp
 
@@ -64,7 +64,7 @@ export class AuthController {
   @ApiResponse({ status: 400, type: BadRequestResponseDto })
   @ApiResponse({ status: 406, type: NotAcceptableResponseDto })
   async emailOtp(@Body() data: EmailOtpDto) {
-    return this.authService.emailOtp(data);
+    return this.authService.requestLogin(data);
   }
 
 
@@ -76,7 +76,7 @@ export class AuthController {
   @ApiResponse({ status: 400, type: BadRequestResponseDto })
   @ApiResponse({ status: 403, type: ForbiddenResponseDto })
   async loginByEmailOtp(@Body() data: EmailOtpConfirmDto) {
-    return this.authService.loginByEmailOtp(data);
+    return this.authService.confirmLogin(data);
   }
   // =============================> login or register by email & otp
 

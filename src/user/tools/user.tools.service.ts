@@ -4,7 +4,7 @@ import { forwardRef, Inject, Injectable, UnauthorizedException, } from '@nestjs/
 import { User, UserDocument } from '../schemas/user.schema';
 import { CreateUserDto } from '../dto/createUser.dto';
 import { UpdateUserDto } from '../dto/updateUser.dto';
-import { PhoneOtpDtoDto } from 'src/auth/dto/phoneOtp.dto';
+import { PhoneOtpDto } from 'src/auth/dto/phoneOtp.dto';
 import { RoleEnum } from '../enum/role.enum';
 import { EmailDto } from 'src/email/dto/email.dto';
 import { EmailService } from 'src/email/email.service';

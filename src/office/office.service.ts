@@ -91,8 +91,8 @@ export class OfficeService {
 
   async remove(id: string) {
     const o = await this.findOne(id)
-    if (o.phone) this.phoneService.remove(o.phone?._id);
-    if (o.email) this.emailService.remove(o.email?._id);
+    // if (o.phone) this.phoneService.remove(o.phone?._id);
+    // if (o.email) this.emailService.remove(o.email?._id);
     await o.remove();
   }
 

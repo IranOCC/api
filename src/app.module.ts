@@ -1,5 +1,6 @@
 import * as path from 'path';
 
+
 // tools
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -7,9 +8,11 @@ import { HeaderResolver, I18nModule, QueryResolver, } from 'nestjs-i18n';
 import { MongooseModule } from '@nestjs/mongoose';
 import { APP_GUARD } from '@nestjs/core';
 
+
 // app
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+
 
 // auth
 import { AuthModule } from './auth/auth.module';
@@ -58,9 +61,7 @@ import { IconModule } from './icon/icon.module';
     IconModule,
     BlogModule,
     SettingModule,
-
     EstateModule,
-
   ],
   controllers: [AppController],
   providers: [
@@ -75,6 +76,9 @@ import { IconModule } from './icon/icon.module';
     },
   ],
 })
+
+
+
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     // consumer.apply(LoggerMiddleware)

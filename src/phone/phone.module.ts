@@ -20,7 +20,6 @@ import { OfficeModule } from 'src/office/office.module';
       { name: SmsLog.name, schema: SmsLogSchema },
     ]),
     forwardRef(() => OfficeModule),
-    forwardRef(() => UserModule),
   ],
   providers: [PhoneService, SmsService],
   controllers: [SmsController],

@@ -30,7 +30,7 @@ export class CreateUserDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  avatar: Storage;
+  avatar: Storage | string;
 
   @ApiProperty()
   @IsEnum(RoleEnum, { each: true, })
@@ -65,11 +65,11 @@ export class CreateUserDto {
   @IsLatLong()
   location: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ default: false })
   @IsOptional()
   verified: boolean;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ default: true })
   @IsOptional()
   active: boolean;
 }

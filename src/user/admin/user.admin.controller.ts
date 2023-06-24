@@ -7,7 +7,7 @@ import { MongoIDQueryDto } from 'src/utils/dto/mongoIDQuery.dto';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { CreateUserDto } from '../dto/createUser.dto';
 import { UpdateUserDto } from '../dto/updateUser.dto';
-import { UserServiceAdmin } from '../services/user.admin.service';
+import { UserServiceAdmin } from './user.admin.service';
 
 
 @Controller('user/admin')

@@ -49,7 +49,6 @@ import { I18nService } from 'nestjs-i18n';
       inject: [ConfigService, I18nService],
     }),
     forwardRef(() => OfficeModule),
-    forwardRef(() => UserModule),
   ],
   providers: [EmailService, MailService],
   controllers: [MailController],
