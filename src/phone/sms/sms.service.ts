@@ -6,8 +6,8 @@ import { Smsir } from 'sms-typescript/lib';
 import { PhoneNumber } from 'src/phone/schemas/phone.schema';
 import { User } from 'src/user/schemas/user.schema';
 import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
-import { SmsTemplatesEnum } from './enum/templates';
-import { SmsLog, SmsLogDocument } from './schemas/sms_log.schema';
+import { SmsTemplatesEnum } from '../enum/templates';
+import { SmsLog, SmsLogDocument } from '../schemas/sms_log.schema';
 import Handlebars from "handlebars"
 import * as fs from 'fs'
 import { join } from 'path';

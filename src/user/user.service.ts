@@ -1,12 +1,9 @@
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
-import { forwardRef, Inject, Injectable, UnauthorizedException, } from '@nestjs/common';
+import { Model } from 'mongoose';
+import { Injectable, UnauthorizedException, } from '@nestjs/common';
 import { User, UserDocument } from './schemas/user.schema';
-import { CreateUserDto } from './dto/createUser.dto';
-import { UpdateUserDto } from './dto/updateUser.dto';
 import { PhoneOtpDto } from 'src/auth/dto/phoneOtp.dto';
 import { RoleEnum } from './enum/role.enum';
-import { EmailDto } from 'src/email/dto/email.dto';
 import { EmailService } from 'src/email/email.service';
 import { PhoneService } from 'src/phone/phone.service';
 import { EmailOtpDto } from 'src/auth/dto/emailOtp.dto';

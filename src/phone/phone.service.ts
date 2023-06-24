@@ -5,7 +5,7 @@ import { PhoneOtpConfirmDto } from 'src/auth/dto/phoneOtpConfirm.dto';
 import { SendSmsDto } from './dto/sendSms.dto';
 import { GetSmsLogsDto } from './dto/getSmsLogs.dto';
 import { Office } from 'src/office/schemas/office.schema';
-import { SmsService } from './sms.service';
+import { SmsService } from './sms/sms.service';
 import { PhoneNumber, PhoneNumberDocument } from './schemas/phone.schema';
 import { User } from 'src/user/schemas/user.schema';
 import { generateToken, validationToken } from 'src/utils/helper/token.helper';

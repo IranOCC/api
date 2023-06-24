@@ -18,9 +18,6 @@ export class UserServicePublic {
   constructor(
     private i18n: I18nService,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
-    @Inject(forwardRef(() => PhoneService)) private phoneService: PhoneService,
-    @Inject(forwardRef(() => EmailService)) private emailService: EmailService,
-    @Inject(forwardRef(() => OfficeService)) private officeService: OfficeService,
   ) { }
 
 
