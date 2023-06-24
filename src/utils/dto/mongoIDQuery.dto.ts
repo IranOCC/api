@@ -1,6 +1,5 @@
-import { ApiParam, ApiProperty, ApiPropertyOptional, ApiQuery } from "@nestjs/swagger";
-import { Transform } from "class-transformer";
-import { IsMongoId, IsOptional, IsPositive } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsMongoId } from "class-validator";
 
 export class MongoIDQueryDto {
     @ApiProperty()

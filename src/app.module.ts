@@ -28,6 +28,8 @@ import { EstateModule } from './estate/estate.module';
 import { BlogModule } from './blog/blog.module';
 import { SettingModule } from './setting/setting.module';
 import { IconModule } from './icon/icon.module';
+import { EmailModule } from './email/email.module';
+import { PhoneModule } from './phone/phone.module';
 
 
 
@@ -55,6 +57,8 @@ import { IconModule } from './icon/icon.module';
       ],
     }),
     AuthModule,
+    PhoneModule,
+    EmailModule,
     UserModule,
     OfficeModule,
     StorageModule,
