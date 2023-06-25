@@ -25,8 +25,7 @@ import { GetSmsLogsDto } from './dto/getSmsLogs.dto';
 
 
 @Controller('admin/phone')
-// @Roles(RoleEnum.SuperAdmin)
-@Public()
+@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
 @ApiBearerAuth()
 @ApiTags('Phone')
 export class PhoneController {

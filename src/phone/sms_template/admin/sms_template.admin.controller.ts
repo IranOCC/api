@@ -24,8 +24,7 @@ import { SmsTemplateServiceAdmin } from './sms_template.admin.service';
 
 
 @Controller('admin/smsTemplate')
-// @Roles(RoleEnum.SuperAdmin)
-@Public()
+@Roles(RoleEnum.SuperAdmin)
 @ApiBearerAuth()
 @ApiTags('SmsTemplate')
 export class SmsTemplateControllerAdmin {
