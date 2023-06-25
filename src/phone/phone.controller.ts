@@ -24,14 +24,15 @@ import { GetSmsLogsDto } from './dto/getSmsLogs.dto';
 
 
 
-@Controller('admin/phone')
+@Controller('admin/sms')
 @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
 @ApiBearerAuth()
-@ApiTags('Phone')
+
 export class PhoneController {
   constructor(private phoneService: PhoneService) { }
 
   @Post()
+  @ApiTags('Sms')
   @ApiOperation({ summary: "Send single sms to phone number", description: "No Description" })
   @ApiResponse({ status: 201 })
   sendSingleSms(@Body() data: SendSmsDto, @Request() { user }) {
@@ -39,6 +40,7 @@ export class PhoneController {
   }
 
   @Get()
+  @ApiTags('Sms')
   @ApiOperation({ summary: "Get list of sms logs", description: "No Description" })
   @ApiResponse({ status: 200 })
   listLogs(@Query() data: GetSmsLogsDto) {

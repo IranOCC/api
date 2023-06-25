@@ -8,7 +8,7 @@ import { EmailService } from './email.service';
 
 
 @ApiTags('Mail')
-@Controller('mail')
+@Controller('admin/mail')
 @Public()
 export class MailController {
 
@@ -17,16 +17,18 @@ export class MailController {
     ) { }
 
 
-    @Post("send")
+    @Post()
     // @Roles(RoleEnum.Admin)
-    @ApiOperation({ summary: "Send single email to user", description: "Mail subject: (context.$subject or base on template)", })
+    @ApiOperation({ summary: "Send single email to email address", description: "Mail subject: (context.$subject or base on template)", })
     @ApiResponse({ status: 201 })
     send(@Body() data: SendMailDto, @Request() { user }) {
         return this.emailService.sendMail(data, user);
     }
 
-    @Get("logs")
+    @Get()
     // @Roles(RoleEnum.Admin)
+    @ApiOperation({ summary: "Get list og mail logs", description: "No Description", })
+    @ApiResponse({ status: 201 })
     logs(@Query() data: GetMailLogsDto) {
         return this.emailService.getMailLogs(data);
     }

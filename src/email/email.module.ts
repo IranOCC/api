@@ -12,6 +12,12 @@ import { ConfigService } from '@nestjs/config';
 import { MailController } from './mail.controller';
 import { MailService } from './mail.service';
 import { I18nService } from 'nestjs-i18n';
+import { MailTemplateControllerAdmin } from './mail_template/admin/mail_template.admin.controller';
+import { MailTemplateControllerTools } from './mail_template/tools/mail_template.tools.controller';
+import { MailTemplateServiceAdmin } from './mail_template/admin/mail_template.admin.service';
+import { MailTemplateService } from './mail_template/mail_template.service';
+import { MailTemplateServiceTools } from './mail_template/tools/mail_template.tools.service';
+import { MailTemplate, MailTemplateSchema } from './schemas/mail_template.schema';
 
 @Module({
   imports: [
@@ -20,6 +26,9 @@ import { I18nService } from 'nestjs-i18n';
     ]),
     MongooseModule.forFeature([
       { name: MailLog.name, schema: MailLogSchema },
+    ]),
+    MongooseModule.forFeature([
+      { name: MailTemplate.name, schema: MailTemplateSchema },
     ]),
     MailerModule.forRootAsync({
       useFactory: (configService: ConfigService, i18n: I18nService) => {
@@ -50,8 +59,8 @@ import { I18nService } from 'nestjs-i18n';
     }),
     forwardRef(() => OfficeModule),
   ],
-  providers: [EmailService, MailService],
-  controllers: [MailController],
+  providers: [EmailService, MailService, MailTemplateService, MailTemplateServiceAdmin, MailTemplateServiceTools],
+  controllers: [MailController, MailTemplateControllerAdmin, MailTemplateControllerTools],
   exports: [EmailService],
 
 })
