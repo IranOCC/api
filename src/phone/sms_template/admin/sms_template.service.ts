@@ -21,7 +21,7 @@ export class SmsTemplateService {
   ) { }
 
   create(data: CreateSmsTemplateDto) {
-    this.templateModel.create(data)
+    return this.templateModel.create(data)
   }
 
   findAll() {
@@ -33,11 +33,11 @@ export class SmsTemplateService {
   }
 
   update(id: string, data: UpdateSmsTemplateDto) {
-    this.templateModel.findOneAndUpdate({ _id: id }, data);
+    return this.templateModel.findOneAndUpdate({ _id: id }, data, { new: true });
   }
 
   remove(id: string) {
-    this.templateModel.deleteOne({ _id: id });
+    return this.templateModel.deleteOne({ _id: id });
   }
 
 

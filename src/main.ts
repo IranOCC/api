@@ -6,6 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
 import { loggerMiddleware, } from './utils/middleware/logger/logger.middleware';
 import { useContainer } from 'class-validator';
+import { ContextInterceptor } from './utils/helper/context.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -59,6 +60,7 @@ async function bootstrap() {
 
   // add app module classValidator
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  app.useGlobalInterceptors(new ContextInterceptor());
 
   // run app
   await app.listen(8000, '0.0.0.0');

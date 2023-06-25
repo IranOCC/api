@@ -29,7 +29,7 @@ export class SmsTemplateController {
 
   @Post()
   create(@Body() data: CreateSmsTemplateDto) {
-    this.smsTemplateService.create(data);
+    return this.smsTemplateService.create(data);
   }
 
   @Get()
@@ -44,12 +44,12 @@ export class SmsTemplateController {
 
   @Patch(':id')
   update(@Param() { id }: MongoIDQueryDto, @Body() data: UpdateSmsTemplateDto) {
-    this.smsTemplateService.update(id, data);
+    return this.smsTemplateService.update(id, data);
   }
 
   @Delete(':id')
   remove(@Param() { id }: MongoIDQueryDto) {
-    this.smsTemplateService.remove(id);
+    return this.smsTemplateService.remove(id);
   }
 
 }

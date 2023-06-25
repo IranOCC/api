@@ -32,8 +32,14 @@ export const IsUnique = <TModel extends Object>(ModelClass: Type<TModel>, path: 
 export class IsUniqueProvider implements ValidatorConstraintInterface {
     constructor(@InjectConnection() private readonly connection: Connection) { }
     async validate(value: any, args: ValidationArguments): Promise<boolean> {
-        const result = await this.connection.models[args.constraints[0].name].count({ [args.constraints[1]]: value });
-        return !result
+        const isUpdate = args.targetName.toLowerCase().includes("update")
+        const id = args?.object['$context']?.params?.id;
+        // before that validated
+        if (isUpdate && !id) return true
+        let Q = { [args.constraints[1]]: value }
+        if (!!id) Q["_id"] = { $ne: id }
+        const result = await this.connection.models[args.constraints[0].name].count(Q);
+        return result === 0
     }
 
     defaultMessage(args?: ValidationArguments): string {
