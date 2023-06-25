@@ -6,16 +6,13 @@ import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
 
 
 export class SendSmsDto {
-  @ApiProperty({ enum: SmsTemplatesEnum })
-  @IsEnum(SmsTemplatesEnum)
-  template: SmsTemplatesEnum = SmsTemplatesEnum.NoTemplate;
+  @ApiProperty()
+  @IsMongoId()
+  template: string;
 
   @ApiProperty({ default: {} })
   @IsObject()
   context: any;
-
-
-
 
   @ApiPropertyOptional({ enum: RelatedToEnum })
   @IsOptional()
@@ -27,20 +24,7 @@ export class SendSmsDto {
   @IsMongoId()
   relatedToID: string;
 
-
-
-  @ApiPropertyOptional()
-  @ValidateIf((obj, val) => (!val && !obj.office && !obj.phone))
-  @IsMongoId()
-  user: string;
-
-  @ApiPropertyOptional()
-  @ValidateIf((obj, val) => (!val && !obj.user && !obj.phone))
-  @IsMongoId()
-  office: string;
-
-  @ApiPropertyOptional()
-  @ValidateIf((obj, val) => (!val && !obj.office && !obj.user))
+  @ApiProperty()
   @IsMongoId()
   phone: string;
 }

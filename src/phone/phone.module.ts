@@ -13,6 +13,7 @@ import { SmsTemplateServiceTools } from './sms_template/tools/sms_template.tools
 import { SmsTemplateControllerTools } from './sms_template/tools/sms_template.tools.controller';
 import { SmsLogService } from './sms_log/sms_log.service';
 import { SmsTemplateService } from './sms_template/sms_template.service';
+import { PhoneController } from './phone.controller';
 
 
 @Module({
@@ -28,7 +29,7 @@ import { SmsTemplateService } from './sms_template/sms_template.service';
     ]),
   ],
   providers: [PhoneService, SmsService, SmsLogService, SmsTemplateService, SmsTemplateServiceAdmin, SmsTemplateServiceTools],
-  controllers: [SmsTemplateControllerAdmin, SmsTemplateControllerTools],
+  controllers: [PhoneController, SmsTemplateControllerAdmin, SmsTemplateControllerTools],
   exports: [PhoneService],
 })
 export class PhoneModule { }

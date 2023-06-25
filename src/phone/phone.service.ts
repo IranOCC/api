@@ -2,14 +2,16 @@ import { forwardRef, Inject, Injectable, NotAcceptableException, NotFoundExcepti
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PhoneOtpConfirmDto } from 'src/auth/dto/phoneOtpConfirm.dto';
-import { SendSmsDto } from './dto/sendSms.dto';
-import { GetSmsLogsDto } from './dto/getSmsLogs.dto';
+
 import { Office } from 'src/office/schemas/office.schema';
 import { SmsService } from './sms/sms.service';
 import { PhoneNumber, PhoneNumberDocument } from './schemas/phone.schema';
 import { User } from 'src/user/schemas/user.schema';
 import { generateToken, validationToken } from 'src/utils/helper/token.helper';
 import { useForEnum } from 'src/utils/enum/useFor.enum';
+import { Template } from 'aws-sdk/clients/appsync';
+import { SendSmsDto } from './dto/sendSms.dto';
+import { GetSmsLogsDto } from './dto/getSmsLogs.dto';
 
 @Injectable()
 export class PhoneService {
@@ -113,72 +115,36 @@ export class PhoneService {
   // ===================================================================================
 
   // Send Sms
-  async sendSms(data: SendSmsDto, sentBy: User) {
-    let _phone: PhoneNumber | null = null
-    if (data.user) {
-      // const u = await this.userService.getUserForSmsService(data.user)
-      // if (!u || !u?.phone) {
-      //   throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
-      // }
-      // _phone = (u.phone as PhoneNumber)
-    }
-    else if (data.office) {
-      // const o = await this.officeService.getOfficeForSmsService(data.office)
-      // if (!o || !o?.phone) {
-      //   throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
-      // }
-      // _phone = (o.phone as PhoneNumber)
-    }
-    else if (data.phone) {
-      const phone = await this.model.findById(data.phone).populate("user", "-phone")
-      if (!phone) {
-        throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
-      }
-      _phone = phone
-    }
-    else {
-      throw new NotAcceptableException("Phone address invalid", "PhoneNumberInvalid")
-    }
+  async sendSingleSms({ phone, template, context, relatedTo, relatedToID }: SendSmsDto, sentBy: User) {
+    // get phone
+    const _phone = await this.model.findById(phone).select(['value', 'user', 'office'])
+      .populate("user", "-phone")
+      .populate("office", "-phone")
+      .exec();
 
+
+    if (!_phone) {
+      throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
+    }
     // ==> send
-    // return await this.smsService.sendSingleSms(_phone, data.template, data.context, sentBy, data.relatedTo, data.relatedToID)
+    return await this.smsService.sendSingleSms(_phone, template, context, sentBy, relatedTo, relatedToID)
   }
 
   // get sms logs
-  async getSmsLogs(data: GetSmsLogsDto) {
-    let _phone: PhoneNumber | null = null
-    if (data.user) {
-      // const u = await this.userService.findOne(data.user)
-      // if (!u || !u?.phone) {
-      //   throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
-      // }
-      // _phone = (u.phone as PhoneNumber)
-    }
-    else if (data.office) {
-      // const o = await this.officeService.findOne(data.office)
-      // if (!o || !o?.phone) {
-      //   throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
-      // }
-      // _phone = (o.phone as PhoneNumber)
-    }
-    else if (data.phone) {
-      const phone = await this.model.findById(data.phone).populate("user", "-phone")
-      if (!phone) {
-        throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
-      }
-      _phone = phone
-    }
-    else {
-      throw new NotAcceptableException("Phone number invalid", "PhoneNumberInvalid")
+  async getSmsLogs({ phone, relatedTo, relatedToID }: GetSmsLogsDto) {
+    // get phone
+    const _phone = await this.model.findById(phone).select(['value', 'user', 'office'])
+      .populate("user", "-phone")
+      .populate("office", "-phone")
+      .exec();
+
+    if (!_phone) {
+      throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
     }
 
-    // logs
-    return await this.smsService.logs(_phone, data.relatedTo, data.relatedToID)
+    // ==> get logs
+    return await this.smsService.logs(_phone, relatedTo, relatedToID)
   }
-
-
-
-
 
 
 

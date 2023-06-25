@@ -14,6 +14,7 @@ import { join } from 'path';
 import { SmsLogService } from '../sms_log/sms_log.service';
 import { SmsTemplateService } from '../sms_template/sms_template.service';
 import { SmsTemplate } from '../schemas/sms_template.schema';
+import { PhoneService } from '../phone.service';
 
 
 
@@ -31,24 +32,31 @@ export class SmsService {
 
 
   async sendOtpCode(phone: PhoneNumber, token: string) {
-    const context = { token }
     // get template
     const template = await this.smsTemplateService.getTemplateBySlug("otp")
     if (!template) throw new NotFoundException("Template not found", "TemplateNotFound")
     // send
-    await this.sendSingleSms(phone, template, context)
+    await this.sendSingleSms(phone, template, { token })
   }
 
-  async sendSingleSms(phone: PhoneNumber, template: SmsTemplate, context: any = {}, sentBy?: User, relatedTo?: RelatedToEnum, relatedToID?: string) {
+  async sendSingleSms(phone: PhoneNumber, template: SmsTemplate | string, context: any = {}, sentBy?: User, relatedTo?: RelatedToEnum, relatedToID?: string) {
+
+    // get template
+    let _template: SmsTemplate
+    if (typeof template === "string") _template = await this.smsTemplateService.getTemplateById(template)
+    else _template = template
+
+    if (!_template) throw new NotFoundException("Template not found", "TemplateNotFound")
+
     // send by serviceID
-    if (template.serviceID) {
+    if (_template.serviceID) {
       const convert = Object.keys(context).map((name) => {
         const value = context[name]
         return { name, value }
       })
       await this.sendService.SendVerifyCode(
         phone.value,
-        template.serviceID,
+        _template.serviceID,
         convert
       )
     }
@@ -56,7 +64,7 @@ export class SmsService {
     else {
       let text = ""
       try {
-        text = Handlebars.compile(template.content)(context)
+        text = Handlebars.compile(_template.content)(context)
       } catch (error) {
         throw new NotFoundException("Template not found", "TemplateNotFound")
       }
@@ -64,7 +72,7 @@ export class SmsService {
     }
 
     // save logs
-    this.smsLogService.create(phone, context, template, sentBy, relatedTo, relatedToID)
+    this.smsLogService.create(phone, context, _template, sentBy, relatedTo, relatedToID)
   }
 
 
