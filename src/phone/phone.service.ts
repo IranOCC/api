@@ -141,7 +141,7 @@ export class PhoneService {
     }
 
     // ==> send
-    return await this.smsService.sendSingleSms(_phone, data.template, data.context, sentBy, data.relatedTo, data.relatedToID)
+    // return await this.smsService.sendSingleSms(_phone, data.template, data.context, sentBy, data.relatedTo, data.relatedToID)
   }
 
   // get sms logs

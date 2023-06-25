@@ -20,7 +20,7 @@ export class UserControllerAdmin {
 
   @Post()
   @ApiOperation({ summary: "Create new Model", description: "No Description" })
-  @ApiResponse({ status: 200 })
+  @ApiResponse({ status: 201 })
   create(@Body() data: CreateUserDto) {
     return this.userAdminService.create(data);
   }
@@ -41,7 +41,7 @@ export class UserControllerAdmin {
 
   @Patch(':id')
   @ApiOperation({ summary: "Edit single Model by id", description: "No Description" })
-  @ApiResponse({ status: 200 })
+  @ApiResponse({ status: 201 })
   update(@Param() { id }: MongoIDQueryDto, @Body() data: UpdateUserDto) {
     return this.userAdminService.update(id, data);
   }

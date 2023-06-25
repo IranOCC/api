@@ -13,7 +13,7 @@ import { UpdateSmsTemplateDto } from '../dto/updateSmsTemplate.dto';
 
 
 @Injectable()
-export class SmsTemplateService {
+export class SmsTemplateServiceAdmin {
 
   constructor(
     private i18n: I18nService,
@@ -38,6 +38,10 @@ export class SmsTemplateService {
 
   remove(id: string) {
     return this.templateModel.deleteOne({ _id: id });
+  }
+
+  bulkRemove(id: string[]) {
+    return this.templateModel.deleteMany({ _id: { $in: id } });
   }
 
 

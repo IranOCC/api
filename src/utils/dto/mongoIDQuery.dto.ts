@@ -6,3 +6,11 @@ export class MongoIDQueryDto {
     @IsMongoId()
     id: string;
 }
+
+
+
+export class MongoArrayIDQueryDto {
+    @ApiProperty()
+    @IsMongoId({ each: true })
+    id: string[];
+}

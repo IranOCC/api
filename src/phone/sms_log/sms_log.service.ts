@@ -15,11 +15,6 @@ import { SmsTemplate } from '../schemas/sms_template.schema';
 
 
 
-const TemplatesID = {
-  "otp": 621415
-}
-
-
 @Injectable()
 export class SmsLogService {
 
@@ -29,7 +24,7 @@ export class SmsLogService {
 
 
 
-  create(phone: PhoneNumber, context: any = {}, template: SmsTemplate, sentBy: User, relatedTo?: RelatedToEnum, relatedToID?: string) {
+  create(phone: PhoneNumber, context: any = {}, template: SmsTemplate, sentBy?: User, relatedTo?: RelatedToEnum, relatedToID?: string) {
     return this.logModel.create({
       phone: phone._id,
       user: phone?.user || null,
@@ -45,7 +40,7 @@ export class SmsLogService {
   }
 
 
-  find(phone: PhoneNumber, relatedTo?: RelatedToEnum, relatedToID?: string) {
+  findAll(phone: PhoneNumber, relatedTo?: RelatedToEnum, relatedToID?: string) {
     if (relatedTo && relatedToID) {
       return this.logModel
         .find({ phone: phone._id })

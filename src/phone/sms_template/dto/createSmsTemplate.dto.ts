@@ -1,6 +1,6 @@
-import { ApiProperty, } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsNotEmpty, IsObject, IsString } from "class-validator";
+import { IsNotEmpty, IsObject, IsOptional, IsString } from "class-validator";
 import slugify from "slugify";
 import { SmsTemplate } from "src/phone/schemas/sms_template.schema";
 import { IsUnique } from "src/utils/decorator/unique.decorator";
@@ -30,4 +30,9 @@ export class CreateSmsTemplateDto {
     @IsString()
     @IsNotEmpty()
     content: string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString()
+    serviceID: string;
 }

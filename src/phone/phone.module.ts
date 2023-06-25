@@ -6,9 +6,13 @@ import { SmsLog, SmsLogSchema } from './schemas/sms_log.schema';
 
 import { PhoneService } from './phone.service';
 import { SmsService } from './sms/sms.service';
-import { SmsTemplateController } from './sms_template/admin/sms_template.controller';
 import { SmsTemplate, SmsTemplateSchema } from './schemas/sms_template.schema';
-import { SmsTemplateService } from './sms_template/admin/sms_template.service';
+import { SmsTemplateControllerAdmin } from './sms_template/admin/sms_template.admin.controller';
+import { SmsTemplateServiceAdmin } from './sms_template/admin/sms_template.admin.service';
+import { SmsTemplateServiceTools } from './sms_template/tools/sms_template.tools.service';
+import { SmsTemplateControllerTools } from './sms_template/tools/sms_template.tools.controller';
+import { SmsLogService } from './sms_log/sms_log.service';
+import { SmsTemplateService } from './sms_template/sms_template.service';
 
 
 @Module({
@@ -23,10 +27,9 @@ import { SmsTemplateService } from './sms_template/admin/sms_template.service';
       { name: SmsTemplate.name, schema: SmsTemplateSchema },
     ]),
   ],
-  providers: [PhoneService, SmsService, SmsTemplateService],
-  controllers: [SmsTemplateController],
+  providers: [PhoneService, SmsService, SmsLogService, SmsTemplateService, SmsTemplateServiceAdmin, SmsTemplateServiceTools],
+  controllers: [SmsTemplateControllerAdmin, SmsTemplateControllerTools],
   exports: [PhoneService],
-
 })
 export class PhoneModule { }
 
