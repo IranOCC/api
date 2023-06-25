@@ -28,3 +28,21 @@ export class SmsTemplate extends Document {
 
 export const SmsTemplateSchema = SchemaFactory.createForClass(SmsTemplate);
 export type SmsTemplateDocument = HydratedDocument<SmsTemplate>;
+
+
+
+var handleE11000 = function (error, res, next) {
+  if (error.name === 'MongoError' && error.code === 11000) {
+    console.log("gg");
+
+    next();
+  } else {
+    next();
+  }
+};
+
+SmsTemplateSchema.post('save', handleE11000);
+SmsTemplateSchema.post('update', handleE11000);
+SmsTemplateSchema.post('findOneAndUpdate', handleE11000);
+SmsTemplateSchema.post('insertMany', handleE11000);
+

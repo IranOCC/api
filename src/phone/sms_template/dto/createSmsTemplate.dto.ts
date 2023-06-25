@@ -2,6 +2,8 @@ import { ApiProperty, } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
 import { IsNotEmpty, IsObject, IsString } from "class-validator";
 import slugify from "slugify";
+import { SmsTemplate } from "src/phone/schemas/sms_template.schema";
+import { IsUnique } from "src/utils/decorator/unique.decorator";
 
 export class CreateSmsTemplateDto {
     @ApiProperty()
@@ -21,6 +23,7 @@ export class CreateSmsTemplateDto {
             trim: true,
         })
     })
+    @IsUnique(SmsTemplate, "slug")
     slug: string;
 
     @ApiProperty()

@@ -5,6 +5,7 @@ import { ExceptionsFilter } from './utils/exception';
 import { ValidationPipe } from '@nestjs/common';
 import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
 import { loggerMiddleware, } from './utils/middleware/logger/logger.middleware';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -55,6 +56,9 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, skipUndefinedProperties: true, stopAtFirstError: true, transform: true, forbidUnknownValues: false, }));
   // app.useGlobalFilters(new ExceptionsFilter());
 
+
+  // add app module classValidator
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   // run app
   await app.listen(8000, '0.0.0.0');

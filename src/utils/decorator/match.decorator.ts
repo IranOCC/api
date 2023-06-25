@@ -9,8 +9,9 @@ import {
 export function Match(property: string, validationOptions?: ValidationOptions) {
   return (object: any, propertyName: string) => {
     registerDecorator({
+      name: 'match',
       target: object.constructor,
-      propertyName,
+      propertyName: propertyName,
       options: validationOptions,
       constraints: [property],
       validator: MatchConstraint,
@@ -18,7 +19,7 @@ export function Match(property: string, validationOptions?: ValidationOptions) {
   };
 }
 
-@ValidatorConstraint({ name: 'Match' })
+@ValidatorConstraint({ name: 'IsMatch' })
 export class MatchConstraint implements ValidatorConstraintInterface {
   defaultMessage(args: ValidationArguments) {
     return args.property + ' must match ' + args.constraints[0];

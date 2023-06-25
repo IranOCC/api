@@ -3,5 +3,6 @@
     "ForbiddenException": "شما دسترسی لازم برای انجام این کار ندارید",
     "NotFoundException": "مسیر مورد نظر پیدا نشد",
     "PhoneNumberInUsed": "شماره وارد شده در اینجا قابل استفاده نیست",
-    "EmailAddressInUsed": "ایمیل وارد شده در اینجا قابل استفاده نیست"
+    "EmailAddressInUsed": "ایمیل وارد شده در اینجا قابل استفاده نیست",
+    "DuplicateError": "قبلا با این مقدار ثبت شده است"
 }

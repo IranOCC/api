@@ -30,6 +30,7 @@ import { SettingModule } from './setting/setting.module';
 import { IconModule } from './icon/icon.module';
 import { EmailModule } from './email/email.module';
 import { PhoneModule } from './phone/phone.module';
+import { IsUniqueProvider } from './utils/decorator/unique.decorator';
 
 
 
@@ -78,6 +79,7 @@ import { PhoneModule } from './phone/phone.module';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    IsUniqueProvider,
   ],
 })
 
