@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagg
 import { Public } from 'src/auth/guard/jwt-auth.guard';
 import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
-import { MongoIDQueryDto } from 'src/utils/dto/mongoIDQuery.dto';
+import { MongoArrayIDQueryDto, MongoIDQueryDto } from 'src/utils/dto/mongoIDQuery.dto';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { CreateUserDto } from '../dto/createUser.dto';
 import { UpdateUserDto } from '../dto/updateUser.dto';
@@ -50,5 +50,12 @@ export class UserControllerAdmin {
   @ApiResponse({ status: 200 })
   remove(@Param() { id }: MongoIDQueryDto) {
     return this.userAdminService.remove(id);
+  }
+
+  @Delete()
+  @ApiOperation({ summary: "Delete bulk of Model by id", description: "No Description" })
+  @ApiResponse({ status: 200 })
+  bulkRemove(@Query() { id }: MongoArrayIDQueryDto) {
+    // return this.userAdminService.remove(id);
   }
 }
