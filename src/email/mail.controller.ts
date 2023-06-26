@@ -20,7 +20,7 @@ export class MailController {
 
     @Post()
     @ApiOperation({ summary: "Send single email to email address", description: "Mail subject: (context.$subject or base on template)", })
-    @ApiResponse({ status: 201 })
+    @ApiResponse({ status: 200 })
     send(@Body() data: SendMailDto, @Request() { user }) {
         return this.emailService.sendSingleMail(data, user);
     }
