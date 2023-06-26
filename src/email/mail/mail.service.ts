@@ -7,6 +7,7 @@ import { MailLogService } from '../mail_log/mail_log.service';
 import { MailTemplateService } from '../mail_template/mail_template.service';
 import { EmailAddress } from '../schemas/email.schema';
 import { MailTemplate } from '../schemas/mail_template.schema';
+import Handlebars from "handlebars"
 
 
 
@@ -43,6 +44,9 @@ export class MailService {
     }
     // send by template
     else {
+      if (!context.$subject) {
+        context.$subject = _template.title
+      }
       let text = ""
       try {
         text = Handlebars.compile(_template.content)(context)
@@ -52,6 +56,7 @@ export class MailService {
       await this.mailerService.sendMail({
         to: email.value,
         html: text,
+        subject: context.$subject
       })
     }
 

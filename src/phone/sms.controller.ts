@@ -26,9 +26,8 @@ import { GetSmsLogsDto } from './dto/getSmsLogs.dto';
 @ApiTags('Sms')
 @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
 @ApiBearerAuth()
-
 export class SmsController {
-  constructor(private phoneService: PhoneService) { }
+  constructor(private readonly phoneService: PhoneService) { }
 
   @Post()
   @ApiOperation({ summary: "Send single sms to phone number", description: "No Description" })

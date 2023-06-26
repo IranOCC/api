@@ -23,7 +23,6 @@ import { EmailService } from './email.service';
 @Controller('admin/email')
 @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
 @ApiBearerAuth()
-
 export class EmailController {
   constructor(private emailService: EmailService) { }
 

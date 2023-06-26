@@ -29,6 +29,7 @@ export class AuthService {
     const byPhoneOtp = (data instanceof PhoneOtpDto)
     const byEmailOtp = (data instanceof EmailOtpDto)
 
+
     // find or create
     let user: User | null = null
     if (byPhoneOtp) user = await this.userService.findOrCreateByPhone(data);
@@ -46,11 +47,11 @@ export class AuthService {
       return { phone: (user.phone as PhoneNumber).value };
     }
     if (byEmailOtp) {
-      try {
-        await this.userService.sendPhoneOtpCode(user)
-      } catch (error) {
-        throw new NotAcceptableException("Send otp code failed", "SendOtpFailed")
-      }
+      // try {
+      await this.userService.sendEmailOtpCode(user)
+      // } catch (error) {
+      //   throw new NotAcceptableException("Send otp code failed", "SendOtpFailed")
+      // }
       return { email: (user.email as EmailAddress).value };
     }
 
@@ -77,7 +78,7 @@ export class AuthService {
 
     // success login
     const payload = await this.userService.getUserPayload(user._id)
-    const accessToken = this.jwtService.sign(payload, { expiresIn: process.env.JWT_EXPIRE_IN });
+    const accessToken = this.jwtService.sign(payload.toJSON(), { expiresIn: process.env.JWT_EXPIRE_IN });
     return { accessToken };
   }
 
