@@ -54,7 +54,14 @@ async function bootstrap() {
     }
   }));
   app.useGlobalPipes(new I18nValidationPipe());
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, skipUndefinedProperties: true, stopAtFirstError: true, transform: true, forbidUnknownValues: false, }));
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    skipUndefinedProperties: true,
+    stopAtFirstError: true,
+    transform: true,
+    forbidUnknownValues: false,
+  }
+  ));
   // app.useGlobalFilters(new ExceptionsFilter());
 
 

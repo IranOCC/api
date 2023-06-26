@@ -14,6 +14,7 @@ import { ValidationError } from 'class-validator';
 import { I18nValidationException, I18nService } from 'nestjs-i18n';
 import { useForEnum } from 'src/utils/enum/useFor.enum';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
+import { listAggregation, PopulatedType, } from 'src/utils/helper/listAggregation.helper';
 
 
 
@@ -29,7 +30,8 @@ export class UserServiceAdmin {
     private emailService: EmailService,
   ) { }
 
-  // *
+
+  // Create User
   async create(data: CreateUserDto): Promise<any> {
     const { phone, email, ...modelData } = data
     const _user = new this.userModel(modelData)
@@ -42,7 +44,7 @@ export class UserServiceAdmin {
     return _user;
   }
 
-  // *
+  // Edit User
   async update(id: string, data: UpdateUserDto): Promise<any> {
     const { phone, email, ...modelData } = data
     const _user = await this.userModel.findById(id)
@@ -53,170 +55,75 @@ export class UserServiceAdmin {
     return this.userModel.updateOne({ _id: id }, modelData).exec();
   }
 
-  findAll({ current, size, search, filter }: PaginationDto): Promise<User[]> {
+  // List User
+  findAll(pagination: PaginationDto, filter: any, sort: any): Promise<User[]> {
 
-
-
-    const _search = ['fullName']
-    const _filter = []
-
-
-
-
-    return this.userModel.aggregate([
-      {
-        $lookup: {
-          from: "phonenumbers",
-          as: "phone",
-          localField: "phone",
-          foreignField: "_id",
-          pipeline: [
-            {
-              $project: {
-                value: true,
-                verified: true
-              }
-            }
-          ]
-        }
-      },
-      {
-        $lookup: {
-          from: "emailaddresses",
-          as: "email",
-          localField: "email",
-          foreignField: "_id",
-          pipeline: [
-            {
-              $project: {
-                value: true,
-                verified: true
-              }
-            }
-          ]
-        }
-      },
-      {
-        $lookup: {
-          from: "storage",
-          as: "avatar",
-          localField: "avatar",
-          foreignField: "_id",
-          pipeline: [
-            {
-              $project: {
-                value: true,
-                verified: true
-              }
-            }
-          ]
-        }
-      },
-      {
-        $project: {
-          firstName: 1,
-          lastName: 1,
-          phone: { $first: "$phone" },
-          email: { $first: "$email" },
-          avatar: { $first: "$avatar" },
-          verified: 1,
-          active: 1,
-          roles: 1,
-        }
-      },
-
-      {
-        $addFields: {
-          fullName: { $concat: ["$firstName", " ", "$lastName"] }
-        }
-      },
-      {
-        $match: {
-          $or: [
-            { fullName: { $regex: search, $options: "i" } },
-            // { _id: new mongoose.Types.ObjectId(initial) }
-          ]
-        }
-      },
-      // {
-      //   $project: {
-      //     _id: 0,
-      //     title: "$fullName",
-      //     value: "$_id",
-      //     isInitial: {
-      //       $cond: [
-      //         // { $eq: ["$_id", new mongoose.Types.ObjectId(initial)] },
-      //         1,
-      //         0
-      //       ]
-      //     }
-      //   }
-      // },
-      { $skip: (current - 1) * size },
-      { $limit: size },
-      { $sort: { createdAt: -1 } },
-
-    ]).exec()
-
-
-
-
-
-
-
-
-
-
-    const myCustomLabels = {
-      totalDocs: 'count',
-      docs: 'items',
-      limit: 'size',
-      page: 'current',
-      nextPage: 'next',
-      prevPage: 'prev',
-      totalPages: 'pageCount',
-      pagingCounter: 'slNo',
-      meta: 'paginator',
-    };
-    const searchPath = [
-      'fullName',
-
+    const populate: PopulatedType[] = [
+      ["phonenumbers", "phone", "value verified"],
+      ["emailaddresses", "email", "value verified"]
     ]
-    const query = { firstName: { $regex: search, $options: "i" } };
-    const options = {
-      select: 'firstName lastName verified active roles',
-      sort: 'createdAt',
-      projection: {
-        full_Name: { $concat: ["$firstName", " ", "$lastName"] }
-      },
-      populate: [
-        {
-          path: "phone",
-          select: "value verified",
-        },
-        {
-          path: "email",
-          select: "value verified",
-        },
-        {
-          path: "avatar"
-        }
-      ],
-      lean: true,
-      page: current,
-      limit: size,
-      customLabels: myCustomLabels,
-    };
+    const project = "firstName lastName verified active roles"
+    const virtualFields = {
+      fullName: { $concat: ["$firstName", " ", "$lastName"] }
+    }
+    const searchFields = "fullName"
+    return listAggregation(this.userModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
 
-    // @ts-ignore
-    return this.userModel.paginate(query, options)
-    return this.userModel.find().exec();
+
+
+
+    // const myCustomLabels = {
+    //   totalDocs: 'count',
+    //   docs: 'items',
+    //   limit: 'size',
+    //   page: 'current',
+    //   nextPage: 'next',
+    //   prevPage: 'prev',
+    //   totalPages: 'pageCount',
+    //   pagingCounter: 'slNo',
+    //   meta: 'paginator',
+    // };
+    // const searchPath = [
+    //   'fullName',
+
+    // ]
+    // const query = { firstName: { $regex: search, $options: "i" } };
+    // const options = {
+    //   select: 'firstName lastName verified active roles',
+    //   sort: 'createdAt',
+    //   projection: {
+    //     full_Name: { $concat: ["$firstName", " ", "$lastName"] }
+    //   },
+    //   populate: [
+    //     {
+    //       path: "phone",
+    //       select: "value verified",
+    //     },
+    //     {
+    //       path: "email",
+    //       select: "value verified",
+    //     },
+    //     {
+    //       path: "avatar"
+    //     }
+    //   ],
+    //   lean: true,
+    //   page: current,
+    //   limit: size,
+    //   customLabels: myCustomLabels,
+    // };
+
+    // // @ts-ignore
+    // return this.userModel.paginate(query, options)
+    // return this.userModel.find().exec();
   }
 
+  // Get User
   findOne(id: string) {
     return this.userModel.findById(id).populate(['phone']);
   }
 
+  // Remove Single User
   async remove(id: string) {
     // const o = await this.findOne(id)
     // if (o.phone) this.phoneService.remove(o.phone?._id);
@@ -224,7 +131,7 @@ export class UserServiceAdmin {
     // await o.remove();
   }
 
-
+  // Remove Bulk User
   bulkRemove(id: string[]) {
     return this.userModel.deleteMany({ _id: { $in: id } });
   }
