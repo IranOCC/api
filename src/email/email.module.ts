@@ -10,7 +10,6 @@ import { join } from 'path';
 import { MailLog, MailLogSchema } from './schemas/mail_log.schema';
 import { ConfigService } from '@nestjs/config';
 import { MailController } from './mail.controller';
-import { MailService } from './mail.service';
 import { I18nService } from 'nestjs-i18n';
 import { MailTemplateControllerAdmin } from './mail_template/admin/mail_template.admin.controller';
 import { MailTemplateControllerTools } from './mail_template/tools/mail_template.tools.controller';
@@ -18,6 +17,9 @@ import { MailTemplateServiceAdmin } from './mail_template/admin/mail_template.ad
 import { MailTemplateService } from './mail_template/mail_template.service';
 import { MailTemplateServiceTools } from './mail_template/tools/mail_template.tools.service';
 import { MailTemplate, MailTemplateSchema } from './schemas/mail_template.schema';
+import { MailService } from './mail/mail.service';
+import { EmailController } from './email.controller';
+import { MailLogService } from './mail_log/mail_log.service';
 
 @Module({
   imports: [
@@ -59,8 +61,8 @@ import { MailTemplate, MailTemplateSchema } from './schemas/mail_template.schema
     }),
     forwardRef(() => OfficeModule),
   ],
-  providers: [EmailService, MailService, MailTemplateService, MailTemplateServiceAdmin, MailTemplateServiceTools],
-  controllers: [MailController, MailTemplateControllerAdmin, MailTemplateControllerTools],
+  providers: [EmailService, MailService, MailLogService, MailTemplateService, MailTemplateServiceAdmin, MailTemplateServiceTools],
+  controllers: [EmailController, MailController, MailTemplateControllerAdmin, MailTemplateControllerTools],
   exports: [EmailService],
 
 })

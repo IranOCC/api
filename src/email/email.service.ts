@@ -6,12 +6,10 @@ import { GetMailLogsDto } from './dto/getMailLogs.dto';
 import { SendMailDto } from './dto/sendMail.dto';
 import { EmailAddress, EmailAddressDocument } from './schemas/email.schema';
 import { User } from 'src/user/schemas/user.schema';
-import { OfficeService } from 'src/office/office.service';
-import { MailService } from './mail.service';
 import { generateToken, validationToken } from 'src/utils/helper/token.helper';
 import { EmailOtpConfirmDto } from 'src/auth/dto/emailOtpConfirm.dto';
 import { useForEnum } from 'src/utils/enum/useFor.enum';
-import { UserService } from 'src/user/user.service';
+import { MailService } from './mail/mail.service';
 
 @Injectable()
 export class EmailService {
@@ -132,68 +130,36 @@ export class EmailService {
   // ===================================================================================
 
   // Send Mail
-  async sendMail(data: SendMailDto, sentBy: User) {
-    let _email: EmailAddress | null = null
-    if (data.user) {
-      // const u = await this.userService.getUserForMailService(data.user)
-      // if (!u || !u?.email) {
-      //   throw new NotFoundException("Email address not found", "EmailAddressNotFound")
-      // }
-      // _email = (u.email as EmailAddress)
-    }
-    else if (data.office) {
-      // const o = await this.officeService.getOfficeForMailService(data.office)
-      // if (!o || !o?.email) {
-      //   throw new NotFoundException("Email address not found", "EmailAddressNotFound")
-      // }
-      // _email = (o.email as EmailAddress)
-    }
-    else if (data.email) {
-      const email = await this.model.findById(data.email).populate("user", "-email")
-      if (!email) {
-        throw new NotFoundException("Email address not found", "EmailAddressNotFound")
-      }
-      _email = email
-    }
-    else {
-      throw new NotAcceptableException("Email address invalid", "EmailAddressInvalid")
-    }
+  async sendSingleMail({ email, template, context, relatedTo, relatedToID }: SendMailDto, sentBy: User) {
+    // get email
+    const _email = await this.model.findById(email).select(['value', 'user', 'office'])
+      .populate("user", "-email")
+      .populate("office", "-email")
+      .exec();
 
+    if (!_email) {
+      throw new NotFoundException("Email address not found", "EmailAddressNotFound")
+    }
     // ==> send
-    return await this.mailService.sendSingleMail(_email, data.template, data.context, sentBy, data.relatedTo, data.relatedToID)
+    return await this.mailService.sendSingleMail(_email, template, context, sentBy, relatedTo, relatedToID)
   }
 
-  // --> get mail logs
-  async getMailLogs(data: GetMailLogsDto) {
-    let _email: EmailAddress | null = null
-    if (data.user) {
-      // const u = await this.userService.getUserForMailService(data.user)
-      // if (!u || !u?.email) {
-      //   throw new NotFoundException("Email address not found", "EmailAddressNotFound")
-      // }
-      // _email = (u.email as EmailAddress)
-    }
-    else if (data.office) {
-      // const o = await this.officeService.getOfficeForMailService(data.office)
-      // if (!o || !o?.email) {
-      //   throw new NotFoundException("Email address not found", "EmailAddressNotFound")
-      // }
-      // _email = (o.email as EmailAddress)
-    }
-    else if (data.email) {
-      const email = await this.model.findById(data.email).populate("user", "-email")
-      if (!email) {
-        throw new NotFoundException("Email address not found", "EmailAddressNotFound")
-      }
-      _email = email
-    }
-    else {
-      throw new NotAcceptableException("Email address invalid", "EmailAddressInvalid")
+  // Get Mail Logs
+  async getMailLogs({ email, relatedTo, relatedToID }: GetMailLogsDto) {
+    // get email
+    const _email = await this.model.findById(email).select(['value', 'user', 'office'])
+      .populate("user", "-email")
+      .populate("office", "-email")
+      .exec();
+
+    if (!_email) {
+      throw new NotFoundException("Email address not found", "EmailAddressNotFound")
     }
 
-    // logs
-    return await this.mailService.logs(_email, data.relatedTo, data.relatedToID)
+    // ==> get logs
+    return await this.mailService.logs(_email, relatedTo, relatedToID)
   }
+
 
 
 

@@ -7,8 +7,9 @@ import { SendMailDto } from './dto/sendMail.dto';
 import { EmailService } from './email.service';
 
 
-@ApiTags('Mail')
 @Controller('admin/mail')
+@ApiTags('Mail')
+// @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
 @Public()
 export class MailController {
 
@@ -18,17 +19,15 @@ export class MailController {
 
 
     @Post()
-    // @Roles(RoleEnum.Admin)
     @ApiOperation({ summary: "Send single email to email address", description: "Mail subject: (context.$subject or base on template)", })
     @ApiResponse({ status: 201 })
     send(@Body() data: SendMailDto, @Request() { user }) {
-        return this.emailService.sendMail(data, user);
+        return this.emailService.sendSingleMail(data, user);
     }
 
     @Get()
-    // @Roles(RoleEnum.Admin)
-    @ApiOperation({ summary: "Get list og mail logs", description: "No Description", })
-    @ApiResponse({ status: 201 })
+    @ApiOperation({ summary: "Get list of mail logs", description: "No Description", })
+    @ApiResponse({ status: 200 })
     logs(@Query() data: GetMailLogsDto) {
         return this.emailService.getMailLogs(data);
     }

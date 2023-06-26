@@ -1,7 +1,6 @@
 import { IsEnum, IsMongoId, IsObject, IsOptional, ValidateIf } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
-import { SmsTemplatesEnum } from '../enum/templates';
 import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
 
 

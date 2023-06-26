@@ -3,8 +3,8 @@ import mongoose, { HydratedDocument, Document } from 'mongoose';
 import { Office } from 'src/office/schemas/office.schema';
 import { User } from 'src/user/schemas/user.schema';
 import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
-import { SmsTemplatesEnum } from '../enum/templates';
 import { PhoneNumber } from './phone.schema';
+import { SmsTemplate } from './sms_template.schema';
 
 @Schema({ timestamps: true })
 export class SmsLog extends Document {
@@ -52,11 +52,11 @@ export class SmsLog extends Document {
 
   @Prop({
     type: mongoose.Schema.Types.String,
-    enum: SmsTemplatesEnum,
-    default: SmsTemplatesEnum.NoTemplate,
-    select: true
+    select: true,
+    required: true,
+    ref: 'SmsTemplate',
   })
-  template: SmsTemplatesEnum;
+  template: SmsTemplate | string;
 
   @Prop({
     type: mongoose.Schema.Types.Mixed,

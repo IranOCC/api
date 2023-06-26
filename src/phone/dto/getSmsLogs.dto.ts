@@ -4,7 +4,6 @@ import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
 
 export class GetSmsLogsDto {
-
   @ApiPropertyOptional({ enum: RelatedToEnum })
   @IsOptional()
   @IsEnum(RelatedToEnum)

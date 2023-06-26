@@ -7,16 +7,13 @@ import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
 
 
 export class SendMailDto {
-  @ApiProperty({ enum: MailTemplatesEnum })
-  @IsEnum(MailTemplatesEnum)
-  template: MailTemplatesEnum = MailTemplatesEnum.NoTemplate;
+  @ApiProperty()
+  @IsMongoId()
+  template: string;
 
   @ApiProperty({ default: {} })
   @IsObject()
   context: any;
-
-
-
 
   @ApiPropertyOptional({ enum: RelatedToEnum })
   @IsOptional()
@@ -28,21 +25,7 @@ export class SendMailDto {
   @IsMongoId()
   relatedToID: string;
 
-
-
-
-  @ApiPropertyOptional()
-  @ValidateIf((obj, val) => (!val && !obj.office && !obj.email))
-  @IsMongoId()
-  user: string;
-
-  @ApiPropertyOptional()
-  @ValidateIf((obj, val) => (!val && !obj.user && !obj.email))
-  @IsMongoId()
-  office: string;
-
-  @ApiPropertyOptional()
-  @ValidateIf((obj, val) => (!val && !obj.office && !obj.user))
+  @ApiProperty()
   @IsMongoId()
   email: string;
 }

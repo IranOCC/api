@@ -122,7 +122,6 @@ export class PhoneService {
       .populate("office", "-phone")
       .exec();
 
-
     if (!_phone) {
       throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
     }

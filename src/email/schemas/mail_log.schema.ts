@@ -5,6 +5,7 @@ import { User } from 'src/user/schemas/user.schema';
 import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
 import { MailTemplatesEnum } from '../enum/templates';
 import { EmailAddress } from './email.schema';
+import { MailTemplate } from './mail_template.schema';
 
 @Schema({ timestamps: true })
 export class MailLog extends Document {
@@ -51,11 +52,11 @@ export class MailLog extends Document {
 
   @Prop({
     type: mongoose.Schema.Types.String,
-    enum: MailTemplatesEnum,
-    default: MailTemplatesEnum.NoTemplate,
-    select: true
+    select: true,
+    required: true,
+    ref: 'MailTemplate',
   })
-  template: MailTemplatesEnum;
+  template: MailTemplate | string;
 
   @Prop({
     type: mongoose.Schema.Types.Mixed,
