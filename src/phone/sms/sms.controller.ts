@@ -15,9 +15,9 @@ import { Public } from 'src/auth/guard/jwt-auth.guard';
 import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PhoneService } from './phone.service';
-import { SendSmsDto } from './dto/sendSms.dto';
-import { GetSmsLogsDto } from './dto/getSmsLogs.dto';
+import { PhoneService } from '../phone.service';
+import { SendSmsDto } from '../dto/sendSms.dto';
+import { GetSmsLogsDto } from '../dto/getSmsLogs.dto';
 
 
 

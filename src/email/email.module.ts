@@ -5,7 +5,7 @@ import { EmailService } from './email.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailLog, MailLogSchema } from './schemas/mail_log.schema';
 import { ConfigService } from '@nestjs/config';
-import { MailController } from './mail.controller';
+import { MailController } from './mail/mail.controller';
 import { I18nService } from 'nestjs-i18n';
 import { MailTemplateControllerAdmin } from './mail_template/admin/mail_template.admin.controller';
 import { MailTemplateControllerTools } from './mail_template/tools/mail_template.tools.controller';

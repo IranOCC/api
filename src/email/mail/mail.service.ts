@@ -56,7 +56,8 @@ export class MailService {
       await this.mailerService.sendMail({
         to: email.value,
         html: text,
-        subject: context.$subject
+        subject: context.$subject,
+        attachments: context.$attachments
       })
     }
 

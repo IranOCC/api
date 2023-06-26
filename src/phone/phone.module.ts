@@ -13,7 +13,7 @@ import { SmsTemplateServiceTools } from './sms_template/tools/sms_template.tools
 import { SmsTemplateControllerTools } from './sms_template/tools/sms_template.tools.controller';
 import { SmsLogService } from './sms_log/sms_log.service';
 import { SmsTemplateService } from './sms_template/sms_template.service';
-import { SmsController } from './sms.controller';
+import { SmsController } from './sms/sms.controller';
 import { PhoneController } from './phone.controller';
 
 

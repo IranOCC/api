@@ -4,9 +4,9 @@ import { PhoneOtpResponseDto } from 'src/auth/dto/response/phoneOtp.dto';
 import { Public } from 'src/auth/guard/jwt-auth.guard';
 import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
-import { GetMailLogsDto } from './dto/getMailLogs.dto';
-import { SendMailDto } from './dto/sendMail.dto';
-import { EmailService } from './email.service';
+import { GetMailLogsDto } from '../dto/getMailLogs.dto';
+import { SendMailDto } from '../dto/sendMail.dto';
+import { EmailService } from '../email.service';
 
 
 @Controller('admin/mail')
