@@ -56,6 +56,6 @@ export class UserControllerAdmin {
   @ApiOperation({ summary: "Delete bulk of Model by id", description: "No Description" })
   @ApiResponse({ status: 200 })
   bulkRemove(@Query() { id }: MongoArrayIDQueryDto) {
-    // return this.userAdminService.remove(id);
+    return this.userAdminService.bulkRemove(id);
   }
 }

@@ -225,6 +225,11 @@ export class UserServiceAdmin {
   }
 
 
+  bulkRemove(id: string[]) {
+    return this.userModel.deleteMany({ _id: { $in: id } });
+  }
+
+
   // ======> phone
   async setPhone(user: User, phone: PhoneDto) {
     try {
