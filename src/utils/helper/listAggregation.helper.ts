@@ -41,7 +41,7 @@ const listAggregation =
 
 
         // virtualFields
-        $pipelines.push({ $addFields: virtualFields })
+        if (!!Object.keys(virtualFields)?.length) $pipelines.push({ $addFields: virtualFields })
 
 
 

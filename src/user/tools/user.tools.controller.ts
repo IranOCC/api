@@ -4,11 +4,14 @@ import { AutoCompleteDto } from 'src/utils/dto/autoComplete.dto';
 import { UserServiceTools } from './user.tools.service';
 import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
+import { Public } from 'src/auth/guard/jwt-auth.guard';
+import { UserFilteringDto } from '../admin/dto/userQuery.dto';
 
 
 
 @Controller('user/tools')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
+// @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
+@Public()
 @ApiTags('User')
 @ApiBearerAuth()
 export class UserControllerTools {
@@ -19,8 +22,8 @@ export class UserControllerTools {
   @Get('autoComplete')
   @ApiOperation({ summary: "Get Model list in autoComplete structure", description: "No Description" })
   @ApiResponse({ status: 200 })
-  autoComplete(@Query() query: AutoCompleteDto) {
-    return this.userServiceTools.autoComplete(query);
+  autoComplete(@Query('filter') filter: UserFilteringDto, @Query() query: AutoCompleteDto) {
+    return this.userServiceTools.autoComplete(query, filter);
   }
 
 

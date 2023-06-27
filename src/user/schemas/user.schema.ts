@@ -5,6 +5,7 @@ import * as speakeasy from 'speakeasy';
 import { PhoneNumber } from 'src/phone/schemas/phone.schema';
 import { EmailAddress } from 'src/email/schemas/email.schema';
 import { Storage } from 'src/storage/schemas/storage.schema';
+import MongooseDelete, { SoftDeleteModel } from 'mongoose-delete';
 
 
 
@@ -114,10 +115,10 @@ export class User extends Document {
   lastOnline: Date;
 }
 
+
+
 export const UserSchema = SchemaFactory.createForClass(User);
 export type UserDocument = HydratedDocument<User>;
-
-
 
 
 
@@ -146,6 +147,14 @@ UserSchema.virtual('fullName')
 
 
 
+
 // plugins
 UserSchema.plugin(require('mongoose-autopopulate'));
+// UserSchema.plugin(require('mongoose-delete'), { deletedBy: true, deletedAt: true });
+
+
+// const model: SoftDeleteModel = model<User>('Pet', UserSchema);
+
+
+
 

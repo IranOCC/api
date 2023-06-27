@@ -1,4 +1,4 @@
-import { IsOptional, } from 'class-validator';
+import { IsBoolean, IsOptional, } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PhoneValueDto } from './phoneNumber.dto';
 
@@ -7,5 +7,6 @@ import { PhoneValueDto } from './phoneNumber.dto';
 export class PhoneDto extends PhoneValueDto {
   @ApiPropertyOptional()
   @IsOptional()
+  @IsBoolean()
   verified: boolean;
 }

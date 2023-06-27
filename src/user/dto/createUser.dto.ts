@@ -7,6 +7,7 @@ import {
   IsNotEmpty,
   ValidateNested,
   IsLatLong,
+  IsMongoId,
 } from 'class-validator';
 import { Type, } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
@@ -30,11 +31,13 @@ export class CreateUserDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  avatar: Storage | string;
+  @IsMongoId()
+  avatar: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ default: [RoleEnum.User] })
+  @IsOptional()
   @IsEnum(RoleEnum, { each: true, })
-  roles: RoleEnum[];
+  roles: RoleEnum[] = [RoleEnum.User];
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -67,9 +70,9 @@ export class CreateUserDto {
 
   @ApiPropertyOptional({ default: false })
   @IsOptional()
-  verified: boolean;
+  verified: boolean = false;
 
   @ApiPropertyOptional({ default: true })
   @IsOptional()
-  active: boolean;
+  active: boolean = true;
 }

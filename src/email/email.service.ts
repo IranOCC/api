@@ -118,7 +118,31 @@ export class EmailService {
 
 
 
+  // ============================================================ delete
 
+  async remove(id: string) {
+    await this.model.deleteOne({ _id: id })
+  }
+
+  async bulkRemove(id: string[]) {
+    await this.model.deleteMany({ _id: { $in: id } });
+  }
+
+  async removeByUser(user: string) {
+    await this.model.deleteMany({ user })
+  }
+
+  async removeByBulkUser(users: string[]) {
+    await this.model.deleteMany({ user: { $in: users } })
+  }
+
+  async removeByOffice(office: string) {
+    await this.model.deleteMany({ office })
+  }
+
+  async removeByBulkOffice(offices: string[]) {
+    await this.model.deleteMany({ office: { $in: offices } })
+  }
 
 
 

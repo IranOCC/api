@@ -12,6 +12,8 @@ import { I18nValidationException, I18nService } from 'nestjs-i18n';
 import { useForEnum } from 'src/utils/enum/useFor.enum';
 import { PhoneNumber } from 'src/phone/schemas/phone.schema';
 import { EmailAddress } from 'src/email/schemas/email.schema';
+import { PhoneDto } from 'src/phone/dto/phone.dto';
+import { EmailDto } from 'src/email/dto/email.dto';
 
 
 
@@ -176,34 +178,84 @@ export class UserService {
 
 
 
-    // ======================================================
+    // ===========================================> (Self) <===============================================
 
-
-
-
-    // find by ID
-    findOne(id: string, ...arg) {
-        return this.userModel.findById(id, ...arg);
+    // ======> phone
+    async setPhone(user: User, phone: PhoneDto) {
+        try {
+            const phoneID = await this.phoneService.setup(phone.value, useForEnum.User, user, phone.verified)
+            user.phone = phoneID
+        } catch (error) {
+            const _error = new ValidationError();
+            _error.property = 'phone';
+            _error.constraints = {
+                PhoneNumberInUsed: this.i18n.t("exception.PhoneNumberInUsed")
+            };
+            _error.value = phone;
+            throw new I18nValidationException([_error])
+        }
+    }
+    // ======> email
+    async setEmail(user: User, email: EmailDto) {
+        try {
+            const emailID = await this.emailService.setup(email.value, useForEnum.User, user, email.verified)
+            user.email = emailID
+        } catch (error) {
+            const _error = new ValidationError();
+            _error.property = 'email';
+            _error.constraints = {
+                EmailAddressInUsed: this.i18n.t("exception.EmailAddressInUsed")
+            };
+            _error.value = email;
+            throw new I18nValidationException([_error])
+        }
     }
 
 
-    // 
-    getUserForMailService = (id: string) => {
-        return this.findOne(id, {}, { autopopulate: false })
-            .populate({
-                path: "email",
-                select: "value verified user",
-                populate: { path: "user", select: "-phone" }
-            })
-    }
-    getUserForSmsService = (id: string) => {
-        return this.findOne(id, {}, { autopopulate: false })
-            .populate({
-                path: "phone",
-                select: "value verified user",
-                populate: { path: "user", select: "-email" }
-            })
-    }
+    // // ==>
+    // async getOrCheck(data: User | string): Promise<User> {
+    //     let _data: User
+    //     if (typeof data === 'string')
+    //         _data = await this.findOne(data)
+    //     else
+    //         _data = data
+
+    //     return _data
+    // }
+
+
+    // async hasSuperAdminRole(user: User | string): Promise<boolean | User> {
+    //     let _user: User = await this.getOrCheck(user)
+    //     return _user.roles.includes(RoleEnum.SuperAdmin) && _user
+    // }
+
+    // async hasAdminRole(user: User | string): Promise<boolean | User> {
+    //     let _user: User = await this.getOrCheck(user)
+    //     return _user.roles.includes(RoleEnum.Admin) && _user
+    // }
+
+    // async hasAgentRole(user: User | string): Promise<boolean | User> {
+    //     let _user: User = await this.getOrCheck(user)
+    //     return _user.roles.includes(RoleEnum.Agent) && _user
+    // }
+
+    // async hasAuthorRole(user: User | string): Promise<boolean | User> {
+    //     let _user: User = await this.getOrCheck(user)
+    //     return _user.roles.includes(RoleEnum.Author) && _user
+    // }
+
+    // async hasUserRole(user: User | string): Promise<boolean | User> {
+    //     let _user: User = await this.getOrCheck(user)
+    //     return _user.roles.includes(RoleEnum.User) && _user
+    // }
+
+
+
+
+
+
+
+
 
 
 

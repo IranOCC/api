@@ -15,6 +15,7 @@ import { I18nValidationException, I18nService } from 'nestjs-i18n';
 import { useForEnum } from 'src/utils/enum/useFor.enum';
 import { ListResponseDto, PaginationDto } from 'src/utils/dto/pagination.dto';
 import { listAggregation, PopulatedType, } from 'src/utils/helper/listAggregation.helper';
+import { UserService } from '../user.service';
 
 
 
@@ -26,6 +27,7 @@ export class UserServiceAdmin {
   constructor(
     private i18n: I18nService,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private userService: UserService,
     private phoneService: PhoneService,
     private emailService: EmailService,
   ) { }
@@ -33,11 +35,11 @@ export class UserServiceAdmin {
 
   // Create User
   async create(data: CreateUserDto): Promise<any> {
-    const { phone, email, ...modelData } = data
-    const _user = new this.userModel(modelData)
+    const { phone, email, ...props } = data
+    const _user = new this.userModel(props)
 
-    if (phone) await this.setPhone(_user, phone)
-    if (email) await this.setEmail(_user, email)
+    if (phone) await this.userService.setPhone(_user, phone)
+    if (email) await this.userService.setEmail(_user, email)
 
     // save
     await _user.save()
@@ -46,13 +48,16 @@ export class UserServiceAdmin {
 
   // Edit User
   async update(id: string, data: UpdateUserDto): Promise<any> {
-    const { phone, email, ...modelData } = data
+    const { phone, email, ...props } = data
     const _user = await this.userModel.findById(id)
 
-    if (phone) await this.setPhone(_user, phone)
-    if (email) await this.setEmail(_user, email)
+    if (phone) await this.userService.setPhone(_user, phone)
+    if (email) await this.userService.setEmail(_user, email)
 
-    return this.userModel.updateOne({ _id: id }, modelData).exec();
+    // save
+    await _user.save()
+
+    return this.userModel.updateOne({ _id: id }, props).exec();
   }
 
   // List User
@@ -76,85 +81,21 @@ export class UserServiceAdmin {
 
   // Remove Single User
   async remove(id: string) {
-    // const o = await this.findOne(id)
-    // if (o.phone) this.phoneService.remove(o.phone?._id);
-    // if (o.email) this.emailService.remove(o.email?._id);
-    // await o.remove();
+    await this.phoneService.removeByUser(id);
+    await this.emailService.removeByUser(id);
+
+    await this.userModel.deleteOne({ _id: id })
   }
 
   // Remove Bulk User
-  bulkRemove(id: string[]) {
-    return this.userModel.deleteMany({ _id: { $in: id } });
+  async bulkRemove(id: string[]) {
+    await this.phoneService.removeByBulkUser(id);
+    await this.emailService.removeByBulkUser(id);
+
+    await this.userModel.deleteMany({ _id: { $in: id } });
   }
 
 
-  // ======> phone
-  async setPhone(user: User, phone: PhoneDto) {
-    try {
-      const phoneID = await this.phoneService.setup(phone.value, useForEnum.User, user, phone.verified)
-      user.phone = phoneID
-    } catch (error) {
-      const _error = new ValidationError();
-      _error.property = 'phone';
-      _error.constraints = {
-        PhoneNumberInUsed: this.i18n.t("exception.PhoneNumberInUsed")
-      };
-      _error.value = phone;
-      throw new I18nValidationException([_error])
-    }
-  }
-  // ======> email
-  async setEmail(user: User, email: EmailDto) {
-    try {
-      const emailID = await this.emailService.setup(email.value, useForEnum.User, user, email.verified)
-      user.email = emailID
-    } catch (error) {
-      const _error = new ValidationError();
-      _error.property = 'email';
-      _error.constraints = {
-        EmailAddressInUsed: this.i18n.t("exception.EmailAddressInUsed")
-      };
-      _error.value = email;
-      throw new I18nValidationException([_error])
-    }
-  }
 
-
-  // ==>
-  async getOrCheck(data: User | string): Promise<User> {
-    let _data: User
-    if (typeof data === 'string')
-      _data = await this.findOne(data)
-    else
-      _data = data
-
-    return _data
-  }
-
-
-  async hasSuperAdminRole(user: User | string): Promise<boolean | User> {
-    let _user: User = await this.getOrCheck(user)
-    return _user.roles.includes(RoleEnum.SuperAdmin) && _user
-  }
-
-  async hasAdminRole(user: User | string): Promise<boolean | User> {
-    let _user: User = await this.getOrCheck(user)
-    return _user.roles.includes(RoleEnum.Admin) && _user
-  }
-
-  async hasAgentRole(user: User | string): Promise<boolean | User> {
-    let _user: User = await this.getOrCheck(user)
-    return _user.roles.includes(RoleEnum.Agent) && _user
-  }
-
-  async hasAuthorRole(user: User | string): Promise<boolean | User> {
-    let _user: User = await this.getOrCheck(user)
-    return _user.roles.includes(RoleEnum.Author) && _user
-  }
-
-  async hasUserRole(user: User | string): Promise<boolean | User> {
-    let _user: User = await this.getOrCheck(user)
-    return _user.roles.includes(RoleEnum.User) && _user
-  }
 
 }
