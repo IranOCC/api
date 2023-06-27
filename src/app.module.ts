@@ -22,8 +22,8 @@ import { RolesGuard } from './auth/guard/roles.guard';
 
 // modules
 import { UserModule } from './user/user.module';
-import { OfficeModule } from './office/office.module';
 import { StorageModule } from './storage/storage.module';
+import { OfficeModule } from './office/office.module';
 import { EstateModule } from './estate/estate.module';
 import { BlogModule } from './blog/blog.module';
 import { SettingModule } from './setting/setting.module';
@@ -65,9 +65,9 @@ import { IsUniqueProvider } from './utils/decorator/unique.decorator';
     IconModule,
     SettingModule,
 
-    OfficeModule,
-    BlogModule,
-    EstateModule,
+    // OfficeModule,
+    // BlogModule,
+    // EstateModule,
   ],
   controllers: [AppController],
   providers: [
