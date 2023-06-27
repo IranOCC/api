@@ -31,13 +31,15 @@ const listAutoComplete =
             let $and = []
             if (filter) $and.push(filter)
             $and.push({
-                $or: [
-                    ...searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } })),
-                    { _id: new mongoose.Types.ObjectId(initial) }
-                ]
+                $or: searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } }))
             })
             $pipelines.push({
-                $match: { $and }
+                $match: {
+                    $or: [
+                        { _id: new mongoose.Types.ObjectId(initial) },
+                        $and
+                    ]
+                }
             })
         }
 
