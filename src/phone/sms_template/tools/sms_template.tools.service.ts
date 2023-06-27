@@ -5,6 +5,7 @@ import { I18nService } from 'nestjs-i18n';
 import { AutoCompleteDto } from 'src/utils/dto/autoComplete.dto';
 import { translateStatics } from 'src/utils/helper/translateStatics.helper';
 import { SmsTemplate, SmsTemplateDocument } from 'src/phone/schemas/sms_template.schema';
+import { listAutoComplete } from 'src/utils/helper/autoComplete.helper';
 
 
 
@@ -19,36 +20,10 @@ export class SmsTemplateServiceTools {
   ) { }
 
 
-  async autoComplete({ initial, search, current, size }: AutoCompleteDto) {
-    return await this.templateModel.aggregate([
-      {
-        $match: {
-          $or: [
-            { title: { $regex: search, $options: "i" } },
-            { slug: { $regex: search, $options: "i" } },
-            { _id: new mongoose.Types.ObjectId(initial) }
-          ]
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          title: "$title",
-          value: "$_id",
-          isInitial: {
-            $cond: [
-              { $eq: ["$_id", new mongoose.Types.ObjectId(initial)] },
-              1,
-              0
-            ]
-          }
-        }
-      },
-      { $skip: (current - 1) * size },
-      { $limit: size },
-      { $sort: { isInitial: -1 } },
-      { $project: { isInitial: 0 } }
-    ])
+  async autoComplete(query: AutoCompleteDto) {
+    const searchFields = "title slug"
+    const displayPath = "title"
+    return await listAutoComplete(this.templateModel, query, searchFields, displayPath)
   }
 
 }

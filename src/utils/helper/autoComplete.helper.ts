@@ -20,9 +20,11 @@ const listAutoComplete =
     ) => {
         let $pipelines: mongoose.PipelineStage[] = []
 
+        if (!Array.isArray(initial)) initial = [initial]
+
 
         // virtualFields
-        if (!!Object.keys(virtualFields)?.length) $pipelines.push({ $addFields: virtualFields })
+        if (virtualFields && !!Object.keys(virtualFields)?.length) $pipelines.push({ $addFields: virtualFields })
 
 
 
@@ -36,8 +38,8 @@ const listAutoComplete =
             $pipelines.push({
                 $match: {
                     $or: [
-                        { _id: new mongoose.Types.ObjectId(initial) },
-                        $and
+                        { _id: { $in: initial?.map(v => new mongoose.Types.ObjectId(v)) } },
+                        { $and }
                     ]
                 }
             })
@@ -52,7 +54,7 @@ const listAutoComplete =
                 value: "$_id",
                 isInitial: {
                     $cond: [
-                        { $eq: ["$_id", new mongoose.Types.ObjectId(initial)] },
+                        { $in: ["$_id", initial?.map(v => new mongoose.Types.ObjectId(v))] },
                         1,
                         0
                     ]

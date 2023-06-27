@@ -42,7 +42,7 @@ class UserFilteringDto {
         return Array.isArray(value) ? { $in: value } : value
     })
     @IsOptional()
-    readonly roles?: boolean;
+    readonly roles?: RoleEnum[];
 }
 
 

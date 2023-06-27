@@ -3,10 +3,13 @@ import { Transform } from "class-transformer";
 import { IsMongoId, IsOptional, IsPositive, IsString } from "class-validator";
 
 export class AutoCompleteDto {
-    @ApiPropertyOptional({ default: null })
-    @IsMongoId()
+    @ApiPropertyOptional({ default: [] })
+    @IsMongoId({ each: true })
+    // @Transform(({ value }) => {
+    //     if (!Array.isArray(value)) return [value]
+    // })
     @IsOptional()
-    initial: string = null;
+    initial: string[] = [];
 
     @ApiPropertyOptional({ default: "" })
     @IsString()

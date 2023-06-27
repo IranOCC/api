@@ -21,13 +21,13 @@ export class UserServiceTools {
   ) { }
 
 
-  async autoComplete(autoData: AutoCompleteDto, filter: any) {
+  async autoComplete(query: AutoCompleteDto, filter: any) {
     const virtualFields = {
       fullName: { $concat: ["$firstName", " ", "$lastName"] }
     }
     const searchFields = "fullName"
     const displayPath = "fullName"
-    return await listAutoComplete(this.userModel, autoData, searchFields, displayPath, virtualFields, filter)
+    return await listAutoComplete(this.userModel, query, searchFields, displayPath, virtualFields, filter)
   }
 
   statics(subject: string) {
