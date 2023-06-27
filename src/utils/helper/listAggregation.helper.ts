@@ -19,6 +19,8 @@ const listAggregation =
     ) => {
         let $pipelines: mongoose.PipelineStage[] = []
         let $project = {}
+
+        // populate
         populate.map(([db, path, select, isArray]) => {
             let project = {}
             select?.split(" ").map((p) => { project[p] = true })
@@ -38,8 +40,7 @@ const listAggregation =
 
 
 
-
-
+        // virtualFields
         $pipelines.push({ $addFields: virtualFields })
 
 
@@ -56,36 +57,36 @@ const listAggregation =
             })
         }
 
+
         // sort
         if (!!Object.keys(sort)?.length) $pipelines.push({ $sort: sort })
+
 
         // project
         $pipelines.push({ $project })
 
 
+        // total count
+        $pipelines.push({
+            $group: {
+                _id: null,
+                total: { $sum: 1 },
+                items: { $push: '$$ROOT' },
+            }
+        })
+
+
         // pagination
-        $pipelines.push({ $skip: (current - 1) * size })
-        $pipelines.push({ $limit: size })
-
-
-        console.log($pipelines);
-
+        $pipelines.push({
+            $project: {
+                _id: false,
+                total: true,
+                items: { $slice: ["$items", (current - 1) * size, size] },
+            }
+        })
 
 
         return model.aggregate($pipelines).exec()
-
-        // return model.aggregate([
-        //     // {
-        //     //     $match: {
-        //     //         $or: [
-        //     //             { fullName: { $regex: search, $options: "i" } },
-        //     //             // { _id: new mongoose.Types.ObjectId(initial) }
-        //     //         ]
-        //     //     }
-        //     // },
-
-
-        // ]).exec()
     }
 
 export { listAggregation }

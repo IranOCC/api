@@ -7,40 +7,21 @@ import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
 import { ApiNestedQuery } from 'src/utils/decorator/filterQuery.decorator';
 import { MongoArrayIDQueryDto, MongoIDQueryDto } from 'src/utils/dto/mongoIDQuery.dto';
-import { PaginationDto } from 'src/utils/dto/pagination.dto';
+import { ListResponseDto, PaginationDto } from 'src/utils/dto/pagination.dto';
 import { CreateUserDto } from '../dto/createUser.dto';
 import { UpdateUserDto } from '../dto/updateUser.dto';
+import { User } from '../schemas/user.schema';
+import { UserFilteringDto, UserSortingDto } from './dto/userQuery.dto';
 import { UserServiceAdmin } from './user.admin.service';
 
 
 
 
-class UserFilterDto {
-  @ApiPropertyOptional({ name: "filter[verified]", enum: ["True", "False"] })
-  @Transform(({ value }) => {
-    return ([1, true, 'True'].includes(value)) ? true : false
-  })
-  @IsOptional()
-  readonly verified?: boolean;
-
-  @ApiPropertyOptional({ name: "filter[active]", enum: ["True", "False"] })
-  @Transform(({ value }) => {
-    return ([1, true, 'True'].includes(value)) ? true : false
-  })
-  @IsOptional()
-  readonly active?: boolean;
-}
 
 
 
-class UserSortDto {
-  @ApiPropertyOptional({ name: "sort[createdAt]", enum: ["Desc", "Asc"] })
-  @Transform(({ value }) => {
-    return ([1, true, 'True', 'Desc'].includes(value)) ? 1 : -1
-  })
-  @IsOptional()
-  readonly createdAt?: boolean;
-}
+
+
 
 
 @Controller('user/admin')
@@ -60,13 +41,8 @@ export class UserControllerAdmin {
 
   @Get()
   @ApiOperation({ summary: "Get list of Model", description: "No Description" })
-  @ApiResponse({ status: 200 })
-  findAll(
-    @Query('filter') filter: UserFilterDto,
-    @Query('sort') sort: UserSortDto,
-    @Query() paginate: PaginationDto,
-  ) {
-    console.log(filter, sort, paginate);
+  @ApiResponse({ status: 200, type: ListResponseDto })
+  findAll(@Query('filter') filter: UserFilteringDto, @Query('sort') sort: UserSortingDto, @Query() paginate: PaginationDto) {
     return this.userAdminService.findAll(paginate, filter, sort);
   }
 

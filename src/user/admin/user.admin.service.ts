@@ -13,7 +13,7 @@ import { OfficeService } from 'src/office/office.service';
 import { ValidationError } from 'class-validator';
 import { I18nValidationException, I18nService } from 'nestjs-i18n';
 import { useForEnum } from 'src/utils/enum/useFor.enum';
-import { PaginationDto } from 'src/utils/dto/pagination.dto';
+import { ListResponseDto, PaginationDto } from 'src/utils/dto/pagination.dto';
 import { listAggregation, PopulatedType, } from 'src/utils/helper/listAggregation.helper';
 
 
@@ -57,7 +57,6 @@ export class UserServiceAdmin {
 
   // List User
   findAll(pagination: PaginationDto, filter: any, sort: any): Promise<User[]> {
-
     const populate: PopulatedType[] = [
       ["phonenumbers", "phone", "value verified"],
       ["emailaddresses", "email", "value verified"]
@@ -68,54 +67,6 @@ export class UserServiceAdmin {
     }
     const searchFields = "fullName"
     return listAggregation(this.userModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
-
-
-
-
-    // const myCustomLabels = {
-    //   totalDocs: 'count',
-    //   docs: 'items',
-    //   limit: 'size',
-    //   page: 'current',
-    //   nextPage: 'next',
-    //   prevPage: 'prev',
-    //   totalPages: 'pageCount',
-    //   pagingCounter: 'slNo',
-    //   meta: 'paginator',
-    // };
-    // const searchPath = [
-    //   'fullName',
-
-    // ]
-    // const query = { firstName: { $regex: search, $options: "i" } };
-    // const options = {
-    //   select: 'firstName lastName verified active roles',
-    //   sort: 'createdAt',
-    //   projection: {
-    //     full_Name: { $concat: ["$firstName", " ", "$lastName"] }
-    //   },
-    //   populate: [
-    //     {
-    //       path: "phone",
-    //       select: "value verified",
-    //     },
-    //     {
-    //       path: "email",
-    //       select: "value verified",
-    //     },
-    //     {
-    //       path: "avatar"
-    //     }
-    //   ],
-    //   lean: true,
-    //   page: current,
-    //   limit: size,
-    //   customLabels: myCustomLabels,
-    // };
-
-    // // @ts-ignore
-    // return this.userModel.paginate(query, options)
-    // return this.userModel.find().exec();
   }
 
   // Get User

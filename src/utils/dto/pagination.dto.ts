@@ -1,6 +1,7 @@
-import { ApiExtraModels, ApiProperty, ApiPropertyOptional, ApiQuery } from "@nestjs/swagger";
+import { ApiExtraModels, ApiProperty, ApiPropertyOptional, ApiQuery, ApiResponseProperty } from "@nestjs/swagger";
 import { Expose, Transform, Type } from "class-transformer";
 import { IsJSON, IsObject, IsOptional, IsPositive, IsString, ValidateNested } from "class-validator";
+import { User } from "src/user/schemas/user.schema";
 
 
 
@@ -21,4 +22,17 @@ export class PaginationDto {
     @IsPositive()
     @IsOptional()
     size: number = 10;
+}
+
+
+
+
+export class ListResponseDto {
+    @ApiResponseProperty({})
+    @Expose()
+    items: number[];
+
+    @ApiResponseProperty()
+    @Expose()
+    total: number;
 }
