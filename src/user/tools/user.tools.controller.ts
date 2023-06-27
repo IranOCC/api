@@ -10,8 +10,7 @@ import { UserFilteringDto } from '../admin/dto/userQuery.dto';
 
 
 @Controller('user/tools')
-// @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
-@Public()
+@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
 @ApiTags('User')
 @ApiBearerAuth()
 export class UserControllerTools {

@@ -25,8 +25,7 @@ import { UserServiceAdmin } from './user.admin.service';
 
 
 @Controller('user/admin')
-// @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
-@Public()
+@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
 @ApiTags('User')
 @ApiBearerAuth()
 export class UserControllerAdmin {
