@@ -4,8 +4,6 @@ import { AutoCompleteDto } from "../dto/autoComplete.dto"
 import { PaginationDto } from "../dto/pagination.dto"
 
 
-// db path select isArray
-export type PopulatedType = [string, string, string?, boolean?]
 
 const listAutoComplete =
     (

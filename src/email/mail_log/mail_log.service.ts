@@ -3,7 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/user/schemas/user.schema';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
+import { listAggregation, PopulatedType } from 'src/utils/helper/listAggregation.helper';
 import { EmailAddress } from '../schemas/email.schema';
 import { MailLog, MailLogDocument } from '../schemas/mail_log.schema';
 import { MailTemplate } from '../schemas/mail_template.schema';
@@ -34,28 +36,18 @@ export class MailLogService {
   }
 
 
-  findAll(email: EmailAddress, relatedTo?: RelatedToEnum, relatedToID?: string) {
-    if (relatedTo && relatedToID) {
-      return this.logModel
-        .find({ email: email._id })
-        .find({ relatedTo, relatedToID })
-        .populate("sentBy", "fullName")
-        .populate("email", "value")
-        .populate("template", "content")
+  findAll(pagination: PaginationDto, filter: any, sort: any) {
+    const populate: PopulatedType[] = [
+      ["users", "sentBy", "firstName lastName"],
+      ["emailaddresses", "email", "value"],
+      ["mailtemplates", "template", "title content"],
+    ]
+    const project = "context"
+    const virtualFields = {
+      // fullName: { $concat: ["$firstName", " ", "$lastName"] }
     }
-    if (relatedTo) {
-      return this.logModel
-        .find({ email: email._id })
-        .find({ relatedTo })
-        .populate("sentBy", "fullName")
-        .populate("email", "value")
-        .populate("template", "content")
-    }
-    return this.logModel
-      .find({ email: email._id })
-      .populate("sentBy", "fullName")
-      .populate("email", "value")
-      .populate("template", "content")
+    const searchFields = ""
+    return listAggregation(this.logModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
   }
 
 

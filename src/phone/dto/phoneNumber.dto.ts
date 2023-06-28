@@ -13,11 +13,10 @@ import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 export class PhoneNumberDto {
     @ApiProperty()
     @Transform(({ value }) => {
-        if (value.substring(0, 1) === "0") value = value.substring(1);
-        else if (value.substring(0, 2) === "98") value = value.substring(2);
+        if (value.substring(0, 2) === "98") value = value.substring(2);
         else if (value.substring(0, 3) === "+98") value = value.substring(3);
-        else if (value.substring(0, 3) === "098") value = value.substring(3);
         else if (value.substring(0, 4) === "0098") value = value.substring(4);
+        else if (value.substring(0, 1) === "0") value = value.substring(1);
         return "+98" + value;
     })
     @IsPhoneNumber("IR", {
@@ -31,11 +30,10 @@ export class PhoneNumberDto {
 export class PhoneValueDto {
     @ApiProperty()
     @Transform(({ value }) => {
-        if (value.substring(0, 1) === "0") value = value.substring(1);
-        else if (value.substring(0, 2) === "98") value = value.substring(2);
+        if (value.substring(0, 2) === "98") value = value.substring(2);
         else if (value.substring(0, 3) === "+98") value = value.substring(3);
-        else if (value.substring(0, 3) === "098") value = value.substring(3);
         else if (value.substring(0, 4) === "0098") value = value.substring(4);
+        else if (value.substring(0, 1) === "0") value = value.substring(1);
         return "+98" + value;
     })
     @IsPhoneNumber("IR", {

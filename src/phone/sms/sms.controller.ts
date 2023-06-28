@@ -18,6 +18,8 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagg
 import { PhoneService } from '../phone.service';
 import { SendSmsDto } from '../dto/sendSms.dto';
 import { GetSmsLogsDto } from '../dto/getSmsLogs.dto';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
+import { SmsLogFilteringDto, SmsLogSortingDto } from './dto/smsLogQuery.dto';
 
 
 
@@ -39,8 +41,8 @@ export class SmsController {
   @Get()
   @ApiOperation({ summary: "Get list of sms logs", description: "No Description" })
   @ApiResponse({ status: 200 })
-  listLogs(@Query() data: GetSmsLogsDto) {
-    return this.phoneService.getSmsLogs(data);
+  listLogs(@Query('filter') filter: SmsLogFilteringDto, @Query('sort') sort: SmsLogSortingDto, @Query() paginate: PaginationDto) {
+    return this.phoneService.getSmsLogs(paginate, filter, sort);
   }
 
 }

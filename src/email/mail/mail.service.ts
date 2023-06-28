@@ -8,6 +8,7 @@ import { MailTemplateService } from '../mail_template/mail_template.service';
 import { EmailAddress } from '../schemas/email.schema';
 import { MailTemplate } from '../schemas/mail_template.schema';
 import Handlebars from "handlebars"
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
 
 
 
@@ -38,15 +39,16 @@ export class MailService {
 
     if (!_template) throw new NotFoundException("Template not found", "TemplateNotFound")
 
+    if (!context.$subject) {
+      context.$subject = _template.title
+    }
+
     // send by serviceID
     if (_template.serviceID) {
       throw new NotAcceptableException("Service not found", "ServiceNotFound")
     }
     // send by template
     else {
-      if (!context.$subject) {
-        context.$subject = _template.title
-      }
       let text = ""
       try {
         text = Handlebars.compile(_template.content)(context)
@@ -67,8 +69,8 @@ export class MailService {
 
 
 
-  async logs(email: EmailAddress, relatedTo?: RelatedToEnum, relatedToID?: string) {
-    return await this.mailLogService.findAll(email, relatedTo, relatedToID)
+  async logs(pagination: PaginationDto, filter: any, sort: any) {
+    return await this.mailLogService.findAll(pagination, filter, sort)
   }
 
 

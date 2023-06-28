@@ -11,6 +11,8 @@ import Handlebars from "handlebars"
 import * as fs from 'fs'
 import { join } from 'path';
 import { SmsTemplate } from '../schemas/sms_template.schema';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
+import { listAggregation, PopulatedType } from 'src/utils/helper/listAggregation.helper';
 
 
 
@@ -39,28 +41,18 @@ export class SmsLogService {
   }
 
 
-  findAll(phone: PhoneNumber, relatedTo?: RelatedToEnum, relatedToID?: string) {
-    if (relatedTo && relatedToID) {
-      return this.logModel
-        .find({ phone: phone._id })
-        .find({ relatedTo, relatedToID })
-        .populate("sentBy", "fullName")
-        .populate("phone", "value")
-        .populate("template", "content")
+  findAll(pagination: PaginationDto, filter: any, sort: any) {
+    const populate: PopulatedType[] = [
+      ["users", "sentBy", "firstName lastName"],
+      ["phonenumbers", "phone", "value"],
+      ["smstemplates", "template", "title slug content"]
+    ]
+    const project = "context"
+    const virtualFields = {
+      // fullName: { $concat: ["$firstName", " ", "$lastName"] }
     }
-    if (relatedTo) {
-      return this.logModel
-        .find({ phone: phone._id })
-        .find({ relatedTo })
-        .populate("sentBy", "fullName")
-        .populate("phone", "value")
-        .populate("template", "content")
-    }
-    return this.logModel
-      .find({ phone: phone._id })
-      .populate("sentBy", "fullName")
-      .populate("phone", "value")
-      .populate("template", "content")
+    const searchFields = ""
+    return listAggregation(this.logModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
   }
 
 

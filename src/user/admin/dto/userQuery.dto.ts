@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsOptional } from "class-validator";
+import { IsEnum, IsOptional } from "class-validator";
 import { RoleEnum } from "src/user/enum/role.enum";
 
 class UserSortingDto {
@@ -9,7 +9,7 @@ class UserSortingDto {
         return ([1, true, 'True', 'Desc'].includes(value)) ? -1 : 1
     })
     @IsOptional()
-    readonly createdAt?: boolean;
+    readonly createdAt?: number;
 }
 
 export { UserSortingDto }
@@ -41,6 +41,7 @@ class UserFilteringDto {
     @Transform(({ value }) => {
         return Array.isArray(value) ? { $in: value } : value
     })
+    @IsEnum(RoleEnum)
     @IsOptional()
     readonly roles?: RoleEnum[];
 }

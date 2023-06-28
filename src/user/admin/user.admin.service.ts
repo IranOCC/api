@@ -76,7 +76,9 @@ export class UserServiceAdmin {
 
   // Get User
   findOne(id: string) {
-    return this.userModel.findById(id).populate(['phone']);
+    return this.userModel.findById(id)
+      .populate(['phone', 'value verified'])
+      .populate(['email', 'value verified']);
   }
 
   // Remove Single User

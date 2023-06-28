@@ -51,10 +51,11 @@ export class MailLog extends Document {
 
 
   @Prop({
-    type: mongoose.Schema.Types.String,
+    type: mongoose.Schema.Types.ObjectId,
     select: true,
     required: true,
     ref: 'MailTemplate',
+    autopopulate: { select: 'title content' }
   })
   template: MailTemplate | string;
 
@@ -77,3 +78,7 @@ export class MailLog extends Document {
 
 export const MailLogSchema = SchemaFactory.createForClass(MailLog);
 export type MailLogDocument = HydratedDocument<MailLog>;
+
+
+// plugins
+MailLogSchema.plugin(require('mongoose-autopopulate'));

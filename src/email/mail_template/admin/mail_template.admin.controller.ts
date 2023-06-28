@@ -19,6 +19,8 @@ import { MongoIDQueryDto, MongoArrayIDQueryDto } from 'src/utils/dto/mongoIDQuer
 import { CreateMailTemplateDto } from '../dto/createMailTemplate.dto';
 import { UpdateMailTemplateDto } from '../dto/updateMailTemplate.dto';
 import { MailTemplateServiceAdmin } from './mail_template.admin.service';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
+import { MailTemplateFilteringDto, MailTemplateSortingDto } from './dto/mailTemplateQuery.dto';
 
 
 
@@ -39,8 +41,8 @@ export class MailTemplateControllerAdmin {
   @Get()
   @ApiOperation({ summary: "Get list of Model", description: "No Description" })
   @ApiResponse({ status: 200 })
-  findAll() {
-    return this.mailTemplateService.findAll();
+  findAll(@Query('filter') filter: MailTemplateFilteringDto, @Query('sort') sort: MailTemplateSortingDto, @Query() paginate: PaginationDto) {
+    return this.mailTemplateService.findAll(paginate, filter, sort);
   }
 
   @Get(':id')

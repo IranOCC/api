@@ -12,6 +12,7 @@ import { useForEnum } from 'src/utils/enum/useFor.enum';
 import { Template } from 'aws-sdk/clients/appsync';
 import { SendSmsDto } from './dto/sendSms.dto';
 import { GetSmsLogsDto } from './dto/getSmsLogs.dto';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
 
 @Injectable()
 export class PhoneService {
@@ -152,19 +153,19 @@ export class PhoneService {
   }
 
   // get sms logs
-  async getSmsLogs({ phone, relatedTo, relatedToID }: GetSmsLogsDto) {
+  async getSmsLogs(pagination: PaginationDto, filter: any, sort: any) {
     // get phone
-    const _phone = await this.model.findById(phone).select(['value', 'user', 'office'])
-      .populate("user", "-phone")
-      .populate("office", "-phone")
-      .exec();
+    // const _phone = await this.model.findById(phone).select(['value', 'user', 'office'])
+    //   .populate("user", "-phone")
+    //   .populate("office", "-phone")
+    //   .exec();
 
-    if (!_phone) {
-      throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
-    }
+    // if (!_phone) {
+    //   throw new NotFoundException("Phone number not found", "PhoneNumberNotFound")
+    // }
 
     // ==> get logs
-    return await this.smsService.logs(_phone, relatedTo, relatedToID)
+    return await this.smsService.logs(pagination, filter, sort)
   }
 
 

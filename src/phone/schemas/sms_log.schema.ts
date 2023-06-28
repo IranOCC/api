@@ -51,10 +51,11 @@ export class SmsLog extends Document {
 
 
   @Prop({
-    type: mongoose.Schema.Types.String,
+    type: mongoose.Schema.Types.ObjectId,
     select: true,
     required: true,
     ref: 'SmsTemplate',
+    autopopulate: { select: 'title content' }
   })
   template: SmsTemplate | string;
 
@@ -75,3 +76,8 @@ export class SmsLog extends Document {
 
 export const SmsLogSchema = SchemaFactory.createForClass(SmsLog);
 export type SmsLogDocument = HydratedDocument<SmsLog>;
+
+
+
+// plugins
+SmsLogSchema.plugin(require('mongoose-autopopulate'));

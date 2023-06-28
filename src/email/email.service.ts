@@ -10,6 +10,7 @@ import { generateToken, validationToken } from 'src/utils/helper/token.helper';
 import { EmailOtpConfirmDto } from 'src/auth/dto/emailOtpConfirm.dto';
 import { useForEnum } from 'src/utils/enum/useFor.enum';
 import { MailService } from './mail/mail.service';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
 
 @Injectable()
 export class EmailService {
@@ -169,19 +170,19 @@ export class EmailService {
   }
 
   // Get Mail Logs
-  async getMailLogs({ email, relatedTo, relatedToID }: GetMailLogsDto) {
+  async getMailLogs(pagination: PaginationDto, filter: any, sort: any) {
     // get email
-    const _email = await this.model.findById(email).select(['value', 'user', 'office'])
-      .populate("user", "-email")
-      .populate("office", "-email")
-      .exec();
+    // const _email = await this.model.findById(email).select(['value', 'user', 'office'])
+    //   .populate("user", "-email")
+    //   .populate("office", "-email")
+    //   .exec();
 
-    if (!_email) {
-      throw new NotFoundException("Email address not found", "EmailAddressNotFound")
-    }
+    // if (!_email) {
+    //   throw new NotFoundException("Email address not found", "EmailAddressNotFound")
+    // }
 
     // ==> get logs
-    return await this.mailService.logs(_email, relatedTo, relatedToID)
+    return await this.mailService.logs(pagination, filter, sort)
   }
 
 

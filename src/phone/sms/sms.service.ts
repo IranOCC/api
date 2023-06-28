@@ -8,6 +8,7 @@ import Handlebars from "handlebars"
 import { SmsLogService } from '../sms_log/sms_log.service';
 import { SmsTemplateService } from '../sms_template/sms_template.service';
 import { SmsTemplate } from '../schemas/sms_template.schema';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
 
 
 
@@ -42,6 +43,10 @@ export class SmsService {
 
     if (!_template) throw new NotFoundException("Template not found", "TemplateNotFound")
 
+    if (!context.$subject) {
+      context.$subject = _template.title
+    }
+
     // send by serviceID
     if (_template.serviceID) {
       const convert = Object.keys(context).map((name) => {
@@ -71,8 +76,8 @@ export class SmsService {
 
 
 
-  async logs(phone: PhoneNumber, relatedTo?: RelatedToEnum, relatedToID?: string) {
-    return await this.smsLogService.findAll(phone, relatedTo, relatedToID)
+  async logs(pagination: PaginationDto, filter: any, sort: any) {
+    return await this.smsLogService.findAll(pagination, filter, sort)
   }
 
 

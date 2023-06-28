@@ -19,6 +19,8 @@ import { CreateSmsTemplateDto } from '../dto/createSmsTemplate.dto';
 import { UpdateSmsTemplateDto } from '../dto/updateSmsTemplate.dto';
 import { MongoArrayIDQueryDto, MongoIDQueryDto } from 'src/utils/dto/mongoIDQuery.dto';
 import { SmsTemplateServiceAdmin } from './sms_template.admin.service';
+import { MailTemplateFilteringDto, MailTemplateSortingDto } from 'src/email/mail_template/admin/dto/mailTemplateQuery.dto';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
 
 
 
@@ -40,8 +42,8 @@ export class SmsTemplateControllerAdmin {
   @Get()
   @ApiOperation({ summary: "Get list of Model", description: "No Description" })
   @ApiResponse({ status: 200 })
-  findAll() {
-    return this.smsTemplateService.findAll();
+  findAll(@Query('filter') filter: MailTemplateFilteringDto, @Query('sort') sort: MailTemplateSortingDto, @Query() paginate: PaginationDto) {
+    return this.smsTemplateService.findAll(paginate, filter, sort);
   }
 
   @Get(':id')

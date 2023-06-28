@@ -4,9 +4,11 @@ import { PhoneOtpResponseDto } from 'src/auth/dto/response/phoneOtp.dto';
 import { Public } from 'src/auth/guard/jwt-auth.guard';
 import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { GetMailLogsDto } from '../dto/getMailLogs.dto';
 import { SendMailDto } from '../dto/sendMail.dto';
 import { EmailService } from '../email.service';
+import { MailLogFilteringDto, MailLogSortingDto } from './dto/mailLogQuery.dto';
 
 @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
 @Controller('admin/mail')
@@ -25,7 +27,7 @@ export class MailController {
     @Get()
     @ApiOperation({ summary: "Get list of mail logs", description: "No Description", })
     @ApiResponse({ status: 200 })
-    logs(@Query() data: GetMailLogsDto) {
-        return this.emailService.getMailLogs(data);
+    listLogs(@Query('filter') filter: MailLogFilteringDto, @Query('sort') sort: MailLogSortingDto, @Query() paginate: PaginationDto) {
+        return this.emailService.getMailLogs(paginate, filter, sort);
     }
 }

@@ -36,7 +36,8 @@ const listAggregation =
             })
             if (!isArray) $project[path] = { $first: `$${path}` }
         })
-        select?.split(" ").map((path) => { $project[path] = true })
+        select?.split(" ").map((path) => { $project[path] = `$${path}` })
+
 
 
 
@@ -66,6 +67,7 @@ const listAggregation =
         $pipelines.push({ $project })
 
 
+
         // total count
         $pipelines.push({
             $group: {
@@ -80,7 +82,7 @@ const listAggregation =
         $pipelines.push({
             $project: {
                 _id: false,
-                total: true,
+                total: "$total",
                 items: { $slice: ["$items", (current - 1) * size, size] },
             }
         })
