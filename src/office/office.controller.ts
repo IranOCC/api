@@ -13,12 +13,14 @@ import { CreateOfficeDto } from './dto/createOffice.dto';
 import { UpdateOfficeDto } from './dto/updateOffice.dto';
 import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { MemberService } from './member.service';
 
 
-@ApiTags('Office')
+
 @Controller('office')
+@ApiTags('Office')
+@ApiBearerAuth()
 export class OfficeController {
   constructor(
     private readonly officeService: OfficeService,

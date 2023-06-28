@@ -67,7 +67,9 @@ export class StorageService {
     const virtualFields = {
       // fullName: { $concat: ["$firstName", " ", "$lastName"] }
     }
-    const searchFields = ""
+    const searchFields = "title alt path"
+    console.log(filter);
+
     return listAggregation(this.storageModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
   }
 

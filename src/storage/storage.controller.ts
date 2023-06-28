@@ -80,6 +80,8 @@ export class StorageController {
     @Body() { relatedToID, alt, title }: CreateStorageDto,
     @Request() { user }
   ) {
+    console.log(image, "image", relatedToID);
+
     return this.storageService.create(image, user, RelatedToEnum.User, relatedToID, alt, title)
   }
 
@@ -113,7 +115,7 @@ export class StorageController {
 
   @Post("estate")
   @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
-  @ApiOperation({ summary: "Upload estate gallery", description: "No Description" })
+  @ApiOperation({ summary: "Upload estate images", description: "No Description" })
   @ApiResponse({ status: 201 })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UploadMultipleImageDto })
@@ -122,8 +124,8 @@ export class StorageController {
     @UploadedFiles(
       new ParseFilePipe({
         validators: [
-          new MaxFileSizeValidator({ maxSize: 10000000 }),
-          new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
+          // new MaxFileSizeValidator({ maxSize: 10000000 }),
+          // new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
         ],
       }),
     )
@@ -131,15 +133,19 @@ export class StorageController {
     @Body() { relatedToID, alt, title }: CreateStorageDto,
     @Request() { user }
   ) {
-    return images.map(image => {
-      return this.storageService.create(image, user, RelatedToEnum.Estate, relatedToID, alt, title)
-    });
+    let result = []
+    for (let i = 0; i < images.length; i++) {
+      const image = images[i];
+      const f = await this.storageService.create(image, user, RelatedToEnum.Estate, relatedToID, alt, title)
+      result.push(f)
+    }
+    return result
   }
 
 
   @Post("blog")
   @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Author)
-  @ApiOperation({ summary: "Upload blog post", description: "No Description" })
+  @ApiOperation({ summary: "Upload blog post images", description: "No Description" })
   @ApiResponse({ status: 201 })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UploadMultipleImageDto })
@@ -148,8 +154,8 @@ export class StorageController {
     @UploadedFiles(
       new ParseFilePipe({
         validators: [
-          new MaxFileSizeValidator({ maxSize: 10000000 }),
-          new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
+          // new MaxFileSizeValidator({ maxSize: 10000000 }),
+          // new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
         ],
       }),
     )
@@ -157,9 +163,13 @@ export class StorageController {
     @Body() { relatedToID, alt, title }: CreateStorageDto,
     @Request() { user }
   ) {
-    return images.map(image => {
-      return this.storageService.create(image, user, RelatedToEnum.Blog, relatedToID, alt, title)
-    });
+    let result = []
+    for (let i = 0; i < images.length; i++) {
+      const image = images[i];
+      const f = await this.storageService.create(image, user, RelatedToEnum.Blog, relatedToID, alt, title)
+      result.push(f)
+    }
+    return result
   }
 
 

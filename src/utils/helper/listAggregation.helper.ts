@@ -59,9 +59,10 @@ const listAggregation =
         }
 
 
+
         // sort
         if (!!Object.keys(sort)?.length) $pipelines.push({ $sort: sort })
-
+        else $pipelines.push({ $sort: { createdAt: -1 } })
 
         // project
         $pipelines.push({ $project })

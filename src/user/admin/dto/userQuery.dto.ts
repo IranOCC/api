@@ -41,7 +41,6 @@ class UserFilteringDto {
     @Transform(({ value }) => {
         return Array.isArray(value) ? { $in: value } : value
     })
-    @IsEnum(RoleEnum)
     @IsOptional()
     readonly roles?: RoleEnum[];
 }

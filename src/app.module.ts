@@ -64,8 +64,9 @@ import { IsUniqueProvider } from './utils/decorator/unique.decorator';
     StorageModule,
     IconModule,
     SettingModule,
+    OfficeModule,
 
-    // OfficeModule,
+
     // BlogModule,
     // EstateModule,
   ],

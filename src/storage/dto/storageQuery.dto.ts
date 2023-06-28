@@ -24,10 +24,12 @@ export { StorageSortingDto }
 
 
 class StorageFilteringDto {
-    @ApiPropertyOptional({ name: "filter[relatedTo]", enum: RelatedToEnum })
-    @IsEnum(RelatedToEnum)
+    @ApiPropertyOptional({ name: "filter[relatedTo]", isArray: true, enum: RelatedToEnum })
+    @Transform(({ value }) => {
+        return Array.isArray(value) ? { $in: value } : value
+    })
     @IsOptional()
-    readonly relatedTo?: RelatedToEnum;
+    readonly relatedTo?: RelatedToEnum[];
 
 
     @ApiPropertyOptional({ name: "filter[relatedToID]", })
