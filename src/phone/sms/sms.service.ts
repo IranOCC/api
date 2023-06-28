@@ -30,10 +30,10 @@ export class SmsService {
     const template = await this.smsTemplateService.getTemplateBySlug("otp")
     if (!template) throw new NotFoundException("Template not found", "TemplateNotFound")
     // send
-    await this.sendSingleSms(phone, template, { token })
+    await this.sendSingleSms(phone, template, { token }, null, RelatedToEnum.User, phone.user)
   }
 
-  async sendSingleSms(phone: PhoneNumber, template: SmsTemplate | string, context: any = {}, sentBy?: User, relatedTo?: RelatedToEnum, relatedToID?: string) {
+  async sendSingleSms(phone: PhoneNumber, template: SmsTemplate | string, context: any = {}, sentBy?: User, relatedTo?: RelatedToEnum, relatedToID?: any) {
 
     // get template
     let _template: SmsTemplate

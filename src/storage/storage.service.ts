@@ -9,6 +9,7 @@ import { S3ManagerService } from './s3-manager/s3-manager.service';
 import { BufferedFile } from './file.type';
 import { customAlphabet } from 'nanoid/non-secure'
 import { User } from 'src/user/schemas/user.schema';
+import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
 const nanoid = customAlphabet('1234567890ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz', 16)
 
 
@@ -22,20 +23,21 @@ export class StorageService {
 
 
 
-  async upload(file: BufferedFile, subject: string, user: User) {
+  async upload(file: Express.Multer.File, user?: User, relatedTo?: RelatedToEnum, relatedToID?: string, alt?: string, title?: string) {
     const ext = "." + file.originalname.split('.').filter(Boolean).slice(1).join('.')
-    const fileKey = subject + "/" + nanoid() + ext
+    const fileKey = relatedTo + "/" + nanoid() + ext
 
     await this.s3managerService.upload(file, fileKey)
 
     const storage = await this.storageModel.create({
-      title: file.originalname,
-      alt: file.originalname,
+      title: title || file.originalname,
+      alt: alt || file.originalname,
       filesize: file.size,
       mimetype: file.mimetype,
       path: fileKey,
-      subject: subject,
-      uploadedBy: user,
+      relatedTo: relatedTo || undefined,
+      relatedToID: relatedToID || undefined,
+      uploadedBy: user?._id || undefined
     })
 
     return storage
@@ -51,35 +53,4 @@ export class StorageService {
     // });
   }
 
-  // async item(id: string) {
-  //   return this.storageModel.findById(id);
-  // }
-
-  // async delete(id: string) {
-  //   const storage = await this.storageModel.findOneAndDelete({ _id: id });
-  //   // return await this.minioClientService.delete(
-  //   //   storage.filename,
-  //   //   storage.bucket,
-  //   // );
-  // }
-
-  // async multipleDelete(id: Array<string>) {
-  //   const storageList = await this.storageModel.find({ _id: { $in: id } });
-  //   const fileList = [];
-  //   let _bucket = '';
-  //   if (storageList.length === 0) {
-  //     throw new HttpException('Files is empty', HttpStatus.BAD_REQUEST);
-  //   }
-  //   storageList.forEach(({ filename, bucket }) => {
-  //     fileList.push(filename);
-  //     _bucket = bucket;
-  //   });
-  //   await this.storageModel.deleteMany({ _id: { $in: id } });
-  //   // return await this.minioClientService.multipleDelete(fileList, _bucket);
-  // }
-
-  // async update(id: string) {
-  //   const storage = await this.storageModel.findOne({ _id: id });
-  //   return storage;
-  // }
 }

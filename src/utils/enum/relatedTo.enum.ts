@@ -1,4 +1,6 @@
 export enum RelatedToEnum {
-  Otp = 'otp',
-
+  User = 'user',
+  Office = 'office',
+  Estate = 'estate',
+  Blog = 'blog',
 }

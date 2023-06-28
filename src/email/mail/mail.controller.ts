@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PhoneOtpResponseDto } from 'src/auth/dto/response/phoneOtp.dto';
 import { Public } from 'src/auth/guard/jwt-auth.guard';
 import { Roles } from 'src/auth/guard/roles.decorator';
@@ -8,10 +8,10 @@ import { GetMailLogsDto } from '../dto/getMailLogs.dto';
 import { SendMailDto } from '../dto/sendMail.dto';
 import { EmailService } from '../email.service';
 
-
+@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
 @Controller('admin/mail')
 @ApiTags('Mail')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
+@ApiBearerAuth()
 export class MailController {
     constructor(private readonly emailService: EmailService) { }
 

@@ -8,73 +8,175 @@ import {
   UseInterceptors,
   UploadedFile,
   Patch,
-  Request
+  Request,
+  UploadedFiles,
+  ParseFilePipeBuilder,
+  FileTypeValidator,
+  MaxFileSizeValidator,
+  ParseFilePipe,
+  HttpException,
+  HttpStatus
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { StorageService } from './storage.service';
 import { BufferedFile } from './file.type';
 import { Public } from 'src/auth/guard/jwt-auth.guard';
-import { Roles } from 'src/auth/guard/roles.decorator';
-import { RoleEnum } from 'src/user/enum/role.enum';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiProperty, ApiPropertyOptional, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ListResponseDto } from 'src/utils/dto/pagination.dto';
+import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
+import { IsMongoId, IsOptional, IsString } from 'class-validator';
+
+export class UploadDataDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  alt: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  title: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsMongoId()
+  relatedToID: string;
+}
+
+export class UploadSingleImageDto extends UploadDataDto {
+  @ApiProperty({ type: 'string', isArray: false, format: 'binary', })
+  image: any[];
+}
+
+
+export class UploadMultipleImageDto extends UploadDataDto {
+  @ApiProperty({ type: 'string', isArray: true, format: 'binary', })
+  images: any[];
+}
 
 
 
-@ApiTags('Storage')
+
+
+@Public()
 @Controller('storage')
+@ApiTags('Storage')
+@ApiBearerAuth()
 export class StorageController {
   constructor(private storageService: StorageService) { }
 
-  @Post("user")
-  @Roles(RoleEnum.User)
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadUsersFiles(@UploadedFile() file: BufferedFile, @Request() { user }) {
-    return this.storageService.upload(file, "user", user)
+
+
+
+  @Post("user/avatar")
+  @ApiOperation({ summary: "Upload user avatar", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UploadSingleImageDto })
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadUserAvatar(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 2000000 }),
+          new FileTypeValidator({ fileType: /image\/jpeg|image\/jpg|image\/png$/ }),
+        ],
+      }),
+    )
+    image: Express.Multer.File,
+    @Body() { relatedToID, alt, title }: UploadDataDto,
+    @Request() { user }
+  ) {
+    return this.storageService.upload(image, user, RelatedToEnum.User, relatedToID, alt, title)
   }
 
-  @Post("office")
-  @Roles(RoleEnum.Agent)
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadOfficesFiles(@UploadedFile() file: BufferedFile, @Request() { user }) {
-    return this.storageService.upload(file, "office", user)
+
+
+  @Post("office/avatar")
+  @ApiOperation({ summary: "Upload office avatar", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UploadSingleImageDto })
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadOfficeAvatar(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 2000000 }),
+          new FileTypeValidator({ fileType: /image\/jpeg|image\/jpg|image\/png$/ }),
+        ],
+      }),
+    )
+    image: Express.Multer.File,
+    @Body() { relatedToID, alt, title }: UploadDataDto,
+    @Request() { user }
+  ) {
+    return this.storageService.upload(image, user, RelatedToEnum.User, relatedToID, alt, title)
   }
 
-  @Post("estate")
-  @Roles(RoleEnum.Agent)
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadEstatesFiles(@UploadedFile() file: BufferedFile, @Request() { user }) {
-    return this.storageService.upload(file, "estate", user)
+
+  @Post("estate/gallery")
+  @ApiOperation({ summary: "Upload estate gallery", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UploadMultipleImageDto })
+  @UseInterceptors(FilesInterceptor('images'))
+  async uploadEstateGallery(
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10000000 }),
+          new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
+        ],
+      }),
+    )
+    images: [Express.Multer.File],
+    @Body() { relatedToID, alt, title }: UploadDataDto,
+    @Request() { user }
+  ) {
+    return images.map(image => {
+      return this.storageService.upload(image, user, RelatedToEnum.User, relatedToID, alt, title)
+    });
   }
 
-  @Post("post")
-  @Roles(RoleEnum.Author)
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadPostsFiles(@UploadedFile() file: BufferedFile, @Request() { user }) {
-    return this.storageService.upload(file, "post", user)
+
+  @Post("blog/post")
+  @ApiOperation({ summary: "Upload blog post", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UploadMultipleImageDto })
+  @UseInterceptors(FilesInterceptor('images'))
+  async uploadPostGallery(
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10000000 }),
+          new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
+        ],
+      }),
+    )
+    images: [Express.Multer.File],
+    @Body() { relatedToID, alt, title }: UploadDataDto,
+    @Request() { user }
+  ) {
+    return images.map(image => {
+      return this.storageService.upload(image, user, RelatedToEnum.User, relatedToID, alt, title)
+    });
   }
 
-  @Post("other")
-  @Roles(RoleEnum.SuperAdmin)
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadOthersFiles(@UploadedFile() file: BufferedFile, @Request() { user }) {
-    return this.storageService.upload(file, "other", user)
-  }
 
-  // ==
+
+
+
+
+
   @Get()
+  @ApiOperation({ summary: "Get list of files", description: "No Description" })
+  @ApiResponse({ status: 200, type: ListResponseDto })
   findAll() {
     return this.storageService.findAll();
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.storageService.findOne(id);
-  // }
 
-  // @Delete(':id')
-  // @Roles(RoleEnum.SuperAdmin)
-  // remove(@Param('id') id: string) {
-  //   return this.storageService.remove(id);
-  // }
 
 }

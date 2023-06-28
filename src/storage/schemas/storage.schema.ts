@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import * as mongoose from 'mongoose';
 import { User } from 'src/user/schemas/user.schema';
+import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
 
 
 @Schema({ timestamps: true })
@@ -24,8 +25,25 @@ export class Storage {
   @Prop({ type: String, })
   path: string;
 
-  @Prop({ type: String, })
-  subject: string;
+
+
+
+  @Prop({
+    type: mongoose.Schema.Types.String,
+    enum: RelatedToEnum,
+    default: undefined,
+    select: false,
+  })
+  relatedTo: RelatedToEnum;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    select: false
+  })
+  relatedToID: string | null;
+
+
+
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,

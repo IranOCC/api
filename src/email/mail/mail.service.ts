@@ -26,10 +26,10 @@ export class MailService {
     const template = await this.mailTemplateService.getTemplateBySlug("otp")
     if (!template) throw new NotFoundException("Template not found", "TemplateNotFound")
     // send
-    await this.sendSingleMail(email, template, { token })
+    await this.sendSingleMail(email, template, { token }, null, RelatedToEnum.User, email.user)
   }
 
-  async sendSingleMail(email: EmailAddress, template: MailTemplate | string, context: any = {}, sentBy?: User, relatedTo?: RelatedToEnum, relatedToID?: string) {
+  async sendSingleMail(email: EmailAddress, template: MailTemplate | string, context: any = {}, sentBy?: User, relatedTo?: RelatedToEnum, relatedToID?: any) {
 
     // get template
     let _template: MailTemplate

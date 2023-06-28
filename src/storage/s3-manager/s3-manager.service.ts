@@ -12,7 +12,7 @@ export class S3ManagerService {
     }
 
 
-    async upload(file: BufferedFile, key: string) {
+    async upload(file: Express.Multer.File, key: string) {
         await this.s3.upload({
             Bucket: process.env.S3_BUCKET,
             ContentType: file.mimetype,
