@@ -57,10 +57,6 @@ export class UploadMultipleImageDto extends UploadDataDto {
 }
 
 
-
-
-
-@Public()
 @Controller('storage')
 @ApiTags('Storage')
 @ApiBearerAuth()
@@ -71,7 +67,7 @@ export class StorageController {
 
 
   @Post("user/avatar")
-  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author, RoleEnum.User)
   @ApiOperation({ summary: "Upload user avatar", description: "No Description" })
   @ApiResponse({ status: 201 })
   @ApiConsumes('multipart/form-data')
