@@ -8,7 +8,6 @@ import {
   IsLatLong
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Storage } from "src/storage/schemas/storage.schema"
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import { EmailDto } from 'src/email/dto/email.dto';
@@ -16,28 +15,27 @@ import { PhoneDto } from 'src/phone/dto/phone.dto';
 
 
 
-const $ = 'validation.CreateOfficeDto';
-
-
-
 
 export class CreateOfficeDto {
   @ApiProperty()
-  @IsNotEmpty({ message: i18nVM(`${$}.name.IsNotEmpty`) })
+  @IsNotEmpty()
   name: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @MinLength(10, { message: i18nVM(`${$}.description.MinLength`) })
+  @MinLength(10)
   description: string;
 
   @ApiProperty()
-  @IsMongoId({ message: i18nVM(`${$}.management.IsMongoId`) })
+  @IsMongoId()
   management: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  logo: Storage;
+  @IsMongoId()
+  logo: string;
+
+
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -50,6 +48,8 @@ export class CreateOfficeDto {
   @Type(() => PhoneDto)
   @ValidateNested()
   phone: PhoneDto;
+
+
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -68,11 +68,12 @@ export class CreateOfficeDto {
   @IsLatLong()
   location: string;
 
-  @ApiPropertyOptional()
-  @IsOptional()
-  verified: boolean;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ default: false })
   @IsOptional()
-  active: boolean;
+  verified: boolean = false;
+
+  @ApiPropertyOptional({ default: true })
+  @IsOptional()
+  active: boolean = true;
 }

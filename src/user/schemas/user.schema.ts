@@ -50,11 +50,16 @@ export class User extends Document {
   })
   avatar: Storage | string | null;
 
+
+
+
   @Prop({ default: false, select: true, })
   verified: boolean;
 
   @Prop({ default: true, select: true, })
   active: boolean;
+
+
 
   @Prop({
     default: () => speakeasy.generateSecret({ length: 10 }).base32,
@@ -150,11 +155,6 @@ UserSchema.virtual('fullName')
 
 // plugins
 UserSchema.plugin(require('mongoose-autopopulate'));
-// UserSchema.plugin(require('mongoose-delete'), { deletedBy: true, deletedAt: true });
-
-
-// const model: SoftDeleteModel = model<User>('Pet', UserSchema);
-
 
 
 

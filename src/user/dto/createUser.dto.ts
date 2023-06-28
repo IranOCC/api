@@ -39,6 +39,8 @@ export class CreateUserDto {
   @IsEnum(RoleEnum, { each: true, })
   roles: RoleEnum[] = [RoleEnum.User];
 
+
+
   @ApiPropertyOptional()
   @IsOptional()
   @Type(() => EmailDto)
@@ -50,6 +52,8 @@ export class CreateUserDto {
   @Type(() => PhoneDto)
   @ValidateNested()
   phone: PhoneDto;
+
+
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -67,6 +71,8 @@ export class CreateUserDto {
   @IsOptional()
   @IsLatLong()
   location: string;
+
+
 
   @ApiPropertyOptional({ default: false })
   @IsOptional()

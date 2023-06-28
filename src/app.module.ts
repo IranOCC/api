@@ -63,10 +63,10 @@ import { IsUniqueProvider } from './utils/decorator/unique.decorator';
     UserModule,
     StorageModule,
     IconModule,
-    SettingModule,
+
     OfficeModule,
 
-
+    SettingModule,
     // BlogModule,
     // EstateModule,
   ],
