@@ -212,42 +212,36 @@ export class UserService {
     }
 
 
-    // // ==>
-    // async getOrCheck(data: User | string): Promise<User> {
-    //     let _data: User
-    //     if (typeof data === 'string')
-    //         _data = await this.findOne(data)
-    //     else
-    //         _data = data
-
-    //     return _data
-    // }
+    // ==>
+    async getUserById(user_id: string): Promise<User> {
+        return this.userModel.findById(user_id)
+    }
 
 
-    // async hasSuperAdminRole(user: User | string): Promise<boolean | User> {
-    //     let _user: User = await this.getOrCheck(user)
-    //     return _user.roles.includes(RoleEnum.SuperAdmin) && _user
-    // }
+    async hasSuperAdminRole(user_id: string): Promise<boolean | User> {
+        let _user: User = await this.getUserById(user_id)
+        return _user.roles.includes(RoleEnum.SuperAdmin) && _user
+    }
 
-    // async hasAdminRole(user: User | string): Promise<boolean | User> {
-    //     let _user: User = await this.getOrCheck(user)
-    //     return _user.roles.includes(RoleEnum.Admin) && _user
-    // }
+    async hasAdminRole(user_id: string): Promise<boolean | User> {
+        let _user: User = await this.getUserById(user_id)
+        return _user.roles.includes(RoleEnum.Admin) && _user
+    }
 
-    // async hasAgentRole(user: User | string): Promise<boolean | User> {
-    //     let _user: User = await this.getOrCheck(user)
-    //     return _user.roles.includes(RoleEnum.Agent) && _user
-    // }
+    async hasAgentRole(user_id: string): Promise<boolean | User> {
+        let _user: User = await this.getUserById(user_id)
+        return _user.roles.includes(RoleEnum.Agent) && _user
+    }
 
-    // async hasAuthorRole(user: User | string): Promise<boolean | User> {
-    //     let _user: User = await this.getOrCheck(user)
-    //     return _user.roles.includes(RoleEnum.Author) && _user
-    // }
+    async hasAuthorRole(user_id: string): Promise<boolean | User> {
+        let _user: User = await this.getUserById(user_id)
+        return _user.roles.includes(RoleEnum.Author) && _user
+    }
 
-    // async hasUserRole(user: User | string): Promise<boolean | User> {
-    //     let _user: User = await this.getOrCheck(user)
-    //     return _user.roles.includes(RoleEnum.User) && _user
-    // }
+    async hasUserRole(user_id: string): Promise<boolean | User> {
+        let _user: User = await this.getUserById(user_id)
+        return _user.roles.includes(RoleEnum.User) && _user
+    }
 
 
 

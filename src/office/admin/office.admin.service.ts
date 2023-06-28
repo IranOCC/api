@@ -34,22 +34,20 @@ export class OfficeServiceAdmin {
 
   // Create Office
   async create(data: CreateOfficeDto): Promise<any> {
-    const { phone, email, ...props } = data
+    const { phone, email, management, ...props } = data
     const _office = new this.officeModel(props)
 
+    if (management) await this.officeService.setManagement(_office, management)
     if (phone) await this.officeService.setPhone(_office, phone)
     if (email) await this.officeService.setEmail(_office, email)
-
-    // save
-    await _office.save()
-    return _office;
   }
 
   // Edit Office
   async update(id: string, data: UpdateOfficeDto): Promise<any> {
-    const { phone, email, ...props } = data
+    const { phone, email, management, ...props } = data
     const _office = await this.officeModel.findById(id)
 
+    if (management) await this.officeService.setManagement(_office, management)
     if (phone) await this.officeService.setPhone(_office, phone)
     if (email) await this.officeService.setEmail(_office, email)
 
@@ -61,26 +59,28 @@ export class OfficeServiceAdmin {
   // List Office
   findAll(pagination: PaginationDto, filter: any, sort: any): Promise<Office[]> | void {
     const populate: PopulatedType[] = [
-      ["users", "management", "firstName lastName fullName"],
-      ["storages", "logo", "path title alt"],
+      ["users", "management", "firstName lastName"],
+      ["storages", "logo"],
       ["phonenumbers", "phone", "value verified"],
       ["emailaddresses", "email", "value verified"],
     ]
-    const project = "name description estatesCount postsCount verified active"
+    const project = "name description estatesCount postsCount membersCount verified active"
     const virtualFields = {
-      membersCount: { $count: "$members" }
+      membersCount: { $size: "$members" }
     }
     const searchFields = "name description"
     return listAggregation(this.officeModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
   }
 
+
+
   // Get Office
   findOne(id: string) {
     return this.officeModel.findById(id)
-      .populate(['logo', 'path title alt'])
-      .populate(['management', 'firstName lastName fullName'])
-      .populate(['phone', 'value verified'])
-      .populate(['email', 'value verified']);
+      .populate('logo', 'path title alt')
+      .populate('management', 'firstName lastName fullName')
+      .populate('phone', 'value verified')
+      .populate('email', 'value verified');
   }
 
   // Remove Single Office
@@ -90,6 +90,7 @@ export class OfficeServiceAdmin {
 
     await this.officeModel.deleteOne({ _id: id })
   }
+
 
   // Remove Bulk Office
   async bulkRemove(id: string[]) {

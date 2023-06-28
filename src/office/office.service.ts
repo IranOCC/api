@@ -12,7 +12,7 @@ import { UserService } from 'src/user/user.service';
 import { useForEnum } from 'src/utils/enum/useFor.enum';
 import { CreateOfficeDto } from './dto/createOffice.dto';
 import { UpdateOfficeDto } from './dto/updateOffice.dto';
-import { MemberService } from './member.service';
+import { MemberService } from './members/member.service';
 import { Office, OfficeDocument } from './schemas/office.schema';
 
 
@@ -24,146 +24,47 @@ export class OfficeService {
     private i18n: I18nService,
     @InjectModel(Office.name) private officeModel: Model<OfficeDocument>,
     private memberService: MemberService,
+    private userService: UserService,
     private phoneService: PhoneService,
     private emailService: EmailService,
   ) { }
 
-  // =============================> Admin Crud <===========================
-  // *
-  // async create(data: CreateOfficeDto): Promise<Office> {
-  //   const { phone, email, management, ...modelData } = data
-  //   const _office: Office = new this.officeModel(modelData)
-  //   // 
-
-  //   if (phone) await this.setPhone(_office, phone)
-  //   if (email) await this.setEmail(_office, email)
-  //   if (management) await this.setManagement(_office, management)
-
-  //   // save
-  //   await _office.save()
-  //   return _office;
-  // }
-
-  // // *
-  // async update(id: string, data: UpdateOfficeDto): Promise<any> {
-  //   const { phone, email, management, ...modelData } = data
-
-  //   const _office: Office = await this.officeModel.findById(id)
-  //   // 
-  //   if (phone) await this.setPhone(_office, phone)
-  //   if (email) await this.setEmail(_office, email)
-  //   if (management) await this.setManagement(_office, management)
-
-  //   // save
-  //   return this.officeModel.updateOne({ _id: id }, modelData).exec();
-  // }
-
-  // findAll(): Promise<Office[]> {
-  //   return this.officeModel.find().populate(['members']).exec();
-  // }
-
-  // findOne(id: string, ...arg) {
-  //   return this.officeModel.findById(id, ...arg);
-  // }
-
-  // // 
-  // getOfficeForMailService = (id: string) => {
-  //   return this.findOne(id, {}, { autopopulate: false })
-  //     .populate({
-  //       path: "email",
-  //       select: "value verified office",
-  //       populate: { path: "office", select: "-phone" }
-  //     })
-  // }
-  // getOfficeForSmsService = (id: string) => {
-  //   return this.findOne(id, {}, { autopopulate: false })
-  //     .populate({
-  //       path: "phone",
-  //       select: "value verified office",
-  //       populate: { path: "office", select: "-email" }
-  //     })
-  // }
 
 
+  // ======> management
+  async setManagement(office: Office, management: string) {
 
+    // checking user
+    const canBeAdmin = await this.userService.hasAdminRole(management)
 
+    // is Admin?
+    if (!canBeAdmin) {
+      const _error = new ValidationError();
+      _error.property = 'management';
+      _error.constraints = {
+        AdminRoleNeeded: this.i18n.t("exception.AdminRoleNeeded")
+      };
+      _error.value = management;
+      throw new I18nValidationException([_error])
+    }
 
-  // async remove(id: string) {
-  //   const o = await this.findOne(id)
-  //   // if (o.phone) this.phoneService.remove(o.phone?._id);
-  //   // if (o.email) this.emailService.remove(o.email?._id);
-  //   await o.remove();
-  // }
+    // is Active?
+    if (!((canBeAdmin as User).active)) {
+      const _error = new ValidationError();
+      _error.property = 'management';
+      _error.constraints = {
+        UserInactive: this.i18n.t("exception.UserInactive")
+      };
+      _error.value = management;
+      throw new I18nValidationException([_error])
+    }
 
-  // // ====================> tools <====================
-  // async getOrCheck(data: Office | string): Promise<Office> {
-  //   let _data: Office
-  //   if (typeof data === 'string')
-  //     _data = await this.findOne(data)
-  //   else
-  //     _data = data
+    // so add to members
+    this.memberService.add(office, management)
 
-  //   return _data
-  // }
-
-  // // ======> phone
-  // async setPhone(office: Office, phone: PhoneDto) {
-  //   try {
-  //     const phoneID = await this.phoneService.setup(phone.value, useForEnum.Office, office, phone.verified)
-  //     office.phone = phoneID
-  //   } catch (error) {
-  //     const _error = new ValidationError();
-  //     _error.property = 'phone';
-  //     _error.constraints = {
-  //       PhoneNumberInUsed: this.i18n.t("exception.PhoneNumberInUsed")
-  //     };
-  //     _error.value = phone;
-  //     throw new I18nValidationException([_error])
-  //   }
-  // }
-  // // ======> email
-  // async setEmail(office: Office, email: EmailDto) {
-  //   try {
-  //     const emailID = await this.emailService.setup(email.value, useForEnum.Office, office, email.verified)
-  //     office.email = emailID
-  //   } catch (error) {
-  //     const _error = new ValidationError();
-  //     _error.property = 'email';
-  //     _error.constraints = {
-  //       EmailAddressInUsed: this.i18n.t("exception.EmailAddressInUsed")
-  //     };
-  //     _error.value = email;
-  //     throw new I18nValidationException([_error])
-  //   }
-  // }
-
-
-  // // ======> management
-  // async setManagement(office: Office, management: User | string) {
-
-  //   // is admin?
-  //   // const u = await this.userService.hasAdminRole(management)
-  //   // if (!u) {
-  //   //   throw new BadRequestException({
-  //   //     errors: {
-  //   //       "management": { "MustBeAdmin": "کاربر نیاز است حداقل دسترسی ادمین را دارا باشد" }
-  //   //     }
-  //   //   })
-  //   // }
-  //   // if (!((u as User).active)) {
-  //   //   throw new BadRequestException({
-  //   //     errors: {
-  //   //       "management": { "NotActive": "کاربر غیرفعال است" }
-  //   //     }
-  //   //   })
-  //   // }
-
-  //   // add member
-  //   await this.memberService.add(office, management)
-
-  //   // set admin
-  //   office.management = management
-  // }
+    // then set admin
+    office.management = management
+  }
 
 
 
@@ -175,6 +76,7 @@ export class OfficeService {
     try {
       const phoneID = await this.phoneService.setup(phone.value, useForEnum.Office, office, phone.verified)
       office.phone = phoneID
+      await office.save()
     } catch (error) {
       const _error = new ValidationError();
       _error.property = 'phone';
@@ -190,6 +92,7 @@ export class OfficeService {
     try {
       const emailID = await this.emailService.setup(email.value, useForEnum.Office, office, email.verified)
       office.email = emailID
+      await office.save()
     } catch (error) {
       const _error = new ValidationError();
       _error.property = 'email';

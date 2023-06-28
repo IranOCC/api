@@ -7,7 +7,7 @@ import { PaginationDto } from "../dto/pagination.dto"
 export type PopulatedType = [string, string, string?, boolean?]
 
 const listAggregation =
-    (
+    async (
         model: mongoose.Model<any, {}, {}, {}, any>,
         { current, size, search, }: PaginationDto,
         filter?: {},
@@ -89,7 +89,12 @@ const listAggregation =
         })
 
 
-        return model.aggregate($pipelines).exec()
+        console.log($pipelines);
+
+
+        return await model.aggregate($pipelines)
+
+
     }
 
 export { listAggregation }
