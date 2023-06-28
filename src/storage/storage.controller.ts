@@ -25,6 +25,8 @@ import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiProperty, ApiProp
 import { ListResponseDto } from 'src/utils/dto/pagination.dto';
 import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
 import { IsMongoId, IsOptional, IsString } from 'class-validator';
+import { Roles } from 'src/auth/guard/roles.decorator';
+import { RoleEnum } from 'src/user/enum/role.enum';
 
 export class UploadDataDto {
   @ApiPropertyOptional()
@@ -69,6 +71,7 @@ export class StorageController {
 
 
   @Post("user/avatar")
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
   @ApiOperation({ summary: "Upload user avatar", description: "No Description" })
   @ApiResponse({ status: 201 })
   @ApiConsumes('multipart/form-data')
@@ -93,6 +96,7 @@ export class StorageController {
 
 
   @Post("office/avatar")
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
   @ApiOperation({ summary: "Upload office avatar", description: "No Description" })
   @ApiResponse({ status: 201 })
   @ApiConsumes('multipart/form-data')
@@ -111,11 +115,12 @@ export class StorageController {
     @Body() { relatedToID, alt, title }: UploadDataDto,
     @Request() { user }
   ) {
-    return this.storageService.upload(image, user, RelatedToEnum.User, relatedToID, alt, title)
+    return this.storageService.upload(image, user, RelatedToEnum.Office, relatedToID, alt, title)
   }
 
 
   @Post("estate/gallery")
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
   @ApiOperation({ summary: "Upload estate gallery", description: "No Description" })
   @ApiResponse({ status: 201 })
   @ApiConsumes('multipart/form-data')
@@ -135,12 +140,13 @@ export class StorageController {
     @Request() { user }
   ) {
     return images.map(image => {
-      return this.storageService.upload(image, user, RelatedToEnum.User, relatedToID, alt, title)
+      return this.storageService.upload(image, user, RelatedToEnum.Estate, relatedToID, alt, title)
     });
   }
 
 
   @Post("blog/post")
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Author)
   @ApiOperation({ summary: "Upload blog post", description: "No Description" })
   @ApiResponse({ status: 201 })
   @ApiConsumes('multipart/form-data')
@@ -160,7 +166,7 @@ export class StorageController {
     @Request() { user }
   ) {
     return images.map(image => {
-      return this.storageService.upload(image, user, RelatedToEnum.User, relatedToID, alt, title)
+      return this.storageService.upload(image, user, RelatedToEnum.Blog, relatedToID, alt, title)
     });
   }
 
