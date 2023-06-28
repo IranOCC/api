@@ -58,9 +58,88 @@ export class StorageController {
   constructor(private storageService: StorageService) { }
 
 
-  @Post()
+
+
+  @Post("user/avatar")
   @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author, RoleEnum.User)
-  @ApiOperation({ summary: "Upload file(s) to storage", description: "No Description" })
+  @ApiOperation({ summary: "Upload user avatar", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UploadSingleImageDto })
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadUserAvatar(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1000000 }),
+          new FileTypeValidator({ fileType: /image\/jpeg|image\/jpg|image\/png$/ }),
+        ],
+      }),
+    )
+    image: Express.Multer.File,
+    @Body() { relatedToID, alt, title }: CreateStorageDto,
+    @Request() { user }
+  ) {
+    return this.storageService.create(image, user, RelatedToEnum.User, relatedToID, alt, title)
+  }
+
+
+
+  @Post("office/avatar")
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
+  @ApiOperation({ summary: "Upload office avatar", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UploadSingleImageDto })
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadOfficeAvatar(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 2000000 }),
+          new FileTypeValidator({ fileType: /image\/jpeg|image\/jpg|image\/png$/ }),
+        ],
+      }),
+    )
+    image: Express.Multer.File,
+    @Body() { relatedToID, alt, title }: CreateStorageDto,
+    @Request() { user }
+  ) {
+    return this.storageService.create(image, user, RelatedToEnum.Office, relatedToID, alt, title)
+  }
+
+
+
+
+  @Post("estate")
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
+  @ApiOperation({ summary: "Upload estate gallery", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UploadMultipleImageDto })
+  @UseInterceptors(FilesInterceptor('images'))
+  async uploadEstateGallery(
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10000000 }),
+          new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
+        ],
+      }),
+    )
+    images: [Express.Multer.File],
+    @Body() { relatedToID, alt, title }: CreateStorageDto,
+    @Request() { user }
+  ) {
+    return images.map(image => {
+      return this.storageService.create(image, user, RelatedToEnum.Estate, relatedToID, alt, title)
+    });
+  }
+
+
+  @Post("blog")
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Author)
+  @ApiOperation({ summary: "Upload blog post", description: "No Description" })
   @ApiResponse({ status: 201 })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UploadMultipleImageDto })

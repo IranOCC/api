@@ -21,10 +21,6 @@ export class CreateStorageDto {
   @IsString()
   title: string;
 
-  @ApiProperty({ enum: RelatedToEnum })
-  @IsEnum(RelatedToEnum)
-  relatedTo: RelatedToEnum;
-
   @ApiProperty()
   @IsMongoId()
   relatedToID: string;
