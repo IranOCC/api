@@ -1,25 +1,45 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { Estate, EstateSchema } from './estate/schemas/estate.schema';
-import { EstateService } from './estate/estate.service';
-import { EstateController } from './estate/estate.controller';
 
-import { EstateDocumentType, EstateDocumentTypeSchema } from './document/schemas/estateDocumentType.schema';
-import { EstateDocumentTypeController } from './document/documentType.controller';
-import { EstateDocumentTypeService } from './document/documentType.service';
+
 
 import { EstateCategory, EstateCategorySchema } from './category/schemas/estateCategory.schema';
-import { EstateCategoryController } from './category/category.controller';
-import { EstateCategoryService } from './category/category.service';
+import { EstateCategoryAdminController } from './category/admin/category.admin.controller';
+import { EstateCategoryToolsController } from './category/tools/category.tools.controller';
+import { EstateCategoryAdminService } from './category/admin/category.admin.service';
+import { EstateCategoryToolsService } from './category/tools/category.tools.service';
+
+
+import { EstateDocumentType, EstateDocumentTypeSchema } from './documentType/schemas/estateDocumentType.schema';
+import { EstateDocumentTypeAdminController } from './documentType/admin/documentType.admin.controller';
+import { EstateDocumentTypeToolsController } from './documentType/tools/documentType.tools.controller';
+import { EstateDocumentTypeAdminService } from './documentType/admin/documentType.admin.service';
+import { EstateDocumentTypeToolsService } from './documentType/tools/documentType.tools.service';
+
 
 import { EstateFeature, EstateFeatureSchema } from './feature/schemas/estateFeature.schema';
-import { EstateFeatureController } from './feature/feature.controller';
-import { EstateFeatureService } from './feature/feature.service';
+import { EstateFeatureAdminController } from './feature/admin/feature.admin.controller';
+import { EstateFeatureToolsController } from './feature/tools/feature.tools.controller';
+import { EstateFeatureAdminService } from './feature/admin/feature.admin.service';
+import { EstateFeatureToolsService } from './feature/tools/feature.tools.service';
+
 
 import { EstateType, EstateTypeSchema } from './type/schemas/estateType.schema';
-import { EstateTypeController } from './type/type.controller';
-import { EstateTypeService } from './type/type.service';
+import { EstateTypeAdminController } from './type/admin/type.admin.controller';
+import { EstateTypeAdminService } from './type/admin/type.admin.service';
+import { EstateTypeToolsController } from './type/tools/type.tools.controller';
+import { EstateTypeToolsService } from './type/tools/type.tools.service';
+
+
+import { Estate, EstateSchema } from './estate/schemas/estate.schema';
+import { EstateAdminController } from './estate/admin/estate.admin.controller';
+import { EstateAdminService } from './estate/admin/estate.admin.service';
+import { EstateToolsController } from './estate/tools/estate.tools.controller';
+import { EstateToolsService } from './estate/tools/estate.tools.service';
+
+
+
 
 @Module({
   imports: [
@@ -30,18 +50,36 @@ import { EstateTypeService } from './type/type.service';
     MongooseModule.forFeature([{ name: EstateType.name, schema: EstateTypeSchema }]),
   ],
   controllers: [
-    EstateTypeController,
-    EstateCategoryController,
-    EstateFeatureController,
-    EstateDocumentTypeController,
-    EstateController,
+    EstateTypeAdminController,
+    EstateTypeToolsController,
+
+    EstateCategoryAdminController,
+    EstateCategoryToolsController,
+
+    EstateFeatureAdminController,
+    EstateFeatureToolsController,
+
+    EstateDocumentTypeAdminController,
+    EstateDocumentTypeToolsController,
+
+    EstateAdminController,
+    EstateToolsController,
   ],
   providers: [
-    EstateTypeService,
-    EstateCategoryService,
-    EstateFeatureService,
-    EstateDocumentTypeService,
-    EstateService,
+    EstateTypeAdminService,
+    EstateTypeToolsService,
+
+    EstateCategoryAdminService,
+    EstateCategoryToolsService,
+
+    EstateFeatureAdminService,
+    EstateFeatureToolsService,
+
+    EstateDocumentTypeAdminService,
+    EstateDocumentTypeToolsService,
+
+    EstateAdminService,
+    EstateToolsService,
   ],
 })
 

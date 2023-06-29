@@ -2,7 +2,6 @@ import { forwardRef, Inject, Injectable, NotAcceptableException, NotFoundExcepti
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Office } from 'src/office/schemas/office.schema';
-import { GetMailLogsDto } from './dto/getMailLogs.dto';
 import { SendMailDto } from './dto/sendMail.dto';
 import { EmailAddress, EmailAddressDocument } from './schemas/email.schema';
 import { User } from 'src/user/schemas/user.schema';

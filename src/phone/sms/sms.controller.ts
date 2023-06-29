@@ -17,7 +17,6 @@ import { RoleEnum } from 'src/user/enum/role.enum';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PhoneService } from '../phone.service';
 import { SendSmsDto } from '../dto/sendSms.dto';
-import { GetSmsLogsDto } from '../dto/getSmsLogs.dto';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { SmsLogFilteringDto, SmsLogSortingDto } from './dto/smsLogQuery.dto';
 

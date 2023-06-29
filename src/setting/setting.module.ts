@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { SettingService } from './setting.service';
-import { SettingController } from './setting.controller';
 import { MongooseModule } from '@nestjs/mongoose';
+import { SettingControllerAdmin } from './admin/setting.admin.controller';
+import { SettingServiceAdmin } from './admin/setting.admin.service';
 import {
   Settings,
   SettingsSchema,
@@ -13,7 +13,7 @@ import {
       { name: Settings.name, schema: SettingsSchema },
     ]),
   ],
-  controllers: [SettingController],
-  providers: [SettingService],
+  controllers: [SettingControllerAdmin],
+  providers: [SettingServiceAdmin],
 })
 export class SettingModule { }

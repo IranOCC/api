@@ -4,8 +4,8 @@ import { Transform } from "class-transformer";
 import { IsBoolean, IsDate, IsEnum, IsLatLong, IsLongitude, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
 import slugify from "slugify";
 import { Office } from "src/office/schemas/office.schema";
-import { EstateStatusEnum } from "../enum/estateStatus.enum";
-import { EstateVisibilityEnum } from "../enum/estateVisibility.enum";
+import { EstateStatusEnum } from "../../enum/estateStatus.enum";
+import { EstateVisibilityEnum } from "../../enum/estateVisibility.enum";
 
 export class CreateEstateDto {
     @ApiProperty()

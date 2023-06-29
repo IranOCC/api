@@ -66,9 +66,11 @@ import { IsUniqueProvider } from './utils/decorator/unique.decorator';
 
     OfficeModule,
 
-    SettingModule,
-    // BlogModule,
-    // EstateModule,
+    EstateModule,
+
+    BlogModule,
+
+    // SettingModule,
   ],
   controllers: [AppController],
   providers: [

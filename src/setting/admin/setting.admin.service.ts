@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { InitialSettingDto } from './dto/initialSetting.dto';
+import { InitialSettingDto } from '../dto/initialSetting.dto';
 import {
   Settings,
   SettingsDocument,
-} from './schemas/settings.schema';
-import { SettingsKeys } from './enum/settingKeys.enum';
+} from '../schemas/settings.schema';
+import { SettingsKeys } from '../enum/settingKeys.enum';
 
 @Injectable()
-export class SettingService {
+export class SettingServiceAdmin {
   constructor(
     @InjectModel(Settings.name) private settingsModel: Model<SettingsDocument>,
   ) {

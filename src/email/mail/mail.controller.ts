@@ -5,7 +5,6 @@ import { Public } from 'src/auth/guard/jwt-auth.guard';
 import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
-import { GetMailLogsDto } from '../dto/getMailLogs.dto';
 import { SendMailDto } from '../dto/sendMail.dto';
 import { EmailService } from '../email.service';
 import { MailLogFilteringDto, MailLogSortingDto } from './dto/mailLogQuery.dto';

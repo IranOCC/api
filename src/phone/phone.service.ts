@@ -11,7 +11,6 @@ import { generateToken, validationToken } from 'src/utils/helper/token.helper';
 import { useForEnum } from 'src/utils/enum/useFor.enum';
 import { Template } from 'aws-sdk/clients/appsync';
 import { SendSmsDto } from './dto/sendSms.dto';
-import { GetSmsLogsDto } from './dto/getSmsLogs.dto';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
 
 @Injectable()
