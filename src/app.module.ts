@@ -31,6 +31,7 @@ import { IconModule } from './icon/icon.module';
 import { EmailModule } from './email/email.module';
 import { PhoneModule } from './phone/phone.module';
 import { IsUniqueProvider } from './utils/decorator/unique.decorator';
+import { PageModule } from './page/page.module';
 
 
 
@@ -63,13 +64,10 @@ import { IsUniqueProvider } from './utils/decorator/unique.decorator';
     UserModule,
     StorageModule,
     IconModule,
-
     OfficeModule,
-
     EstateModule,
-
     BlogModule,
-
+    PageModule,
     // SettingModule,
   ],
   controllers: [AppController],

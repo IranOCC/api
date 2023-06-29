@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
-import { PostStatusEum } from '../enum/postStatus.enum';
-import { PostVisibilityEum } from '../enum/postVisibility.enum';
+import { PageStatusEum } from '../enum/pageStatus.enum';
+
 
 @Schema({ timestamps: true })
-export class BlogPost extends Document {
+export class Page extends Document {
   @Prop({ required: true, trim: true })
   title: string;
 
@@ -23,15 +23,8 @@ export class BlogPost extends Document {
   })
   image: any;
 
-  @Prop({ type: String, enum: PostStatusEum, default: PostStatusEum.Publish })
-  status: PostStatusEum;
-
-  @Prop({
-    type: String,
-    enum: PostVisibilityEum,
-    default: PostVisibilityEum.Public,
-  })
-  visibility: PostVisibilityEum;
+  @Prop({ type: String, enum: PageStatusEum, default: PageStatusEum.Publish })
+  status: PageStatusEum;
 
   @Prop({ select: false })
   password: string;
@@ -78,5 +71,5 @@ export class BlogPost extends Document {
   comments: any[];
 }
 
-export const BlogPostSchema = SchemaFactory.createForClass(BlogPost);
-export type BlogPostDocument = HydratedDocument<BlogPost>;
+export const PageSchema = SchemaFactory.createForClass(Page);
+export type PageDocument = HydratedDocument<Page>;
