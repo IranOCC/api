@@ -68,7 +68,7 @@ import { PageModule } from './page/page.module';
     EstateModule,
     BlogModule,
     PageModule,
-    // SettingModule,
+    SettingModule,
   ],
   controllers: [AppController],
   providers: [

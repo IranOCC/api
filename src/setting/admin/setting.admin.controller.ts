@@ -17,32 +17,24 @@ import { SettingServiceAdmin } from './setting.admin.service';
 
 
 
-@Controller('setting')
+@Controller('admin/setting')
 @ApiTags('Setting')
 export class SettingControllerAdmin {
   constructor(private readonly settingServiceAdmin: SettingServiceAdmin) {
     // #
   }
 
-  @Get('webInitialData')
-  @Public()
-  getInitialData() {
-    return this.settingServiceAdmin.getWebInitialData();
-  }
+  // @Get(':key')
+  // @Roles(RoleEnum.SuperAdmin)
+  // get(@Param('key') key: SettingsKeys) {
+  //   return this.settingServiceAdmin.get(key);
+  // }
 
-  // ==
-
-  @Get(':key')
-  @Roles(RoleEnum.SuperAdmin)
-  get(@Param('key') key: SettingsKeys) {
-    return this.settingServiceAdmin.get(key);
-  }
-
-  @Patch(':key')
-  @Roles(RoleEnum.SuperAdmin)
-  set(@Param('key') key: SettingsKeys, @Body() data: InitialSettingDto) {
-    return this.settingServiceAdmin.set(key, data);
-  }
+  // @Patch(':key')
+  // @Roles(RoleEnum.SuperAdmin)
+  // set(@Param('key') key: SettingsKeys, @Body() data: InitialSettingDto) {
+  //   return this.settingServiceAdmin.set(key, data);
+  // }
 
 
 }
