@@ -24,4 +24,13 @@ export class EstateToolsController {
     return this.estateToolsService.autoComplete(query);
   }
 
+
+  // ==================================================================================================> statics
+  @Get('statics/:subject')
+  @ApiOperation({ summary: "Get statics variables", description: "No Description" })
+  @ApiResponse({ status: 200 })
+  statics(@Param('subject') subject: string) {
+    return this.estateToolsService.statics(subject);
+  }
+
 }
