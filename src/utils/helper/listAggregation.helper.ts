@@ -92,7 +92,7 @@ const listAggregation =
         console.log($pipelines);
 
 
-        return await model.aggregate($pipelines)
+        return (await model.aggregate($pipelines))[0] || {}
 
 
     }
