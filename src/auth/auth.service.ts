@@ -14,6 +14,7 @@ import { EmailOtpDto } from './dto/emailOtp.dto';
 import { EmailOtpConfirmDto } from './dto/emailOtpConfirm.dto';
 import { PhoneOtpDto } from './dto/phoneOtp.dto';
 import { PhoneOtpConfirmDto } from './dto/phoneOtpConfirm.dto';
+import { UpdateMe } from './dto/updateMe.dto';
 
 @Injectable()
 export class AuthService {
@@ -83,13 +84,22 @@ export class AuthService {
   }
 
 
+
+
   // =============================> getMe
-  // * get user login
   async getMe(user: User) {
     const _user = await this.userService.getUserPayload(user._id)
     return _user as User;
   }
   // =============================> getMe
+
+
+
+  // =============================> updateMe
+  async updateMe(user: User, data: UpdateMe) {
+    return await this.userService.updateMe(user._id, data)
+  }
+  // =============================> updateMe
 
 
 

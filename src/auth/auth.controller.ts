@@ -4,6 +4,7 @@ import {
   Request,
   Body,
   Get,
+  Patch,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from './guard/jwt-auth.guard';
@@ -20,6 +21,7 @@ import { PhoneOtpResponseDto } from './dto/response/phoneOtp.dto';
 import { BadRequestResponseDto } from 'src/utils/dto/response/badRequest.dto';
 import { ForbiddenResponseDto } from 'src/utils/dto/response/forbidden.dto';
 import { NotAcceptableResponseDto } from 'src/utils/dto/response/notAcceptable.dto';
+import { UpdateMe } from './dto/updateMe.dto';
 
 
 @ApiTags('Auth')
@@ -92,5 +94,17 @@ export class AuthController {
     return this.authService.getMe(user)
   }
   // =============================> get me
+
+
+  // =============================> updateMe
+  @Patch()
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "Update me (current user login)", description: "No Description" })
+  @ApiResponse({ status: 200, type: GetMeResponseDto })
+  @ApiResponse({ status: 401, type: UnauthorizedResponseDto })
+  async updateMe(@Body() data: UpdateMe, @Request() { user }) {
+    return this.authService.updateMe(user, data)
+  }
+  // =============================> updateMe
 
 }

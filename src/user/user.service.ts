@@ -14,6 +14,7 @@ import { PhoneNumber } from 'src/phone/schemas/phone.schema';
 import { EmailAddress } from 'src/email/schemas/email.schema';
 import { PhoneDto } from 'src/phone/dto/phone.dto';
 import { EmailDto } from 'src/email/dto/email.dto';
+import { UpdateMe } from 'src/auth/dto/updateMe.dto';
 
 
 
@@ -166,6 +167,18 @@ export class UserService {
     // ==============================================================================> get ME & payload
 
 
+    // updateMe
+    async updateMe(id: string, data: UpdateMe): Promise<any> {
+        const { phone, email, ...props } = data
+        const _user = await this.userModel.findById(id)
+
+        if (phone) await this.setPhone(_user, phone)
+        if (email) await this.setEmail(_user, email)
+
+        // save
+        await _user.save()
+        return this.userModel.updateOne({ _id: id }, props).exec();
+    }
 
 
 
