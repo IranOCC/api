@@ -9,7 +9,7 @@ import { UserFilteringDto } from '../admin/dto/userQuery.dto';
 
 
 
-@Controller('user/tools')
+@Controller('tools/user')
 @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
 @ApiTags('User')
 @ApiBearerAuth()
