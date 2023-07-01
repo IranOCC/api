@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer";
+import { Transform, Type } from "class-transformer";
 import { IsNotEmpty, IsOptional, IsMongoId, ValidateNested, IsLatLong } from "class-validator";
 import { EmailDto } from "src/email/dto/email.dto";
 import { PhoneDto } from "src/phone/dto/phone.dto";
@@ -16,6 +16,9 @@ export class UpdateMe {
 
     @ApiPropertyOptional()
     @IsOptional()
+    @Transform(({ value }) => {
+        return !!value?._id ? value?._id : value
+    })
     @IsMongoId()
     avatar: string;
 

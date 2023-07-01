@@ -80,8 +80,6 @@ export class StorageController {
     @Body() { relatedToID, alt, title }: CreateStorageDto,
     @Request() { user }
   ) {
-    console.log(image, "image", relatedToID);
-
     return this.storageService.create(image, user, RelatedToEnum.User, relatedToID, alt, title)
   }
 
