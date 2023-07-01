@@ -3,8 +3,8 @@ import { I18nService } from "nestjs-i18n"
 import { PaginationDto } from "../dto/pagination.dto"
 
 
-// db path select isArray
-export type PopulatedType = [string, string, string?, boolean?]
+// db path select isArray pipelines
+export type PopulatedType = [string, string, string?, boolean?, any[]?]
 
 const listAggregation =
     async (
@@ -21,7 +21,7 @@ const listAggregation =
         let $project = {}
 
         // populate
-        populate.map(([db, path, select, isArray]) => {
+        populate.map(([db, path, select, isArray, $pipes = []]) => {
             let project = {}
             select?.split(" ").map((p) => { project[p] = true })
             const $p = !!select?.length ? [{ $project: project }] : []
@@ -31,7 +31,7 @@ const listAggregation =
                     as: path,
                     localField: path,
                     foreignField: "_id",
-                    pipeline: $p
+                    pipeline: [...$pipes, ...$p]
                 }
             })
             if (!isArray) $project[path] = { $first: `$${path}` }

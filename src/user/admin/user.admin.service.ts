@@ -63,7 +63,6 @@ export class UserServiceAdmin {
   // List User
   findAll(pagination: PaginationDto, filter: any, sort: any): Promise<User[]> {
     const populate: PopulatedType[] = [
-      ["storages", "avatar", "path title alt"],
       ["phonenumbers", "phone", "value verified"],
       ["emailaddresses", "email", "value verified"]
     ]
