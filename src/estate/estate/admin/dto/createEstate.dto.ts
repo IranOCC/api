@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { User } from "aws-sdk/clients/appstream";
 import { Transform } from "class-transformer";
-import { IsBoolean, IsDate, IsEnum, IsLatLong, IsLongitude, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsDateString, IsEnum, IsLatLong, IsLongitude, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
 import slugify from "slugify";
 import { Office } from "src/office/schemas/office.schema";
 import { EstateStatusEnum } from "../../enum/estateStatus.enum";
@@ -38,11 +38,17 @@ export class CreateEstateDto {
     // == media
 
     @ApiPropertyOptional()
+    @Transform(({ value }) => {
+        return value?._id ? value?._id : value
+    })
     @IsOptional()
     @IsMongoId()
     image?: string;
 
     @ApiPropertyOptional()
+    @Transform(({ value }) => {
+        return value.map((v: any) => (v?._id ? v?._id : v))
+    })
     @IsOptional()
     @IsMongoId({ each: true })
     gallery?: string[];
@@ -63,7 +69,8 @@ export class CreateEstateDto {
     pinned: boolean;
 
     @ApiProperty()
-    @IsDate()
+    // @IsDate()
+    @IsDateString({})
     publishedAt: Date;
 
 
@@ -93,14 +100,17 @@ export class CreateEstateDto {
     documentType?: string[];
 
     @ApiProperty()
+    @Transform(({ value }) => (parseInt(value)))
     @IsPositive()
     area?: number;
 
     @ApiProperty()
+    @Transform(({ value }) => (parseInt(value)))
     @IsPositive()
     price?: number;
 
     @ApiProperty()
+    @Transform(({ value }) => (parseInt(value)))
     @IsPositive()
     totalPrice?: number;
 
@@ -115,30 +125,37 @@ export class CreateEstateDto {
 
     // == special
     @ApiPropertyOptional()
+    @Transform(({ value }) => (parseInt(value)))
     @IsOptional()
     constructionYear?: number;
 
     @ApiPropertyOptional()
+    @Transform(({ value }) => (parseInt(value)))
     @IsOptional()
     roomsCount?: number;
 
     @ApiPropertyOptional()
+    @Transform(({ value }) => (parseInt(value)))
     @IsOptional()
     mastersCount?: number;
 
     @ApiPropertyOptional()
+    @Transform(({ value }) => (parseInt(value)))
     @IsOptional()
     buildingArea?: number;
 
     @ApiPropertyOptional()
+    @Transform(({ value }) => (parseInt(value)))
     @IsOptional()
     floorsCount?: number;
 
     @ApiPropertyOptional()
+    @Transform(({ value }) => (parseInt(value)))
     @IsOptional()
     unitsCount?: number;
 
     @ApiPropertyOptional()
+    @Transform(({ value }) => (parseInt(value)))
     @IsOptional()
     floor?: number;
 

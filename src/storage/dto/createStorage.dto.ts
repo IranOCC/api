@@ -21,7 +21,8 @@ export class CreateStorageDto {
   @IsString()
   title: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsMongoId()
   relatedToID: string;
 }
