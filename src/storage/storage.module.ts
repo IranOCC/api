@@ -7,6 +7,9 @@ import { S3ManagerModule } from './s3-manager/s3-manager.module';
 import { S3 } from 'aws-sdk';
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { StorageAdminController } from './admin/storage.admin.controller';
+import { StorageAdminService } from './admin/storage.admin.service';
+
 
 @Module({
   imports: [
@@ -27,8 +30,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     }),
     MongooseModule.forFeature([{ name: Storage.name, schema: StorageSchema }]),
   ],
-  providers: [StorageService],
-  controllers: [StorageController],
+  providers: [StorageService, StorageAdminService],
+  controllers: [StorageController, StorageAdminController],
 })
 export class StorageModule { }
 

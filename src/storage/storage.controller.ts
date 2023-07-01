@@ -10,31 +10,19 @@ import {
   Patch,
   Request,
   UploadedFiles,
-  ParseFilePipeBuilder,
   FileTypeValidator,
   MaxFileSizeValidator,
   ParseFilePipe,
-  HttpException,
-  HttpStatus,
   Query
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { StorageService } from './storage.service';
-import { BufferedFile } from './file.type';
-import { Public } from 'src/auth/guard/jwt-auth.guard';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiProperty, ApiPropertyOptional, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiProperty, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ListResponseDto, PaginationDto } from 'src/utils/dto/pagination.dto';
 import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
-import { IsEnum, IsMongoId, IsOptional, IsString } from 'class-validator';
 import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
-import { StorageFilteringDto, StorageSortingDto } from './dto/storageQuery.dto';
-import { MongoArrayIDQueryDto, MongoIDQueryDto } from 'src/utils/dto/mongoIDQuery.dto';
 import { CreateStorageDto } from './dto/createStorage.dto';
-import { UpdateStorageDto } from './dto/updateStorage.dto';
-
-
-
 
 
 
@@ -51,11 +39,14 @@ export class UploadMultipleImageDto extends CreateStorageDto {
 }
 
 
+
+
 @Controller('storage')
 @ApiTags('Storage')
 @ApiBearerAuth()
 export class StorageController {
   constructor(private storageService: StorageService) { }
+
 
 
 
@@ -85,6 +76,9 @@ export class StorageController {
 
 
 
+
+
+
   @Post("office/logo")
   @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
   @ApiOperation({ summary: "Upload office logo", description: "No Description" })
@@ -107,6 +101,8 @@ export class StorageController {
   ) {
     return this.storageService.create(image, user, RelatedToEnum.Office, relatedToID, alt, title)
   }
+
+
 
 
 
@@ -141,6 +137,9 @@ export class StorageController {
   }
 
 
+
+
+
   @Post("blog")
   @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Author)
   @ApiOperation({ summary: "Upload blog post images", description: "No Description" })
@@ -172,48 +171,4 @@ export class StorageController {
 
 
 
-
-  // ============
-
-
-  @Get()
-  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
-  @ApiOperation({ summary: "Get list of Model", description: "No Description" })
-  @ApiResponse({ status: 200, type: ListResponseDto })
-  findAll(@Query('filter') filter: StorageFilteringDto, @Query('sort') sort: StorageSortingDto, @Query() paginate: PaginationDto) {
-    return this.storageService.findAll(paginate, filter, sort);
-  }
-
-
-  @Get(':id')
-  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
-  @ApiOperation({ summary: "Get single Model by id", description: "No Description" })
-  @ApiResponse({ status: 200 })
-  findOne(@Param() { id }: MongoIDQueryDto) {
-    return this.storageService.findOne(id);
-  }
-
-  @Patch(':id')
-  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
-  @ApiOperation({ summary: "Edit single Model by id", description: "No Description" })
-  @ApiResponse({ status: 201 })
-  update(@Param() { id }: MongoIDQueryDto, @Body() data: UpdateStorageDto) {
-    return this.storageService.update(id, data);
-  }
-
-  @Delete(':id')
-  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
-  @ApiOperation({ summary: "Delete single Model by id", description: "No Description" })
-  @ApiResponse({ status: 200 })
-  remove(@Param() { id }: MongoIDQueryDto) {
-    return this.storageService.remove(id);
-  }
-
-  @Delete()
-  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
-  @ApiOperation({ summary: "Delete bulk of Model by id", description: "No Description" })
-  @ApiResponse({ status: 200 })
-  bulkRemove(@Query() { id }: MongoArrayIDQueryDto) {
-    return this.storageService.bulkRemove(id);
-  }
 }
