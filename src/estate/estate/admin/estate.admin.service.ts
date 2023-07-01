@@ -24,10 +24,11 @@ export class EstateAdminService {
   // List Estate
   findAll(pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
-      // ["users", "owner"],
-      // ["estatecategories", "parent"]
+      ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      ["users", "owner", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      ["estatecategories", "category", "title"]
     ]
-    const project = "title slug"
+    const project = "title slug publishedAt status code"
     const virtualFields = {}
     const searchFields = "title slug excerpt content"
     return listAggregation(this.estateModel, pagination, filter, sort, populate, project, virtualFields, searchFields)

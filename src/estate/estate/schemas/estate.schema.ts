@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
 import { EstateStatusEnum } from '../enum/estateStatus.enum';
 import { EstateVisibilityEnum } from '../enum/estateVisibility.enum';
+import { EstateCategory } from 'src/estate/category/schemas/estateCategory.schema';
 
 @Schema({ timestamps: true })
 export class Estate extends Document {
@@ -46,21 +47,21 @@ export class Estate extends Document {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    select: false,
+    // select: false,
   })
   createdBy: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    select: false,
+    // select: false,
   })
   confirmedBy: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Office',
-    select: false,
+    // select: false,
   })
   office: any;
 
@@ -75,7 +76,7 @@ export class Estate extends Document {
     ref: 'EstateCategory',
     default: null
   })
-  category: any;
+  category: EstateCategory;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
