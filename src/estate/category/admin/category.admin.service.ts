@@ -35,7 +35,7 @@ export class EstateCategoryAdminService {
   // Get EstateCategory
   findOne(id: string) {
     return this.estateCategoryModel.findById(id)
-      .populate(["icon", "parent"])
+      .populate(["icon"])
       .exec();
   }
 
