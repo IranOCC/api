@@ -35,6 +35,7 @@ const listAggregation =
                 }
             })
             if (!isArray) $project[path] = { $first: `$${path}` }
+            else $project[path] = `$${path}`
         })
         select?.split(" ").map((path) => { $project[path] = `$${path}` })
 

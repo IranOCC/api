@@ -25,6 +25,7 @@ export class EstateDocumentTypeAdminService {
   findAll(pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
       ["icons", "icon"],
+      ["estatecategories", "categories", "title", true]
     ]
     const project = "title slug description tags"
     const virtualFields = {}
