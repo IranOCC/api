@@ -50,12 +50,16 @@ const listAggregation =
         if (!!searchFields) {
             let $and = []
             if (filter) $and.push(filter)
-            $and.push({
-                $or: searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } }))
-            })
-            $pipelines.push({
-                $match: { $and }
-            })
+            if (!!search) {
+                $and.push({
+                    $or: searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } }))
+                })
+            }
+            if ($and.length) {
+                $pipelines.push({
+                    $match: { $and }
+                })
+            }
         }
 
 

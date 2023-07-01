@@ -67,7 +67,7 @@ export class UserServiceAdmin {
       ["phonenumbers", "phone", "value verified"],
       ["emailaddresses", "email", "value verified"]
     ]
-    const project = "firstName lastName verified active roles"
+    const project = "firstName lastName fullName verified active roles"
     const virtualFields = {
       fullName: { $concat: ["$firstName", " ", "$lastName"] }
     }
