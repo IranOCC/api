@@ -87,9 +87,9 @@ export class StorageController {
 
 
 
-  @Post("office/avatar")
+  @Post("office/logo")
   @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
-  @ApiOperation({ summary: "Upload office avatar", description: "No Description" })
+  @ApiOperation({ summary: "Upload office logo", description: "No Description" })
   @ApiResponse({ status: 201 })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UploadSingleImageDto })
