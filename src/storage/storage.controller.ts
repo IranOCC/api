@@ -190,13 +190,13 @@ export class StorageController {
       }),
     )
     images: [Express.Multer.File],
-    @Body() { relatedToID, alt, title }: CreateStorageDto,
+    @Body() { alt, title }: CreateStorageDto,
     @Request() { user }
   ) {
     let result = []
     for (let i = 0; i < images.length; i++) {
       const image = images[i];
-      const f = await this.storageService.create(image, user, RelatedToEnum.Estate, relatedToID, alt, title)
+      const f = await this.storageService.create(image, user, undefined, undefined, alt, title)
       result.push(f)
     }
     return result
