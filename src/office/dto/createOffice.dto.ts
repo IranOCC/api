@@ -7,7 +7,7 @@ import {
   ValidateNested,
   IsLatLong
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { i18nValidationMessage as i18nVM } from 'nestjs-i18n';
 import { EmailDto } from 'src/email/dto/email.dto';
@@ -32,6 +32,9 @@ export class CreateOfficeDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @Transform(({ value }) => {
+    return !!value?._id ? value?._id : value
+  })
   @IsMongoId()
   logo: string;
 
