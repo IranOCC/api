@@ -180,7 +180,7 @@ export class StorageController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UploadMultipleImageDto })
   @UseInterceptors(FilesInterceptor('images'))
-  async uploadEstateGallery(
+  async uploadMain(
     @UploadedFiles(
       new ParseFilePipe({
         validators: [
