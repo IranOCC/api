@@ -16,6 +16,8 @@ const listAggregation =
         select: string = "",
         virtualFields?: {},
         searchFields?: string,
+        newRoot?: string,
+        newRootPipelines?: any[],
     ) => {
         let $pipelines: mongoose.PipelineStage[] = []
         let $project = {}
@@ -48,30 +50,44 @@ const listAggregation =
 
 
         // search & filter
-        if (!!searchFields) {
-            let $and = []
-            if (filter) $and.push(filter)
-            if (!!search) {
-                $and.push({
-                    $or: searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } }))
-                })
-            }
-            if ($and.length) {
-                $pipelines.push({
-                    $match: { $and }
-                })
-            }
+
+        let $and = []
+        if (!!filter) $and.push(filter)
+        if (!!searchFields && !!search) {
+            $and.push({
+                $or: searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } }))
+            })
+        }
+        if ($and.length) {
+            $pipelines.push({
+                $match: { $and }
+            })
         }
 
 
 
+
         // sort
-        if (!!Object.keys(sort)?.length) $pipelines.push({ $sort: sort })
+        if (!!sort && !!Object.keys(sort)?.length) $pipelines.push({ $sort: sort })
         else $pipelines.push({ $sort: { createdAt: -1 } })
 
         // project
         $pipelines.push({ $project })
 
+
+
+        // change root
+        if (newRoot) {
+            $pipelines.push({
+                $unwind: "$" + newRoot
+            })
+            if (!!newRootPipelines?.length) $pipelines.push(...newRootPipelines)
+            $pipelines.push({
+                $replaceRoot: {
+                    "newRoot": "$" + newRoot
+                }
+            })
+        }
 
 
         // total count

@@ -1,10 +1,11 @@
 import { BadRequestException, ForbiddenException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { User } from 'src/user/schemas/user.schema';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { OfficeService } from '../office.service';
 import { Office, OfficeDocument } from '../schemas/office.schema';
+import { PopulatedType, listAggregation } from 'src/utils/helper/listAggregation.helper';
 
 @Injectable()
 export class MemberService {
@@ -53,14 +54,37 @@ export class MemberService {
 
 
         // save
-        await office.save()
+        if (_office instanceof String) await office.save()
     }
 
 
     async findAll(_office: string, pagination: PaginationDto) {
-        // get office
-        const office = await this.getOfficeById(_office)
-        return office
+        const populate: PopulatedType[] = [
+            // ["users", "management", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+            ["users", "members", "firstName lastName roles verified fullName", true, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+        ]
+        const project = "name members management"
+        const virtualFields = {
+            // membersCount: { $size: "$members" }
+        }
+        const searchFields = ""
+        const filter = { _id: { $eq: new mongoose.Types.ObjectId(_office) } }
+
+        const newRoot = "members"
+        const newRootPipelines = [
+            // {
+            //     $project: {
+            //         "isManagement": {
+            //             "$cond": {
+            //                 if: { "$eq": { "$members._id": "$management" } },
+            //                 then: true,
+            //                 else: false
+            //             }
+            //         }
+            //     }
+            // }
+        ]
+        return listAggregation(this.officeModel, pagination, filter, undefined, populate, project, virtualFields, searchFields, newRoot, newRootPipelines)
     }
 
 

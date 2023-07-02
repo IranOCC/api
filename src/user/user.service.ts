@@ -200,7 +200,7 @@ export class UserService {
             user.phone = phoneID
         } catch (error) {
             const _error = new ValidationError();
-            _error.property = 'phone';
+            _error.property = 'phone.value';
             _error.constraints = {
                 PhoneNumberInUsed: this.i18n.t("exception.PhoneNumberInUsed")
             };
@@ -215,7 +215,7 @@ export class UserService {
             user.email = emailID
         } catch (error) {
             const _error = new ValidationError();
-            _error.property = 'email';
+            _error.property = 'email.value';
             _error.constraints = {
                 EmailAddressInUsed: this.i18n.t("exception.EmailAddressInUsed")
             };
