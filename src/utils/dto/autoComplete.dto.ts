@@ -4,7 +4,7 @@ import { IsMongoId, IsOptional, IsPositive, IsString } from "class-validator";
 
 export class AutoCompleteDto {
     @ApiPropertyOptional({ default: [] })
-    @IsMongoId({ each: true })
+    // @IsMongoId({ each: true })
     // @Transform(({ value }) => {
     //     if (!Array.isArray(value)) return [value]
     // })

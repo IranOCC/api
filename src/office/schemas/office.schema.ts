@@ -93,7 +93,7 @@ export class Office extends Document {
     get: (value) => {
       return value?.join(",")
     },
-    select: false,
+    select: false
   })
   location: [number, number] | string;
 

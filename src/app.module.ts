@@ -32,6 +32,7 @@ import { EmailModule } from './email/email.module';
 import { PhoneModule } from './phone/phone.module';
 import { IsUniqueProvider } from './utils/decorator/unique.decorator';
 import { PageModule } from './page/page.module';
+import { StaticModule } from './static/static.module';
 
 
 
@@ -69,6 +70,7 @@ import { PageModule } from './page/page.module';
     BlogModule,
     PageModule,
     SettingModule,
+    StaticModule,
   ],
   controllers: [AppController],
   providers: [
