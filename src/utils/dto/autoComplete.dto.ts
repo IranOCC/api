@@ -22,9 +22,9 @@ export class AutoCompleteDto {
     @IsOptional()
     current: number = 1;
 
-    @ApiPropertyOptional({ default: 10 })
+    @ApiPropertyOptional({ default: 50 })
     @Transform(({ value, obj }) => parseInt(value))
     @IsPositive()
     @IsOptional()
-    size: number = 10;
+    size: number = 50;
 }

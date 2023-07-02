@@ -25,7 +25,6 @@ const listAutoComplete =
         if (virtualFields && !!Object.keys(virtualFields)?.length) $pipelines.push({ $addFields: virtualFields })
 
 
-        console.log(filter);
 
         // Search & Filter
         if (!!searchFields) {
@@ -42,8 +41,6 @@ const listAutoComplete =
                     ]
                 }
             })
-
-            console.log($and)
         }
 
 

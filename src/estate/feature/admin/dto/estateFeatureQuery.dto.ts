@@ -23,7 +23,7 @@ export { EstateFeatureSortingDto }
 
 
 class EstateFeatureFilteringDto {
-    @ApiPropertyOptional({ name: "filter[categories]", isArray: true, })
+    @ApiPropertyOptional({ name: "filter[categories]", })
     @IsMongoId({ each: true })
     @IsOptional()
     readonly categories?: string[];

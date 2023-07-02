@@ -26,10 +26,18 @@ export class EstateTypeToolsService {
     const displayPath = "title"
 
     if (!!filter?.categories) {
+      let m = []
       if (Array.isArray(filter.categories))
-        filter.categories = { $in: filter.categories.map((v: string) => new ObjectId(v)) }
+        m = filter.categories.map((v: string) => new ObjectId(v))
       else
-        filter.categories = { $in: [new ObjectId(filter.categories)] }
+        m = [new ObjectId(filter.categories)]
+      filter = {
+        $or: [
+          { categories: { $exists: false } },
+          { categories: { $size: 0 } },
+          { categories: { $in: m } },
+        ]
+      }
     }
 
     return await listAutoComplete(this.estateTypeModel, query, searchFields, displayPath, undefined, filter)

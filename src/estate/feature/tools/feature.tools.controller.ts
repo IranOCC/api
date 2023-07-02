@@ -5,11 +5,12 @@ import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
 import { EstateFeatureToolsService } from './feature.tools.service';
 import { EstateFeatureFilteringDto } from '../admin/dto/estateFeatureQuery.dto';
+import { Public } from 'src/auth/guard/jwt-auth.guard';
 
 
 
 @Controller('tools/estate/feature')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
+@Public()
 @ApiTags('EstateFeature')
 @ApiBearerAuth()
 export class EstateFeatureToolsController {
