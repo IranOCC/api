@@ -101,18 +101,20 @@ export class MemberService {
         if (!Array.isArray(users)) m = [users]
         else m = users
 
+        const mngID = (office.management as User)._id
+
         // check is already add or not and push
         m.map((item: User | string) => {
             if (item instanceof User) {
                 if (office.members.includes(item._id)) {
-                    if (office.management === item._id) throw new NotAcceptableException("Management can not to delete", "ManagementDeleteError")
+                    if (new mongoose.Types.ObjectId(item._id).equals(mngID)) throw new NotAcceptableException("Management can not to delete", "ManagementDeleteError")
                     const _index = office.members.indexOf(item._id)
                     office.members.splice(_index, 1)
                 }
             }
             else {
                 if (office.members.includes(item)) {
-                    if (office.management === item) throw new NotAcceptableException("Management can not to delete", "ManagementDeleteError")
+                    if (new mongoose.Types.ObjectId(item).equals(mngID)) throw new NotAcceptableException("Management can not to delete", "ManagementDeleteError")
                     const _index = office.members.indexOf(item)
                     office.members.splice(_index, 1)
                 }
