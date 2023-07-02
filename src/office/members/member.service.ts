@@ -76,17 +76,17 @@ export class MemberService {
 
         const newRoot = "members"
         const newRootPipelines = [
-            // {
-            //     $project: {
-            //         "isManagement": {
-            //             "$cond": {
-            //                 if: { "$eq": { "$members._id": "$management" } },
-            //                 then: true,
-            //                 else: false
-            //             }
-            //         }
-            //     }
-            // }
+            {
+                $addFields: {
+                    "members.isManagement": {
+                        $cond: {
+                            if: { $eq: ["$members._id", "$management"] },
+                            then: true,
+                            else: false
+                        }
+                    }
+                }
+            }
         ]
         return listAggregation(this.officeModel, pagination, filter, undefined, populate, project, virtualFields, searchFields, newRoot, newRootPipelines)
     }
