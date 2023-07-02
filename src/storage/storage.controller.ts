@@ -171,4 +171,37 @@ export class StorageController {
 
 
 
+
+
+  @Post("main")
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
+  @ApiOperation({ summary: "Upload estate images", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UploadMultipleImageDto })
+  @UseInterceptors(FilesInterceptor('images'))
+  async uploadEstateGallery(
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          // new MaxFileSizeValidator({ maxSize: 10000000 }),
+          // new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
+        ],
+      }),
+    )
+    images: [Express.Multer.File],
+    @Body() { relatedToID, alt, title }: CreateStorageDto,
+    @Request() { user }
+  ) {
+    let result = []
+    for (let i = 0; i < images.length; i++) {
+      const image = images[i];
+      const f = await this.storageService.create(image, user, RelatedToEnum.Estate, relatedToID, alt, title)
+      result.push(f)
+    }
+    return result
+  }
+
+
+
 }
