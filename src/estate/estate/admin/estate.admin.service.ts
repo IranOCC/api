@@ -37,7 +37,7 @@ export class EstateAdminService {
   // Get Estate
   findOne(id: string) {
     return this.estateModel.findById(id)
-      // .populate(["icon", "parent"])
+      .populate(["image", "gallery"])
       .exec();
   }
 
