@@ -65,6 +65,7 @@ export class OfficeServiceAdmin {
   // List Office
   findAll(pagination: PaginationDto, filter: any, sort: any): Promise<Office[]> | void {
     const populate: PopulatedType[] = [
+      ["storages", "logo", "path title alt"],
       ["users", "management", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["phonenumbers", "phone", "value verified"],
       ["emailaddresses", "email", "value verified"],
