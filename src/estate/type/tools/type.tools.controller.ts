@@ -4,11 +4,13 @@ import { AutoCompleteDto } from 'src/utils/dto/autoComplete.dto';
 import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
 import { EstateTypeToolsService } from './type.tools.service';
+import { EstateTypeFilteringDto } from '../admin/dto/estateTypeQuery.dto';
+import { Public } from 'src/auth/guard/jwt-auth.guard';
 
 
 
 @Controller('tools/estate/type')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
+@Public()
 @ApiTags('EstateType')
 @ApiBearerAuth()
 export class EstateTypeToolsController {
@@ -19,8 +21,8 @@ export class EstateTypeToolsController {
   @Get('autoComplete')
   @ApiOperation({ summary: "Get Model list in autoComplete structure", description: "No Description" })
   @ApiResponse({ status: 200 })
-  autoComplete(@Query() query: AutoCompleteDto) {
-    return this.estateTypeToolsService.autoComplete(query);
+  autoComplete(@Query('filter') filter: EstateTypeFilteringDto, @Query() query: AutoCompleteDto) {
+    return this.estateTypeToolsService.autoComplete(query, filter);
   }
 
 }
