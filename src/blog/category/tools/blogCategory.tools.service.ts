@@ -17,14 +17,14 @@ import { BlogCategory, BlogCategoryDocument } from '../schemas/blogCategory.sche
 export class BlogCategoryToolsService {
   constructor(
     private i18n: I18nService,
-    @InjectModel(BlogCategory.name) private BlogCategoryModel: Model<BlogCategoryDocument>,
+    @InjectModel(BlogCategory.name) private blogCategoryModel: Model<BlogCategoryDocument>,
   ) { }
 
 
   async autoComplete(query: AutoCompleteDto) {
     const searchFields = "title slug excerpt content"
     const displayPath = "title"
-    return await listAutoComplete(this.BlogCategoryModel, query, searchFields, displayPath)
+    return await listAutoComplete(this.blogCategoryModel, query, searchFields, displayPath)
   }
 
 
