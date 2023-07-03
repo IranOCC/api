@@ -17,5 +17,15 @@
         "visibility": {
             "Public": "عمومی"
         }
+    },
+    "blogPost": {
+        "status": {
+            "Pending": "در انتظار تایید",
+            "Draft": "پیش نویس",
+            "Publish": "منتشر شده"
+        },
+        "visibility": {
+            "Public": "عمومی"
+        }
     }
 }
