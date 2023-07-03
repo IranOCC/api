@@ -26,8 +26,7 @@ export class PageAdminService {
   // List Page
   findAll(pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
-      // ["users", "owner"],
-      // ["estatecategories", "parent"]
+      ["users", "createdBy"],
     ]
     const project = "title slug publishedAt createdBy"
     const virtualFields = {}
