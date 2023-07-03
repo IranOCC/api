@@ -29,9 +29,9 @@ export class PageAdminService {
       // ["users", "owner"],
       // ["estatecategories", "parent"]
     ]
-    const project = "title slug"
+    const project = "title slug publishedAt createdBy"
     const virtualFields = {}
-    const searchFields = "title slug excerpt content"
+    const searchFields = "title slug content"
     return listAggregation(this.pageModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
   }
 

@@ -1,8 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { User } from "aws-sdk/clients/appstream";
 import { Transform } from "class-transformer";
-import { IsBoolean, IsDate, IsEnum, IsLatLong, IsLongitude, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsDateString, IsEnum, IsLatLong, IsLongitude, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
 import slugify from "slugify";
+import { PageStatusEum } from "src/page/enum/pageStatus.enum";
 
 
 export class CreatePageDto {
@@ -25,13 +26,19 @@ export class CreatePageDto {
     })
     slug: string;
 
-    @ApiPropertyOptional()
-    @IsOptional()
+    @ApiProperty()
+    @IsNotEmpty()
     content?: string;
 
+    @ApiProperty({ enum: PageStatusEum })
+    @IsEnum(PageStatusEum)
+    status: string;
+
+    @ApiProperty()
+    @IsDateString({})
+    publishedAt: Date;
+
     @ApiPropertyOptional()
     @IsOptional()
-    excerpt?: string;
-
-
+    createdBy?: User | string;
 }
