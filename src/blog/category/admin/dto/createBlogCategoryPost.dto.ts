@@ -27,11 +27,23 @@ export class CreateBlogCategoryDto {
 
     @ApiPropertyOptional()
     @IsOptional()
-    content?: string;
+    @MinLength(10)
+    description: string;
 
     @ApiPropertyOptional()
     @IsOptional()
-    excerpt?: string;
+    @IsMongoId()
+    icon: string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString({ each: true })
+    tags: string[];
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsMongoId()
+    parent: string;
 
 
 }

@@ -14,49 +14,49 @@ import { UpdateBlogCategoryDto } from './dto/updateBlogCategoryPost.dto';
 @Injectable()
 export class BlogCategoryAdminService {
   constructor(
-    @InjectModel(BlogCategory.name) private BlogCategoryModel: Model<BlogCategoryDocument>,
+    @InjectModel(BlogCategory.name) private blogCategoryModel: Model<BlogCategoryDocument>,
   ) { }
 
 
   // Create BlogCategory
   create(data: CreateBlogCategoryDto) {
-    return this.BlogCategoryModel.create(data);
+    return this.blogCategoryModel.create(data);
   }
 
   // List BlogCategory
   findAll(pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
-      // ["users", "owner"],
-      // ["estatecategories", "parent"]
+      ["icons", "icon"],
+      ["blogcategories", "parent"]
     ]
-    const project = "title slug"
+    const project = "title slug description tags"
     const virtualFields = {}
-    const searchFields = "title slug excerpt content"
-    return listAggregation(this.BlogCategoryModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
+    const searchFields = "title slug description"
+    return listAggregation(this.blogCategoryModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
   }
 
   // Get BlogCategory
   findOne(id: string) {
-    return this.BlogCategoryModel.findById(id)
-      // .populate(["icon", "parent"])
+    return this.blogCategoryModel.findById(id)
+      .populate(["icon"])
       .exec();
   }
 
   // Edit BlogCategory
   update(id: string, data: UpdateBlogCategoryDto) {
-    return this.BlogCategoryModel.updateOne({ _id: id }, data).exec();
+    return this.blogCategoryModel.updateOne({ _id: id }, data).exec();
   }
 
   // Remove Single BlogCategory
   remove(id: string) {
     // TODO: remove other
-    return this.BlogCategoryModel.deleteOne({ _id: id })
+    return this.blogCategoryModel.deleteOne({ _id: id })
   }
 
   // Remove Bulk BlogCategory
   async bulkRemove(id: string[]) {
     // TODO: remove other
-    await this.BlogCategoryModel.deleteMany({ _id: { $in: id } })
+    await this.blogCategoryModel.deleteMany({ _id: { $in: id } })
   }
 }
 

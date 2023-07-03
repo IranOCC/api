@@ -6,17 +6,23 @@ export class BlogCategory extends Document {
   @Prop({ required: true, trim: true })
   title: string;
 
-  @Prop({ required: true, trim: true, unique: true })
+  @Prop({ required: true, trim: true, unique: true, lowercase: true })
   slug: string;
 
-  @Prop()
+  @Prop({ type: String })
   description: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Storage',
+    ref: 'Icon',
   })
   icon: any;
+
+  @Prop({
+    type: [String],
+    default: []
+  })
+  tags: string[];
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
