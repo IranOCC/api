@@ -5,13 +5,13 @@ import { PostVisibilityEum } from '../enum/postVisibility.enum';
 
 @Schema({ timestamps: true })
 export class BlogPost extends Document {
-  @Prop({ required: true, trim: true })
+  @Prop({ type: String, required: true, trim: true })
   title: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   content: string;
 
-  @Prop()
+  @Prop({ type: String, required: true })
   excerpt: string;
 
   @Prop({ required: true, trim: true, unique: true })
@@ -23,7 +23,11 @@ export class BlogPost extends Document {
   })
   image: any;
 
-  @Prop({ type: String, enum: PostStatusEum, default: PostStatusEum.Publish })
+  @Prop({
+    type: String,
+    enum: PostStatusEum,
+    default: PostStatusEum.Publish
+  })
   status: PostStatusEum;
 
   @Prop({
@@ -32,9 +36,6 @@ export class BlogPost extends Document {
     default: PostVisibilityEum.Public,
   })
   visibility: PostVisibilityEum;
-
-  @Prop({ select: false })
-  password: string;
 
   @Prop({ default: false })
   pinned: boolean;
@@ -62,18 +63,21 @@ export class BlogPost extends Document {
 
   @Prop({
     type: [String],
+    default: []
   })
   tags: string[];
 
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'BlogCategory',
+    default: []
   })
   categories: any[];
 
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'BlogComment',
+    default: []
   })
   comments: any[];
 }

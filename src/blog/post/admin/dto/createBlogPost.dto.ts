@@ -1,8 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { User } from "aws-sdk/clients/appstream";
 import { Transform } from "class-transformer";
-import { IsBoolean, IsDate, IsEnum, IsLatLong, IsLongitude, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsDateString, IsEnum, IsLatLong, IsLongitude, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
 import slugify from "slugify";
+import { PostStatusEum } from "../../enum/postStatus.enum";
+import { PostVisibilityEum } from "../../enum/postVisibility.enum";
+import { Office } from "src/office/schemas/office.schema";
 
 
 export class CreateBlogPostDto {
@@ -25,13 +28,70 @@ export class CreateBlogPostDto {
     })
     slug: string;
 
-    @ApiPropertyOptional()
-    @IsOptional()
+    @ApiProperty()
+    @IsNotEmpty()
     content?: string;
 
-    @ApiPropertyOptional()
-    @IsOptional()
+    @ApiProperty()
+    @IsNotEmpty()
     excerpt?: string;
 
+
+
+    @ApiPropertyOptional()
+    @Transform(({ value }) => {
+        return value?._id ? value?._id : value
+    })
+    @IsOptional()
+    @IsMongoId()
+    image?: string;
+
+
+
+    // == status
+
+    @ApiProperty({ enum: PostStatusEum })
+    @IsEnum(PostStatusEum)
+    status: string;
+
+    @ApiProperty({ enum: PostVisibilityEum })
+    @IsEnum(PostVisibilityEum)
+    visibility: string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsBoolean()
+    pinned: boolean;
+
+    @ApiProperty()
+    @IsDateString({})
+    publishedAt: Date;
+
+
+    // == tags
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString({ each: true })
+    tags?: string[];
+
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsMongoId({ each: true })
+    categories: string[];
+
+
+    // detail
+    @ApiPropertyOptional()
+    @IsOptional()
+    createdBy?: User | string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    confirmedBy?: User | string;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    office?: Office | string;
 
 }

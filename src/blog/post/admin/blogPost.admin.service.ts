@@ -25,10 +25,10 @@ export class BlogPostAdminService {
   // List BlogPost
   findAll(pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
-      // ["users", "owner"],
-      // ["estatecategories", "parent"]
+      ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      ["blogcategories", "category", "title"]
     ]
-    const project = "title slug"
+    const project = "title slug status visibility publishedAt"
     const virtualFields = {}
     const searchFields = "title slug excerpt content"
     return listAggregation(this.blogPostModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
@@ -37,7 +37,7 @@ export class BlogPostAdminService {
   // Get BlogPost
   findOne(id: string) {
     return this.blogPostModel.findById(id)
-      // .populate(["icon", "parent"])
+      .populate(["image"])
       .exec();
   }
 
