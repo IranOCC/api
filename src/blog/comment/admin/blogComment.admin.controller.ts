@@ -24,7 +24,7 @@ import { UpdateBlogCommentDto } from './dto/updateBlogComment.dto';
 
 
 @Controller('admin/blog/comment')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
+@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Author)
 @ApiTags("BlogComment")
 @ApiBearerAuth()
 export class BlogCommentAdminController {

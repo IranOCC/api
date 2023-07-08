@@ -23,7 +23,7 @@ import { BlogPostAdminService } from './blogPost.admin.service';
 
 
 @Controller('admin/blog/post')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
+@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Author)
 @ApiTags("BlogPost")
 @ApiBearerAuth()
 export class BlogPostAdminController {

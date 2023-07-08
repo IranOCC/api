@@ -9,7 +9,7 @@ import { BlogCategoryToolsService, } from './blogCategory.tools.service';
 
 
 @Controller('tools/blog/category')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
+@Public()
 @ApiTags('BlogCategory')
 @ApiBearerAuth()
 export class BlogCategoryToolsController {
