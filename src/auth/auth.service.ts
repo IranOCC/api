@@ -80,7 +80,7 @@ export class AuthService {
     // success login
     const payload = await this.userService.getUserPayload(user._id)
     const accessToken = this.jwtService.sign(payload.toJSON(), { expiresIn: "30d" });
-    return { accessToken };
+    return { accessToken, user: { roles: payload.roles } };
   }
 
 
