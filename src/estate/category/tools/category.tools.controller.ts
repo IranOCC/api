@@ -9,7 +9,7 @@ import { Public } from 'src/auth/guard/jwt-auth.guard';
 
 
 @Controller('tools/estate/category')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
+@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
 @ApiTags('EstateCategory')
 @ApiBearerAuth()
 export class EstateCategoryToolsController {

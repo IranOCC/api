@@ -9,7 +9,7 @@ import { Public } from 'src/auth/guard/jwt-auth.guard';
 
 
 @Controller('tools/smsTemplate')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
+@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
 @ApiTags('SmsTemplate')
 @ApiBearerAuth()
 export class SmsTemplateControllerTools {

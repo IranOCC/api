@@ -9,7 +9,7 @@ import { Public } from 'src/auth/guard/jwt-auth.guard';
 
 
 @Controller('tools/mailTemplate')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
+@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
 @ApiTags('MailTemplate')
 @ApiBearerAuth()
 export class MailTemplateControllerTools {

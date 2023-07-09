@@ -9,7 +9,7 @@ import { EstateToolsService } from './estate.tools.service';
 
 
 @Controller('tools/estate')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
+@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
 @ApiTags('Estate')
 @ApiBearerAuth()
 export class EstateToolsController {

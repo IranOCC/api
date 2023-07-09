@@ -10,7 +10,7 @@ import { BlogCommentToolsService } from './blogComment.tools.service';
 
 
 @Controller('tools/blog/post')
-@Public()
+@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
 @ApiTags('BlogComment')
 @ApiBearerAuth()
 export class BlogCommentToolsController {

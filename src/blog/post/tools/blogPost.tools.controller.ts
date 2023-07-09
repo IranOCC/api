@@ -9,7 +9,7 @@ import { BlogPostToolsService } from './blogPost.tools.service';
 
 
 @Controller('tools/blog/post')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
+@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
 @ApiTags('BlogPost')
 @ApiBearerAuth()
 export class BlogPostToolsController {
