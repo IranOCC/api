@@ -69,7 +69,7 @@ export class StorageAdminController {
   }
 
   @Delete(':id')
-  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
+  @Roles(RoleEnum.SuperAdmin)
   @ApiOperation({ summary: "Delete single Model by id", description: "No Description" })
   @ApiResponse({ status: 200 })
   remove(@Param() { id }: MongoIDQueryDto) {
@@ -77,7 +77,7 @@ export class StorageAdminController {
   }
 
   @Delete()
-  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
+  @Roles(RoleEnum.SuperAdmin)
   @ApiOperation({ summary: "Delete bulk of Model by id", description: "No Description" })
   @ApiResponse({ status: 200 })
   bulkRemove(@Query() { id }: MongoArrayIDQueryDto) {

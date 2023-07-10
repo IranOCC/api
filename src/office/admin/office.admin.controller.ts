@@ -32,6 +32,7 @@ export class OfficeControllerAdmin {
   constructor(private readonly officeAdminService: OfficeServiceAdmin) { }
 
   @Post()
+  @Roles(RoleEnum.SuperAdmin)
   @ApiOperation({ summary: "Create new Model", description: "No Description" })
   @ApiResponse({ status: 201 })
   create(@Body() data: CreateOfficeDto) {
@@ -39,6 +40,7 @@ export class OfficeControllerAdmin {
   }
 
   @Get()
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
   @ApiOperation({ summary: "Get list of Model", description: "No Description" })
   @ApiResponse({ status: 200, type: ListResponseDto })
   findAll(@Query('filter') filter: OfficeFilteringDto, @Query('sort') sort: OfficeSortingDto, @Query() paginate: PaginationDto) {
@@ -46,6 +48,7 @@ export class OfficeControllerAdmin {
   }
 
   @Get(':id')
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
   @ApiOperation({ summary: "Get single Model by id", description: "No Description" })
   @ApiResponse({ status: 200 })
   findOne(@Param() { id }: MongoIDQueryDto) {
@@ -53,6 +56,7 @@ export class OfficeControllerAdmin {
   }
 
   @Patch(':id')
+  @Roles(RoleEnum.SuperAdmin)
   @ApiOperation({ summary: "Edit single Model by id", description: "No Description" })
   @ApiResponse({ status: 201 })
   update(@Param() { id }: MongoIDQueryDto, @Body() data: UpdateOfficeDto) {
@@ -60,6 +64,7 @@ export class OfficeControllerAdmin {
   }
 
   @Delete(':id')
+  @Roles(RoleEnum.SuperAdmin)
   @ApiOperation({ summary: "Delete single Model by id", description: "No Description" })
   @ApiResponse({ status: 200 })
   remove(@Param() { id }: MongoIDQueryDto) {
@@ -67,6 +72,7 @@ export class OfficeControllerAdmin {
   }
 
   @Delete()
+  @Roles(RoleEnum.SuperAdmin)
   @ApiOperation({ summary: "Delete bulk of Model by id", description: "No Description" })
   @ApiResponse({ status: 200 })
   bulkRemove(@Query() { id }: MongoArrayIDQueryDto) {

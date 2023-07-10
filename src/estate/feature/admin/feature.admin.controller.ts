@@ -21,7 +21,7 @@ import { EstateFeatureAdminService } from './feature.admin.service';
 
 
 @Controller('admin/estate/feature')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
+@Roles(RoleEnum.SuperAdmin)
 @ApiTags("EstateFeature")
 @ApiBearerAuth()
 export class EstateFeatureAdminController {

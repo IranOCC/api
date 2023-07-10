@@ -20,7 +20,7 @@ import { UpdateEstateDocumentTypeDto } from './dto/updateEstateDocumentType.dto'
 
 
 @Controller('admin/estate/documentType')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
+@Roles(RoleEnum.SuperAdmin)
 @ApiTags("EstateDocumentType")
 @ApiBearerAuth()
 export class EstateDocumentTypeAdminController {

@@ -23,7 +23,7 @@ import { PageAdminService } from './page.admin.service';
 
 
 @Controller('admin/page')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
+@Roles(RoleEnum.SuperAdmin)
 @ApiTags("Page")
 @ApiBearerAuth()
 export class PageAdminController {

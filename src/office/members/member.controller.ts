@@ -5,13 +5,15 @@ import { MongoIDQueryDto, MongoArrayIDQueryDto } from 'src/utils/dto/mongoIDQuer
 import { ListResponseDto, PaginationDto } from 'src/utils/dto/pagination.dto';
 
 import { MemberService } from './member.service';
+import { Roles } from 'src/auth/guard/roles.decorator';
+import { RoleEnum } from 'src/user/enum/role.enum';
 
 
 
 
 
-@Public()
 @Controller('admin/office/:office_id/member')
+@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
 @ApiTags('Office')
 @ApiBearerAuth()
 export class MemberController {

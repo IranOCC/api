@@ -19,7 +19,7 @@ import { EstateCategoryFilteringDto, EstateCategorySortingDto } from './dto/esta
 import { UpdateEstateCategoryDto } from './dto/updateEstateCategory.dto';
 
 @Controller('admin/estate/category')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
+@Roles(RoleEnum.SuperAdmin)
 @ApiTags("EstateCategory")
 @ApiBearerAuth()
 export class EstateCategoryAdminController {

@@ -22,7 +22,7 @@ import { EstateAdminService } from './estate.admin.service';
 
 
 @Controller('admin/estate')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
+@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
 @ApiTags("Estate")
 @ApiBearerAuth()
 export class EstateAdminController {

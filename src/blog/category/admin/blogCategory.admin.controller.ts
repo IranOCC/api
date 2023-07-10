@@ -24,7 +24,7 @@ import { BlogCategoryAdminService } from './blogCategory.admin.service';
 
 
 @Controller('admin/blog/category')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
+@Roles(RoleEnum.SuperAdmin)
 @ApiTags("BlogCategory")
 @ApiBearerAuth()
 export class BlogCategoryAdminController {

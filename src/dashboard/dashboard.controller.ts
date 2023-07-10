@@ -1,11 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DashboardService } from './dashboard.service';
+import { Public } from 'src/auth/guard/jwt-auth.guard';
 
 
 
 @Controller('dashboard')
+@Public()
 @ApiTags('Dashboard')
 @ApiBearerAuth()
 export class DashboardController {
