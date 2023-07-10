@@ -41,8 +41,6 @@ export class OfficeServiceAdmin {
     if (phone) await this.officeService.setPhone(_office, phone)
     if (email) await this.officeService.setEmail(_office, email)
 
-
-
     // save
     await _office.save()
     return _office

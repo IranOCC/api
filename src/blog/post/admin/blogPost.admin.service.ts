@@ -19,6 +19,22 @@ export class BlogPostAdminService {
 
   // Create BlogPost
   create(data: CreateBlogPostDto) {
+    const {
+      status,
+      visibility,
+      pinned,
+      publishedAt,
+
+      tags,
+      categories,
+
+      createdBy,
+      confirmedBy,
+      office,
+      ...props
+    } = data
+
+
     return this.blogPostModel.create(data);
   }
 

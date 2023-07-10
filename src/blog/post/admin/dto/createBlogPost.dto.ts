@@ -50,21 +50,24 @@ export class CreateBlogPostDto {
 
     // == status
 
-    @ApiProperty({ enum: PostStatusEum })
+    @ApiPropertyOptional({ enum: PostStatusEum, default: PostStatusEum.Pending })
+    @IsOptional()
     @IsEnum(PostStatusEum)
-    status: string;
+    status: string = PostStatusEum.Pending;
 
-    @ApiProperty({ enum: PostVisibilityEum })
+    @ApiPropertyOptional({ enum: PostVisibilityEum, default: PostVisibilityEum.Public })
+    @IsOptional()
     @IsEnum(PostVisibilityEum)
-    visibility: string;
+    visibility: string = PostVisibilityEum.Public;
 
     @ApiPropertyOptional()
     @IsOptional()
     @IsBoolean()
     pinned: boolean;
 
-    @ApiProperty()
-    @IsDateString({})
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsDateString()
     publishedAt: Date;
 
 
@@ -84,14 +87,17 @@ export class CreateBlogPostDto {
     // detail
     @ApiPropertyOptional()
     @IsOptional()
+    @IsMongoId()
     createdBy?: User | string;
 
     @ApiPropertyOptional()
     @IsOptional()
+    @IsMongoId()
     confirmedBy?: User | string;
 
     @ApiPropertyOptional()
     @IsOptional()
+    @IsMongoId()
     office?: Office | string;
 
 }

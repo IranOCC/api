@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Request,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/guard/roles.decorator';
@@ -32,7 +33,9 @@ export class BlogPostAdminController {
   @Post()
   @ApiOperation({ summary: "Create new Model", description: "No Description" })
   @ApiResponse({ status: 201 })
-  create(@Body() data: CreateBlogPostDto) {
+  create(@Body() data: CreateBlogPostDto, @Request() { user }) {
+    console.log(user, 'userrrrrr');
+
     return this.blogPostAdminService.create(data);
   }
 

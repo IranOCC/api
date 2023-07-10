@@ -80,7 +80,7 @@ export class StorageController {
 
 
   @Post("office/logo")
-  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
+  @Roles(RoleEnum.SuperAdmin)
   @ApiOperation({ summary: "Upload office logo", description: "No Description" })
   @ApiResponse({ status: 201 })
   @ApiConsumes('multipart/form-data')

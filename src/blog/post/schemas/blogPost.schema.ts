@@ -26,7 +26,7 @@ export class BlogPost extends Document {
   @Prop({
     type: String,
     enum: PostStatusEum,
-    default: PostStatusEum.Publish
+    default: PostStatusEum.Pending
   })
   status: PostStatusEum;
 
