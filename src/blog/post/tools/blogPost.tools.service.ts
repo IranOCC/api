@@ -24,7 +24,6 @@ export class BlogPostToolsService {
     @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPostDocument>,
   ) { }
 
-
   async autoComplete(query: AutoCompleteDto) {
     const searchFields = "title slug excerpt content"
     const displayPath = "title"
