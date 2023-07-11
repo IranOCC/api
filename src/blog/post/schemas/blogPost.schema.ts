@@ -5,6 +5,7 @@ import { PostVisibilityEum } from '../enum/postVisibility.enum';
 
 @Schema({ timestamps: true })
 export class BlogPost extends Document {
+
   @Prop({ type: String, required: true, trim: true })
   title: string;
 
@@ -22,6 +23,33 @@ export class BlogPost extends Document {
     ref: 'Storage',
   })
   image: any;
+
+
+
+
+
+  @Prop({
+    type: [String],
+    default: []
+  })
+  tags: string[];
+
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'BlogCategory',
+    default: []
+  })
+  categories: any[];
+
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'BlogComment',
+    default: []
+  })
+  comments: any[];
+
+
+
 
   @Prop({
     type: String,
@@ -43,43 +71,31 @@ export class BlogPost extends Document {
   @Prop({ default: Date.now })
   publishedAt: Date;
 
+
+
+
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true
   })
   createdBy: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true
   })
   confirmedBy: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Office',
+    required: true
   })
   office: any;
 
-  @Prop({
-    type: [String],
-    default: []
-  })
-  tags: string[];
 
-  @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'BlogCategory',
-    default: []
-  })
-  categories: any[];
-
-  @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'BlogComment',
-    default: []
-  })
-  comments: any[];
 }
 
 export const BlogPostSchema = SchemaFactory.createForClass(BlogPost);

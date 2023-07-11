@@ -50,15 +50,15 @@ export class CreateBlogPostDto {
 
     // == status
 
-    @ApiPropertyOptional({ enum: PostStatusEum, default: PostStatusEum.Pending })
+    @ApiPropertyOptional({ enum: PostStatusEum })
     @IsOptional()
     @IsEnum(PostStatusEum)
-    status: string = PostStatusEum.Pending;
+    status: string;
 
-    @ApiPropertyOptional({ enum: PostVisibilityEum, default: PostVisibilityEum.Public })
+    @ApiPropertyOptional({ enum: PostVisibilityEum })
     @IsOptional()
     @IsEnum(PostVisibilityEum)
-    visibility: string = PostVisibilityEum.Public;
+    visibility: string;
 
     @ApiPropertyOptional()
     @IsOptional()
