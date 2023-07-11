@@ -6,6 +6,9 @@ import { AutoCompleteDto } from 'src/utils/dto/autoComplete.dto';
 import { translateStatics } from 'src/utils/helper/translateStatics.helper';
 import { listAutoComplete } from 'src/utils/helper/autoComplete.helper';
 import { Office, OfficeDocument } from '../schemas/office.schema';
+import { CurrentUser, User } from 'src/user/schemas/user.schema';
+import { ObjectId } from 'mongodb';
+import { RoleEnum } from 'src/user/enum/role.enum';
 
 
 
@@ -20,10 +23,12 @@ export class OfficeServiceTools {
   ) { }
 
 
-  async autoComplete(query: AutoCompleteDto, filter: any) {
+  async autoComplete(query: AutoCompleteDto, filter: any, user: CurrentUser) {
     const virtualFields = {}
     const searchFields = "name"
     const displayPath = "name"
+
+    if (!user.roles.includes(RoleEnum.SuperAdmin)) filter.members = new ObjectId(user._id)
     return await listAutoComplete(this.officeModel, query, searchFields, displayPath, virtualFields, filter)
   }
 

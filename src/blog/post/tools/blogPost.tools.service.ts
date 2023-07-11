@@ -1,6 +1,6 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Injectable, } from '@nestjs/common';
+import { Injectable, NotAcceptableException, } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import { AutoCompleteDto } from 'src/utils/dto/autoComplete.dto';
 import { translateStatics } from 'src/utils/helper/translateStatics.helper';
@@ -8,9 +8,11 @@ import { listAutoComplete } from 'src/utils/helper/autoComplete.helper';
 import { BlogPost, BlogPostDocument } from '../schemas/blogPost.schema';
 import { PostStatusEum } from '../enum/postStatus.enum';
 import { PostVisibilityEum } from '../enum/postVisibility.enum';
-import { User } from 'src/user/schemas/user.schema';
+import { CurrentUser, User } from 'src/user/schemas/user.schema';
 import { OfficeService } from 'src/office/office.service';
 import { RoleEnum } from 'src/user/enum/role.enum';
+import { Office } from 'src/office/schemas/office.schema';
+import moment from 'moment';
 
 
 
@@ -38,14 +40,116 @@ export class BlogPostToolsService {
 
 
   // actions: create update findOne find remove
-  checking(user: User, action: string) {
+  checking(user: CurrentUser, action: string) {
+
     // check my offices if not superAdmin
     if (!user.roles.includes(RoleEnum.SuperAdmin)) {
+      if (!user?.offices?.length) throw new NotAcceptableException("You are not member of any office", "NoOffice")
+    }
+
+
+    if (action === "create") {
+      if (user.roles.includes(RoleEnum.SuperAdmin)) {
+        return {
+          status: {
+            disabled: false,
+            default: PostStatusEum.Publish,
+          },
+          visibility: {
+            disabled: false,
+            default: PostVisibilityEum.Public,
+          },
+          pinned: {
+            disabled: false,
+            default: false,
+          },
+          publishedAt: {
+            disabled: false,
+            default: moment().toISOString(),
+          },
+          createdBy: {
+            disabled: false,
+            default: user._id,
+          },
+          confirmedBy: {
+            disabled: false,
+            default: user._id,
+          },
+          office: {
+            disabled: false,
+            default: user.offices[0]._id,
+          },
+        }
+      }
+      if (user.roles.includes(RoleEnum.Admin)) {
+        return {
+          status: {
+            disabled: false,
+            default: PostStatusEum.Publish,
+          },
+          visibility: {
+            disabled: false,
+            default: PostVisibilityEum.Public,
+          },
+          pinned: {
+            disabled: false,
+            default: false,
+          },
+          publishedAt: {
+            disabled: false,
+            default: moment().toISOString(),
+          },
+          createdBy: {
+            disabled: false,
+            default: user._id,
+          },
+          confirmedBy: {
+            disabled: false,
+            default: user._id,
+          },
+          office: {
+            disabled: false,
+            default: user.offices[0]._id,
+          },
+        }
+      }
+      if (user.roles.includes(RoleEnum.Author)) {
+        return {
+          status: {
+            disabled: true,
+            default: PostStatusEum.Pending,
+          },
+          visibility: {
+            disabled: true,
+            default: PostVisibilityEum.Public,
+          },
+          pinned: {
+            disabled: true,
+            default: false,
+          },
+          publishedAt: {
+            disabled: true,
+            default: moment().toISOString(),
+          },
+          createdBy: {
+            disabled: true,
+            default: user._id,
+          },
+          confirmedBy: {
+            disabled: true,
+            default: null,
+          },
+          office: {
+            disabled: false,
+            default: user.offices[0]._id,
+          },
+        }
+      }
 
     }
-    if (action === "create" || action === "update") {
 
-    }
+
+    return { ok: user }
   }
 
 }

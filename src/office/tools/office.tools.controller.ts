@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Request, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AutoCompleteDto } from 'src/utils/dto/autoComplete.dto';
 import { Roles } from 'src/auth/guard/roles.decorator';
@@ -21,8 +21,8 @@ export class OfficeControllerTools {
   @Get('autoComplete')
   @ApiOperation({ summary: "Get Model list in autoComplete structure", description: "No Description" })
   @ApiResponse({ status: 200 })
-  autoComplete(@Query('filter') filter: OfficeFilteringDto, @Query() query: AutoCompleteDto) {
-    return this.officeServiceTools.autoComplete(query, filter);
+  autoComplete(@Request() { user }, @Query('filter') filter: OfficeFilteringDto, @Query() query: AutoCompleteDto) {
+    return this.officeServiceTools.autoComplete(query, filter, user);
   }
 
 

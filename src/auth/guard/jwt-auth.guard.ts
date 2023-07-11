@@ -3,13 +3,17 @@ import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { SetMetadata } from '@nestjs/common';
 import { Observable } from 'rxjs';
+import { OfficeService } from 'src/office/office.service';
 
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(private reflector: Reflector) {
+  constructor(
+    private officeService: OfficeService,
+    private reflector: Reflector
+  ) {
     super();
   }
 
@@ -21,6 +25,14 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     if (isPublic) {
       try {
         await super.canActivate(context);
+
+        try {
+          const user = context.switchToHttp().getRequest().user
+          const offices = await this.officeService.getMyOffices(user._id)
+          context.switchToHttp().getRequest().user.offices = offices
+        } catch (error) { }
+
+
       } catch (error) { }
 
       // 
@@ -28,6 +40,13 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
     try {
       await super.canActivate(context);
+
+      try {
+        const user = context.switchToHttp().getRequest().user
+        const offices = await this.officeService.getMyOffices(user._id)
+        context.switchToHttp().getRequest().user.offices = offices
+      } catch (error) { }
+
     } catch (error) {
       throw new UnauthorizedException("You must login for this action", "Unauthorized")
     }

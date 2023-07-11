@@ -14,6 +14,7 @@ import { CreateOfficeDto } from './dto/createOffice.dto';
 import { UpdateOfficeDto } from './dto/updateOffice.dto';
 import { MemberService } from './members/member.service';
 import { Office, OfficeDocument } from './schemas/office.schema';
+import { ObjectId } from 'mongodb';
 
 
 
@@ -102,6 +103,17 @@ export class OfficeService {
       _error.value = email;
       throw new I18nValidationException([_error])
     }
+  }
+
+
+
+
+
+
+  // ==========================> get my offices
+  async getMyOffices(user_id: string) {
+    return this.officeModel.find({ members: new ObjectId(user_id) })
+      .select("_id name active verified")
   }
 
 

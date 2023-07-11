@@ -6,6 +6,7 @@ import { PhoneNumber } from 'src/phone/schemas/phone.schema';
 import { EmailAddress } from 'src/email/schemas/email.schema';
 import { Storage } from 'src/storage/schemas/storage.schema';
 import MongooseDelete, { SoftDeleteModel } from 'mongoose-delete';
+import { Office } from 'src/office/schemas/office.schema';
 
 
 
@@ -158,3 +159,7 @@ UserSchema.plugin(require('mongoose-autopopulate'));
 
 
 
+
+
+
+export type CurrentUser = User & { offices: Office[] }
