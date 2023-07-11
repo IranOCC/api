@@ -34,9 +34,7 @@ export class BlogPostAdminController {
   @ApiOperation({ summary: "Create new Model", description: "No Description" })
   @ApiResponse({ status: 201 })
   create(@Body() data: CreateBlogPostDto, @Request() { user }) {
-    console.log(user, 'userrrrrr');
-
-    return this.blogPostAdminService.create(data);
+    return this.blogPostAdminService.create(data, user);
   }
 
   @Get()

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Request, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AutoCompleteDto } from 'src/utils/dto/autoComplete.dto';
 import { Roles } from 'src/auth/guard/roles.decorator';
@@ -31,6 +31,16 @@ export class BlogPostToolsController {
   @ApiResponse({ status: 200 })
   statics(@Param('subject') subject: string) {
     return this.blogPostToolsService.statics(subject);
+  }
+
+
+  // ==================================================================================================> checking
+  // actions: create update findOne find remove
+  @Get('checking/:action')
+  @ApiOperation({ summary: "Checking ", description: "No Description" })
+  @ApiResponse({ status: 200 })
+  checking(@Request() { user }, @Param('subject') action: string) {
+    return this.blogPostToolsService.checking(user, action);
   }
 
 }

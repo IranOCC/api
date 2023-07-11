@@ -6,6 +6,10 @@ import { listAggregation, PopulatedType } from 'src/utils/helper/listAggregation
 import { BlogPost, BlogPostDocument } from '../schemas/blogPost.schema';
 import { CreateBlogPostDto } from './dto/createBlogPost.dto';
 import { UpdateBlogPostDto } from './dto/updateBlogPost.dto';
+import { PostStatusEum } from '../enum/postStatus.enum';
+import { PostVisibilityEum } from '../enum/postVisibility.enum';
+import { User } from 'src/user/schemas/user.schema';
+import { RoleEnum } from 'src/user/enum/role.enum';
 
 
 
@@ -17,16 +21,48 @@ export class BlogPostAdminService {
   ) { }
 
 
-  // Create BlogPost
-  create(data: CreateBlogPostDto) {
+  // Create SuperAdmin BlogPost
+  create(data: CreateBlogPostDto, user: User) {
+
+    let {
+      status,
+      visibility,
+      pinned, // @ db default
+      publishedAt, // @ db default
+
+      createdBy,
+      confirmedBy,
+      office,
+      ...props
+    } = data
+
+    if (user.roles.includes(RoleEnum.SuperAdmin)) {
+      if (!data?.status) data.status = PostStatusEum.Publish
+      if (!data?.visibility) data.visibility = PostVisibilityEum.Public
+
+      if (!data?.createdBy) data.createdBy = PostStatusEum.Publish
+      if (!data?.confirmedBy) data.confirmedBy = PostStatusEum.Publish
+      if (!data?.office) data.office = PostStatusEum.Publish
+    }
+
+
+
+
+
+
+
+
+    return this.blogPostModel.create(data);
+  }
+
+
+  // Create Admin BlogPost
+  createByAdmin(data: CreateBlogPostDto) {
     const {
       status,
       visibility,
       pinned,
       publishedAt,
-
-      tags,
-      categories,
 
       createdBy,
       confirmedBy,
@@ -37,6 +73,26 @@ export class BlogPostAdminService {
 
     return this.blogPostModel.create(data);
   }
+
+
+  // Create Agent BlogPost
+  createByAgent(data: CreateBlogPostDto) {
+    const {
+      status,
+      visibility,
+      pinned,
+      publishedAt,
+
+      createdBy,
+      confirmedBy,
+      office,
+      ...props
+    } = data
+
+
+    return this.blogPostModel.create(data);
+  }
+
 
   // List BlogPost
   findAll(pagination: PaginationDto, filter: any, sort: any) {

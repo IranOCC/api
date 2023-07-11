@@ -19,6 +19,9 @@ import { BlogCategoryAdminController } from './category/admin/blogCategory.admin
 import { BlogCategoryAdminService } from './category/admin/blogCategory.admin.service';
 import { BlogCategoryToolsController } from './category/tools/blogCategory.tools.controller';
 import { BlogCategoryToolsService } from './category/tools/blogCategory.tools.service';
+import { OfficeService } from 'src/office/office.service';
+import { OfficeModule } from 'src/office/office.module';
+import { Office, OfficeSchema } from 'src/office/schemas/office.schema';
 
 
 @Module({

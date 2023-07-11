@@ -15,6 +15,7 @@ import { EmailOtpConfirmDto } from './dto/emailOtpConfirm.dto';
 import { PhoneOtpDto } from './dto/phoneOtp.dto';
 import { PhoneOtpConfirmDto } from './dto/phoneOtpConfirm.dto';
 import { UpdateMe } from './dto/updateMe.dto';
+import { OfficeService } from 'src/office/office.service';
 
 @Injectable()
 export class AuthService {
@@ -80,7 +81,13 @@ export class AuthService {
     // success login
     const payload = await this.userService.getUserPayload(user._id)
     const accessToken = this.jwtService.sign(payload.toJSON(), { expiresIn: "30d" });
-    return { accessToken, user: { roles: payload.roles } };
+    return {
+      accessToken, user: {
+        id: payload._id,
+        _id: payload._id,
+        roles: payload.roles,
+      }
+    };
   }
 
 

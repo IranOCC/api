@@ -7,6 +7,7 @@ import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
 import { loggerMiddleware, } from './utils/middleware/logger/logger.middleware';
 import { useContainer } from 'class-validator';
 import { ContextInterceptor } from './utils/helper/context.interceptor';
+import { userOfficeMiddleware } from './utils/middleware/userOffice/userOffice.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -39,6 +40,8 @@ async function bootstrap() {
 
   // global middleware
   app.use(loggerMiddleware)
+  app.use(userOfficeMiddleware)
+
 
   // exception & validation middleware
   app.useGlobalFilters(new I18nValidationExceptionFilter({

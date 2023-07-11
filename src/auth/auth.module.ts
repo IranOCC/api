@@ -8,6 +8,7 @@ import { AuthController } from './auth.controller';
 import { ConfigService } from '@nestjs/config';
 import { EmailModule } from '../email/email.module';
 import { PhoneModule } from '../phone/phone.module';
+import { OfficeModule } from 'src/office/office.module';
 
 @Module({
   imports: [

@@ -12,7 +12,6 @@ import { OfficeServiceAdmin } from './admin/office.admin.service';
 import { OfficeServicePublic } from './public/office.public.service';
 import { OfficeServiceTools } from './tools/office.tools.service';
 import { MemberController } from './members/member.controller';
-import { UserService } from 'src/user/user.service';
 import { UserModule } from 'src/user/user.module';
 
 @Module({

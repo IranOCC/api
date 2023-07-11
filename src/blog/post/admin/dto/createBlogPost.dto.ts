@@ -48,8 +48,23 @@ export class CreateBlogPostDto {
 
 
 
-    // == status
+    // ==> tags & categories
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString({ each: true })
+    tags?: string[];
 
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsMongoId({ each: true })
+    categories: string[];
+
+
+
+
+
+
+    // ==> status
     @ApiPropertyOptional({ enum: PostStatusEum })
     @IsOptional()
     @IsEnum(PostStatusEum)
@@ -71,20 +86,7 @@ export class CreateBlogPostDto {
     publishedAt: Date;
 
 
-    // == tags
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsString({ each: true })
-    tags?: string[];
-
-
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsMongoId({ each: true })
-    categories: string[];
-
-
-    // detail
+    // ==> detail
     @ApiPropertyOptional()
     @IsOptional()
     @IsMongoId()
@@ -99,5 +101,4 @@ export class CreateBlogPostDto {
     @IsOptional()
     @IsMongoId()
     office?: Office | string;
-
 }

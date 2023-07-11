@@ -8,6 +8,9 @@ import { listAutoComplete } from 'src/utils/helper/autoComplete.helper';
 import { BlogPost, BlogPostDocument } from '../schemas/blogPost.schema';
 import { PostStatusEum } from '../enum/postStatus.enum';
 import { PostVisibilityEum } from '../enum/postVisibility.enum';
+import { User } from 'src/user/schemas/user.schema';
+import { OfficeService } from 'src/office/office.service';
+import { RoleEnum } from 'src/user/enum/role.enum';
 
 
 
@@ -32,6 +35,18 @@ export class BlogPostToolsService {
   statics(subject: string) {
     const data = { visibility: PostVisibilityEum, status: PostStatusEum }
     return translateStatics(this.i18n, `blogPost.${subject}`, data[subject]) || {}
+  }
+
+
+  // actions: create update findOne find remove
+  checking(user: User, action: string) {
+    // check my offices if not superAdmin
+    if (!user.roles.includes(RoleEnum.SuperAdmin)) {
+
+    }
+    if (action === "create" || action === "update") {
+
+    }
   }
 
 }
