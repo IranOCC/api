@@ -9,9 +9,7 @@ import { BlogPost, BlogPostDocument } from '../schemas/blogPost.schema';
 import { PostStatusEum } from '../enum/postStatus.enum';
 import { PostVisibilityEum } from '../enum/postVisibility.enum';
 import { CurrentUser, User } from 'src/user/schemas/user.schema';
-import { OfficeService } from 'src/office/office.service';
 import { RoleEnum } from 'src/user/enum/role.enum';
-import { Office } from 'src/office/schemas/office.schema';
 import moment from 'moment';
 
 
@@ -47,7 +45,6 @@ export class BlogPostToolsService {
       if (!user?.offices?.length) throw new NotAcceptableException("You are not member of any office", "NoOffice")
     }
 
-
     if (action === "create") {
       if (user.roles.includes(RoleEnum.SuperAdmin)) {
         return {
@@ -67,6 +64,10 @@ export class BlogPostToolsService {
             disabled: false,
             default: moment().toISOString(),
           },
+          office: {
+            disabled: false,
+            default: user.offices[0]._id,
+          },
           createdBy: {
             disabled: false,
             default: user._id,
@@ -74,10 +75,6 @@ export class BlogPostToolsService {
           confirmedBy: {
             disabled: false,
             default: user._id,
-          },
-          office: {
-            disabled: false,
-            default: user.offices[0]._id,
           },
         }
       }
@@ -96,8 +93,12 @@ export class BlogPostToolsService {
             default: false,
           },
           publishedAt: {
-            disabled: false,
-            default: moment().toISOString(),
+            disabled: true,
+            default: new Date().toISOString(),
+          },
+          office: {
+            disabled: user.offices.length > 1 ? false : true,
+            default: user.offices[0]._id,
           },
           createdBy: {
             disabled: false,
@@ -106,10 +107,6 @@ export class BlogPostToolsService {
           confirmedBy: {
             disabled: false,
             default: user._id,
-          },
-          office: {
-            disabled: false,
-            default: user.offices[0]._id,
           },
         }
       }
@@ -128,28 +125,29 @@ export class BlogPostToolsService {
             default: false,
           },
           publishedAt: {
+            hidden: true,
             disabled: true,
-            default: moment().toISOString(),
+            default: new Date().toISOString(),
+          },
+          office: {
+            disabled: user.offices.length > 1 ? false : true,
+            default: user.offices[0]._id,
           },
           createdBy: {
-            disabled: true,
+            disabled: false,
             default: user._id,
           },
           confirmedBy: {
+            hidden: true,
             disabled: true,
             default: null,
           },
-          office: {
-            disabled: false,
-            default: user.offices[0]._id,
-          },
         }
       }
-
     }
 
 
-    return { ok: user }
+    return null
   }
 
 }

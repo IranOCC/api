@@ -39,7 +39,7 @@ export class BlogPostToolsController {
   @Get('checking/:action')
   @ApiOperation({ summary: "Checking ", description: "No Description" })
   @ApiResponse({ status: 200 })
-  checking(@Request() { user }, @Param('subject') action: string) {
+  checking(@Request() { user }, @Param('action') action: string) {
     return this.blogPostToolsService.checking(user, action);
   }
 

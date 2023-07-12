@@ -22,6 +22,7 @@ export class UserServiceTools {
 
 
   async autoComplete(query: AutoCompleteDto, filter: any) {
+    filter.firstName = { $ne: null }
     const virtualFields = {
       fullName: { $concat: ["$firstName", " ", "$lastName"] }
     }

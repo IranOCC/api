@@ -16,6 +16,8 @@ const listAggregation =
         select: string = "",
         virtualFields?: {},
         searchFields?: string,
+
+        filterRoot?: {},
         newRoot?: string,
         newRootPipelines?: any[],
     ) => {
@@ -50,18 +52,27 @@ const listAggregation =
 
 
         // search & filter
-
         let $and = []
-        if (!!filter) $and.push(filter)
-        if (!!searchFields && !!search) {
-            $and.push({
-                $or: searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } }))
-            })
+        if (!!newRoot) {
+            if (!!filterRoot && !!Object.keys(filterRoot).length) $and.push(filterRoot)
+            if ($and.length) {
+                $pipelines.push({
+                    $match: { $and }
+                })
+            }
         }
-        if ($and.length) {
-            $pipelines.push({
-                $match: { $and }
-            })
+        else {
+            if (!!filter && !!Object.keys(filter).length) $and.push(filter)
+            if (!!searchFields && !!search) {
+                $and.push({
+                    $or: searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } }))
+                })
+            }
+            if ($and.length) {
+                $pipelines.push({
+                    $match: { $and }
+                })
+            }
         }
 
 
@@ -88,6 +99,24 @@ const listAggregation =
                 }
             })
         }
+
+
+        // search & filtering when new root
+        $and = []
+        if (!!newRoot) {
+            if (!!filter && !!Object.keys(filter).length) $and.push(filter)
+            if (!!searchFields && !!search) {
+                $and.push({
+                    $or: searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } }))
+                })
+            }
+            if ($and.length) {
+                $pipelines.push({
+                    $match: { $and }
+                })
+            }
+        }
+
 
 
         // total count

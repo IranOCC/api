@@ -12,7 +12,7 @@ import { UserService } from 'src/user/user.service';
 import { useForEnum } from 'src/utils/enum/useFor.enum';
 import { CreateOfficeDto } from './dto/createOffice.dto';
 import { UpdateOfficeDto } from './dto/updateOffice.dto';
-import { MemberService } from './members/member.service';
+import { OfficeMemberAdminService } from './members/admin/member.admin.service';
 import { Office, OfficeDocument } from './schemas/office.schema';
 import { ObjectId } from 'mongodb';
 
@@ -24,7 +24,7 @@ export class OfficeService {
   constructor(
     private i18n: I18nService,
     @InjectModel(Office.name) private officeModel: Model<OfficeDocument>,
-    private memberService: MemberService,
+    private memberService: OfficeMemberAdminService,
     private userService: UserService,
     private phoneService: PhoneService,
     private emailService: EmailService,

@@ -3,12 +3,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { User } from 'src/user/schemas/user.schema';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
-import { OfficeService } from '../office.service';
-import { Office, OfficeDocument } from '../schemas/office.schema';
+import { OfficeService } from '../../office.service';
+import { Office, OfficeDocument } from '../../schemas/office.schema';
 import { PopulatedType, listAggregation } from 'src/utils/helper/listAggregation.helper';
 
 @Injectable()
-export class MemberService {
+export class OfficeMemberAdminService {
     constructor(
         @InjectModel(Office.name) private officeModel: Model<OfficeDocument>,
     ) { }
@@ -71,8 +71,8 @@ export class MemberService {
         const virtualFields = {
             // membersCount: { $size: "$members" }
         }
-        const searchFields = ""
-        const filter = { _id: { $eq: new mongoose.Types.ObjectId(_office) } }
+        const searchFields = "fullName"
+        const filter = {}
 
         const newRoot = "members"
         const newRootPipelines = [
@@ -88,7 +88,9 @@ export class MemberService {
                 }
             }
         ]
-        return listAggregation(this.officeModel, pagination, filter, undefined, populate, project, virtualFields, searchFields, newRoot, newRootPipelines)
+
+        let filterRoot: any = { _id: { $eq: new mongoose.Types.ObjectId(_office) } }
+        return listAggregation(this.officeModel, pagination, filter, undefined, populate, project, virtualFields, searchFields, filterRoot, newRoot, newRootPipelines)
     }
 
 
