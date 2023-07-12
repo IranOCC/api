@@ -134,7 +134,7 @@ export class BlogPostToolsService {
             default: user.offices[0]._id,
           },
           createdBy: {
-            disabled: false,
+            disabled: true,
             default: user._id,
           },
           confirmedBy: {
