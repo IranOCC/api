@@ -38,7 +38,7 @@ export class BlogPostToolsService {
 
 
   // actions: create update findOne find remove
-  checking(user: CurrentUser, action: string) {
+  async checking(user: CurrentUser, action: string, id?: string) {
 
     // check my offices if not superAdmin
     if (!user.roles.includes(RoleEnum.SuperAdmin)) {
@@ -48,6 +48,13 @@ export class BlogPostToolsService {
     if (action === "create") {
       if (user.roles.includes(RoleEnum.SuperAdmin)) {
         return {
+          title: { disabled: false },
+          slug: { disabled: false },
+          excerpt: { disabled: false },
+          content: { disabled: false },
+          image: { disabled: false },
+          categories: { disabled: false },
+          tags: { disabled: false },
           status: {
             disabled: false,
             default: PostStatusEum.Publish,
@@ -81,6 +88,13 @@ export class BlogPostToolsService {
       }
       if (user.roles.includes(RoleEnum.Admin)) {
         return {
+          title: { disabled: false },
+          slug: { disabled: false },
+          excerpt: { disabled: false },
+          content: { disabled: false },
+          image: { disabled: false },
+          categories: { disabled: false },
+          tags: { disabled: false },
           status: {
             disabled: false,
             default: PostStatusEum.Publish,
@@ -94,11 +108,11 @@ export class BlogPostToolsService {
             default: false,
           },
           publishedAt: {
-            disabled: true,
+            disabled: false,
             default: new Date().toISOString(),
           },
           office: {
-            disabled: user.offices.length > 1 ? false : true,
+            disabled: !(user.offices.length > 1),
             default: user.offices[0]._id,
           },
           createdBy: {
@@ -113,6 +127,13 @@ export class BlogPostToolsService {
       }
       if (user.roles.includes(RoleEnum.Author)) {
         return {
+          title: { disabled: false },
+          slug: { disabled: false },
+          excerpt: { disabled: false },
+          content: { disabled: false },
+          image: { disabled: false },
+          categories: { disabled: false },
+          tags: { disabled: false },
           status: {
             disabled: true,
             default: PostStatusEum.Pending,
@@ -131,7 +152,7 @@ export class BlogPostToolsService {
             default: new Date().toISOString(),
           },
           office: {
-            disabled: user.offices.length > 1 ? false : true,
+            disabled: !(user.offices.length > 1),
             default: user.offices[0]._id,
           },
           createdBy: {
@@ -141,45 +162,48 @@ export class BlogPostToolsService {
           confirmedBy: {
             hidden: true,
             disabled: true,
-            default: null,
           },
         }
       }
     }
 
     if (action === "update") {
+      const doc = await this.blogPostModel.findById(id).populate("office")
+      console.log(doc, "update doc check");
+
       if (user.roles.includes(RoleEnum.SuperAdmin)) {
         return {
-          status: {
-            disabled: false,
-          },
-          visibility: {
-            disabled: false,
-          },
-          pinned: {
-            disabled: false,
-          },
-          publishedAt: {
-            disabled: false,
-          },
-          office: {
-            disabled: false,
-          },
-          createdBy: {
-            disabled: false,
-          },
-          confirmedBy: {
-            disabled: false,
-          },
+          title: { disabled: false },
+          slug: { disabled: false },
+          excerpt: { disabled: false },
+          content: { disabled: false },
+          image: { disabled: false },
+          categories: { disabled: false },
+          tags: { disabled: false },
+          status: { disabled: false },
+          visibility: { disabled: false },
+          pinned: { disabled: false },
+          publishedAt: { disabled: false },
+          office: { disabled: false },
+          createdBy: { disabled: false },
+          confirmedBy: { disabled: false },
         }
       }
-      if (user.roles.includes(RoleEnum.Admin)) {
+      // check is office management
+      if (user.roles.includes(RoleEnum.Admin) && ((doc.office.management as User)._id.equals(user._id))) {
         return {
+          title: { disabled: false },
+          slug: { disabled: false },
+          excerpt: { disabled: false },
+          content: { disabled: false },
+          image: { disabled: false },
+          categories: { disabled: false },
+          tags: { disabled: false },
           status: {
-            disabled: true,
+            disabled: false,
           },
           visibility: {
-            disabled: true,
+            disabled: false,
           },
           pinned: {
             disabled: false,
@@ -198,28 +222,30 @@ export class BlogPostToolsService {
           },
         }
       }
+      // check is createdBy & office
       if (user.roles.includes(RoleEnum.Author)) {
         return {
-          status: {
-            disabled: true,
-          },
-          visibility: {
-            disabled: true,
-          },
-          pinned: {
-            disabled: true,
-          },
+          title: { disabled: !!doc.confirmedBy },
+          slug: { disabled: !!doc.confirmedBy },
+          excerpt: { disabled: !!doc.confirmedBy },
+          content: { disabled: !!doc.confirmedBy },
+          image: { disabled: !!doc.confirmedBy },
+          categories: { disabled: !!doc.confirmedBy },
+          tags: { disabled: !!doc.confirmedBy },
+          status: { disabled: true },
+          visibility: { disabled: true },
+          pinned: { disabled: true },
           publishedAt: {
-            disabled: true,
+            hidden: !doc.confirmedBy,
+            disabled: true
           },
           office: {
-            disabled: true,
+            disabled: !!doc.confirmedBy,
           },
-          createdBy: {
-            disabled: true,
-          },
+          createdBy: { disabled: true },
           confirmedBy: {
-            disabled: true,
+            hidden: !doc.confirmedBy,
+            disabled: true
           },
         }
       }
