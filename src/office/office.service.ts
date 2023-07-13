@@ -1,4 +1,4 @@
-import { BadRequestException, forwardRef, Inject, Injectable, } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException, } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ValidationError } from 'class-validator';
 import { Model } from 'mongoose';
@@ -114,6 +114,25 @@ export class OfficeService {
   async getMyOffices(user_id: string) {
     return this.officeModel.find({ members: new ObjectId(user_id) })
       .select("_id name active verified")
+  }
+
+
+  // get office
+  async checkOffice(office_id: string) {
+    const o = await this.officeModel.findById(office_id)
+    if (!o) throw new NotFoundException("Office not found", "OfficeNotFound")
+    return o
+  }
+
+
+  // is member of office?
+  async isMember(office_id: string, user_id: string) {
+    return this.officeModel.find({ _id: new ObjectId(office_id), members: new ObjectId(user_id) })
+  }
+
+  // is management of office?
+  async isManagement(office_id: string, user_id: string) {
+    return this.officeModel.find({ _id: new ObjectId(office_id), management: new ObjectId(user_id) })
   }
 
 

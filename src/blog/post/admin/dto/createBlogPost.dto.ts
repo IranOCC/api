@@ -87,18 +87,17 @@ export class CreateBlogPostDto {
 
 
     // ==> detail
-    @ApiPropertyOptional()
-    @IsOptional()
+    @ApiProperty()
     @IsMongoId()
-    createdBy?: User | string;
+    office: string;
+
+    @ApiProperty()
+    @IsMongoId()
+    createdBy: string;
 
     @ApiPropertyOptional()
     @IsOptional()
     @IsMongoId()
-    confirmedBy?: User | string;
-
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsMongoId()
-    office?: Office | string;
+    confirmedBy?: string | null;
 }
+

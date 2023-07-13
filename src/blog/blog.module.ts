@@ -26,6 +26,7 @@ import { Office, OfficeSchema } from 'src/office/schemas/office.schema';
 
 @Module({
   imports: [
+    OfficeModule,
     MongooseModule.forFeature([{ name: BlogPost.name, schema: BlogPostSchema }]),
     MongooseModule.forFeature([{ name: BlogComment.name, schema: BlogCommentSchema }]),
     MongooseModule.forFeature([{ name: BlogCategory.name, schema: BlogCategorySchema }]),

@@ -157,8 +157,10 @@ export class UserService {
             .findById(id)
             .select("_id roles firstName lastName fullName verified active phone email avatar accountToken province city address location")
             .exec()
+
         if (!user) throw new UnauthorizedException("User not found", "UserNotFound")
         if (!user?.active) throw new UnauthorizedException("Your account is inactive by management", "UserLoginInactive")
+
 
         return user
     }

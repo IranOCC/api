@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotAcceptableException,
   Param,
   Patch,
   Post,
@@ -33,8 +34,23 @@ export class BlogPostAdminController {
   @Post()
   @ApiOperation({ summary: "Create new Model", description: "No Description" })
   @ApiResponse({ status: 201 })
-  create(@Body() data: CreateBlogPostDto, @Request() { user }) {
-    return this.blogPostAdminService.create(data, user);
+  create(@Body() data: CreateBlogPostDto, @Request() { user }, @Request() { offices }) {
+    return this.blogPostAdminService.create(data, { ...user, offices });
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: "Edit single Model by id", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  update(@Param() { id }: MongoIDQueryDto, @Body() data: UpdateBlogPostDto, @Request() { user }, @Request() { offices }) {
+    return this.blogPostAdminService.update(id, data, { ...user, offices });
+  }
+
+  @Patch(':id')
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
+  @ApiOperation({ summary: "Confirm & publish post", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  confirm(@Param() { id }: MongoIDQueryDto, @Request() { user }, @Request() { offices }) {
+    return this.blogPostAdminService.confirmPublish(id, { ...user, offices });
   }
 
   @Get()
@@ -51,12 +67,7 @@ export class BlogPostAdminController {
     return this.blogPostAdminService.findOne(id);
   }
 
-  @Patch(':id')
-  @ApiOperation({ summary: "Edit single Model by id", description: "No Description" })
-  @ApiResponse({ status: 201 })
-  update(@Param() { id }: MongoIDQueryDto, @Body() data: UpdateBlogPostDto) {
-    return this.blogPostAdminService.update(id, data);
-  }
+
 
   @Delete(':id')
   @ApiOperation({ summary: "Delete single Model by id", description: "No Description" })

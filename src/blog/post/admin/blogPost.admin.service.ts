@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
@@ -8,8 +8,9 @@ import { CreateBlogPostDto } from './dto/createBlogPost.dto';
 import { UpdateBlogPostDto } from './dto/updateBlogPost.dto';
 import { PostStatusEum } from '../enum/postStatus.enum';
 import { PostVisibilityEum } from '../enum/postVisibility.enum';
-import { User } from 'src/user/schemas/user.schema';
+import { CurrentUser, User } from 'src/user/schemas/user.schema';
 import { RoleEnum } from 'src/user/enum/role.enum';
+import { OfficeService } from 'src/office/office.service';
 
 
 
@@ -18,79 +19,124 @@ import { RoleEnum } from 'src/user/enum/role.enum';
 export class BlogPostAdminService {
   constructor(
     @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPostDocument>,
+    private officeService: OfficeService,
   ) { }
 
 
   // Create SuperAdmin BlogPost
-  create(data: CreateBlogPostDto, user: User) {
+  async create(data: CreateBlogPostDto, user: CurrentUser) {
 
-    let {
-      status,
-      visibility,
-      pinned, // @ db default
-      publishedAt, // @ db default
+    // get office
+    const _office = await this.officeService.checkOffice(data.office)
 
-      createdBy,
-      confirmedBy,
-      office,
-      ...props
-    } = data
 
     if (user.roles.includes(RoleEnum.SuperAdmin)) {
       if (!data?.status) data.status = PostStatusEum.Publish
       if (!data?.visibility) data.visibility = PostVisibilityEum.Public
-
-      if (!data?.createdBy) data.createdBy = PostStatusEum.Publish
-      if (!data?.confirmedBy) data.confirmedBy = PostStatusEum.Publish
-      if (!data?.office) data.office = PostStatusEum.Publish
+      if (!data?.createdBy) data.createdBy = user._id
+      if (data.status === PostStatusEum.Publish) {
+        if (!data?.publishedAt) data.publishedAt = new Date()
+        if (!data?.confirmedBy) data.confirmedBy = user._id
+      }
+      return this.blogPostModel.create(data);
+    }
+    // is Admin & management of office
+    else if (user.roles.includes(RoleEnum.Admin) && ((_office.management as User)._id.equals(user._id))) {
+      if (!data?.status) data.status = PostStatusEum.Publish
+      if (!data?.visibility) data.visibility = PostVisibilityEum.Public
+      if (!data?.createdBy) data.createdBy = user._id
+      if (data.status === PostStatusEum.Publish) {
+        if (!data?.publishedAt) data.publishedAt = new Date()
+        data.confirmedBy = user._id
+      }
+      return this.blogPostModel.create(data);
+    }
+    // is Author & member of office
+    else if (user.roles.includes(RoleEnum.Author) && (_office.members.includes(user._id))) {
+      data.status = PostStatusEum.Pending
+      data.visibility = PostVisibilityEum.Public
+      data.publishedAt = null
+      data.createdBy = user._id
+      return this.blogPostModel.create(data);
     }
 
 
-
-
-
-
-
-
-    return this.blogPostModel.create(data);
+    // throw
+    throw new ForbiddenException("You don't have access to create post for this office", "NoAccessCreatePost")
   }
 
 
-  // Create Admin BlogPost
-  createByAdmin(data: CreateBlogPostDto) {
+
+  // Edit BlogPost
+  async update(id: string, data: UpdateBlogPostDto, user: CurrentUser) {
+    const post = await this.blogPostModel.findById(id)
+    if (!post) throw new NotFoundException("Post not found", "PostNotFound")
+
+    if (user.roles.includes(RoleEnum.SuperAdmin)) {
+
+    }
+
     const {
       status,
       visibility,
-      pinned,
       publishedAt,
+      pinned,
 
+      office,
       createdBy,
       confirmedBy,
-      office,
-      ...props
     } = data
 
+    // const _office = await this.officeService.checkOffice(data.office)
 
-    return this.blogPostModel.create(data);
+
+
+    // // is Admin & management of office
+    // else if (user.roles.includes(RoleEnum.Admin) && ((_office.management as User)._id.equals(user._id))) {
+    //   if (!data?.status) data.status = PostStatusEum.Publish
+    //   if (!data?.visibility) data.visibility = PostVisibilityEum.Public
+    //   if (!data?.createdBy) data.createdBy = user._id
+    //   if (data.status === PostStatusEum.Publish) {
+    //     if (!data?.publishedAt) data.publishedAt = new Date()
+    //     data.confirmedBy = user._id
+    //   }
+    //   return this.blogPostModel.create(data);
+    // }
+    // // is Author & member of office
+    // else if (user.roles.includes(RoleEnum.Author) && (_office.members.includes(user._id))) {
+    //   data.status = PostStatusEum.Pending
+    //   data.visibility = PostVisibilityEum.Public
+    //   data.publishedAt = null
+    //   data.createdBy = user._id
+    //   return this.blogPostModel.create(data);
+    // }
+
+
+    return this.blogPostModel.updateOne({ _id: id }, data).exec();
   }
 
 
-  // Create Agent BlogPost
-  createByAgent(data: CreateBlogPostDto) {
-    const {
-      status,
-      visibility,
-      pinned,
-      publishedAt,
 
-      createdBy,
-      confirmedBy,
-      office,
-      ...props
-    } = data
-
-
-    return this.blogPostModel.create(data);
+  // confirm publish post
+  async confirmPublish(id: string, user: CurrentUser) {
+    const post = await (await this.blogPostModel.findById(id)).populate("office", "_id management")
+    if (!post) throw new NotFoundException("Post not found", "PostNotFound")
+    if (user.roles.includes(RoleEnum.SuperAdmin)) {
+      post.status = PostStatusEum.Publish
+      post.publishedAt = new Date()
+      post.confirmedBy = user._id
+      return await post.save()
+    }
+    if (user.roles.includes(RoleEnum.Admin)) {
+      // check access
+      if (!(post.office.management as User)._id.equals(user._id)) {
+        throw new ForbiddenException("You don't have access to confirm this post", "ConfirmAccessDenied")
+      }
+      post.status = PostStatusEum.Publish
+      post.publishedAt = new Date()
+      post.confirmedBy = user._id
+      return await post.save()
+    }
   }
 
 
@@ -113,10 +159,7 @@ export class BlogPostAdminService {
       .exec();
   }
 
-  // Edit BlogPost
-  update(id: string, data: UpdateBlogPostDto) {
-    return this.blogPostModel.updateOne({ _id: id }, data).exec();
-  }
+
 
   // Remove Single BlogPost
   remove(id: string) {
@@ -129,6 +172,14 @@ export class BlogPostAdminService {
     // TODO: remove other
     await this.blogPostModel.deleteMany({ _id: { $in: id } })
   }
+
+
+
+
+
+
+
+
 }
 
 

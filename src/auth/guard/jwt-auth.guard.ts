@@ -29,7 +29,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         try {
           const user = context.switchToHttp().getRequest().user
           const offices = await this.officeService.getMyOffices(user._id)
-          context.switchToHttp().getRequest().user.offices = offices
+          context.switchToHttp().getRequest().offices = offices
         } catch (error) { }
 
 
@@ -44,7 +44,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       try {
         const user = context.switchToHttp().getRequest().user
         const offices = await this.officeService.getMyOffices(user._id)
-        context.switchToHttp().getRequest().user.offices = offices
+        context.switchToHttp().getRequest().offices = offices
       } catch (error) { }
 
     } catch (error) {

@@ -49,11 +49,11 @@ export class AuthService {
       return { phone: (user.phone as PhoneNumber).value };
     }
     if (byEmailOtp) {
-      // try {
-      await this.userService.sendEmailOtpCode(user)
-      // } catch (error) {
-      //   throw new NotAcceptableException("Send otp code failed", "SendOtpFailed")
-      // }
+      try {
+        await this.userService.sendEmailOtpCode(user)
+      } catch (error) {
+        throw new NotAcceptableException("Send otp code failed", "SendOtpFailed")
+      }
       return { email: (user.email as EmailAddress).value };
     }
 
@@ -82,7 +82,8 @@ export class AuthService {
     const payload = await this.userService.getUserPayload(user._id)
     const accessToken = this.jwtService.sign(payload.toJSON(), { expiresIn: "30d" });
     return {
-      accessToken, user: {
+      accessToken,
+      user: {
         id: payload._id,
         _id: payload._id,
         roles: payload.roles,

@@ -62,16 +62,17 @@ export class BlogPostToolsService {
           },
           publishedAt: {
             disabled: false,
-            default: moment().toISOString(),
+            default: new Date().toISOString(),
           },
           office: {
             disabled: false,
-            default: user.offices[0]._id,
+            default: null,
           },
           createdBy: {
             disabled: false,
             default: user._id,
           },
+          // =========================
           confirmedBy: {
             disabled: false,
             default: user._id,
@@ -146,6 +147,83 @@ export class BlogPostToolsService {
       }
     }
 
+    if (action === "update") {
+      if (user.roles.includes(RoleEnum.SuperAdmin)) {
+        return {
+          status: {
+            disabled: false,
+          },
+          visibility: {
+            disabled: false,
+          },
+          pinned: {
+            disabled: false,
+          },
+          publishedAt: {
+            disabled: false,
+          },
+          office: {
+            disabled: false,
+          },
+          createdBy: {
+            disabled: false,
+          },
+          confirmedBy: {
+            disabled: false,
+          },
+        }
+      }
+      if (user.roles.includes(RoleEnum.Admin)) {
+        return {
+          status: {
+            disabled: true,
+          },
+          visibility: {
+            disabled: true,
+          },
+          pinned: {
+            disabled: false,
+          },
+          publishedAt: {
+            disabled: false,
+          },
+          office: {
+            disabled: true,
+          },
+          createdBy: {
+            disabled: false,
+          },
+          confirmedBy: {
+            disabled: true,
+          },
+        }
+      }
+      if (user.roles.includes(RoleEnum.Author)) {
+        return {
+          status: {
+            disabled: true,
+          },
+          visibility: {
+            disabled: true,
+          },
+          pinned: {
+            disabled: true,
+          },
+          publishedAt: {
+            disabled: true,
+          },
+          office: {
+            disabled: true,
+          },
+          createdBy: {
+            disabled: true,
+          },
+          confirmedBy: {
+            disabled: true,
+          },
+        }
+      }
+    }
 
     return null
   }
