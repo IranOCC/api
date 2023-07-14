@@ -48,6 +48,7 @@ export class BlogPostToolsService {
     if (action === "create") {
       if (user.roles.includes(RoleEnum.SuperAdmin)) {
         return {
+          allowSubmit: true,
           title: { disabled: false },
           slug: { disabled: false },
           excerpt: { disabled: false },
@@ -88,6 +89,7 @@ export class BlogPostToolsService {
       }
       if (user.roles.includes(RoleEnum.Admin)) {
         return {
+          allowSubmit: true,
           title: { disabled: false },
           slug: { disabled: false },
           excerpt: { disabled: false },
@@ -112,7 +114,7 @@ export class BlogPostToolsService {
             default: new Date().toISOString(),
           },
           office: {
-            disabled: !(user.offices.length > 1),
+            disabled: false,
             default: user.offices[0]._id,
           },
           createdBy: {
@@ -127,6 +129,7 @@ export class BlogPostToolsService {
       }
       if (user.roles.includes(RoleEnum.Author)) {
         return {
+          allowSubmit: true,
           title: { disabled: false },
           slug: { disabled: false },
           excerpt: { disabled: false },
@@ -152,7 +155,7 @@ export class BlogPostToolsService {
             default: new Date().toISOString(),
           },
           office: {
-            disabled: !(user.offices.length > 1),
+            disabled: false,
             default: user.offices[0]._id,
           },
           createdBy: {
@@ -173,6 +176,7 @@ export class BlogPostToolsService {
 
       if (user.roles.includes(RoleEnum.SuperAdmin)) {
         return {
+          allowSubmit: true,
           title: { disabled: false },
           slug: { disabled: false },
           excerpt: { disabled: false },
@@ -192,6 +196,7 @@ export class BlogPostToolsService {
       // check is office management
       if (user.roles.includes(RoleEnum.Admin) && ((doc.office.management as User)._id.equals(user._id))) {
         return {
+          allowSubmit: true,
           title: { disabled: false },
           slug: { disabled: false },
           excerpt: { disabled: false },
@@ -223,8 +228,9 @@ export class BlogPostToolsService {
         }
       }
       // check is createdBy & office
-      if (user.roles.includes(RoleEnum.Author)) {
+      if (user.roles.includes(RoleEnum.Author) && doc.createdBy.equals(user._id) && (doc.office.members.includes(user._id))) {
         return {
+          allowSubmit: !doc.confirmedBy,
           title: { disabled: !!doc.confirmedBy },
           slug: { disabled: !!doc.confirmedBy },
           excerpt: { disabled: !!doc.confirmedBy },
@@ -249,9 +255,31 @@ export class BlogPostToolsService {
           },
         }
       }
+
+
+
+      return {
+        allowSubmit: false,
+        title: { disabled: true },
+        slug: { disabled: true },
+        excerpt: { disabled: true },
+        content: { disabled: true },
+        image: { disabled: true },
+        categories: { disabled: true },
+        tags: { disabled: true },
+        status: { disabled: true },
+        visibility: { disabled: true },
+        pinned: { disabled: true },
+        publishedAt: { disabled: true },
+        office: { disabled: true },
+        createdBy: { disabled: true },
+        confirmedBy: { disabled: true },
+      }
     }
 
-    return null
+
+
+
   }
 
 }
