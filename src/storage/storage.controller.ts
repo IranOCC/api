@@ -112,28 +112,22 @@ export class StorageController {
   @ApiOperation({ summary: "Upload estate images", description: "No Description" })
   @ApiResponse({ status: 201 })
   @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: UploadMultipleImageDto })
-  @UseInterceptors(FilesInterceptor('images'))
+  @ApiBody({ type: UploadSingleImageDto })
+  @UseInterceptors(FileInterceptor('image'))
   async uploadEstateGallery(
-    @UploadedFiles(
+    @UploadedFile(
       new ParseFilePipe({
         validators: [
-          // new MaxFileSizeValidator({ maxSize: 10000000 }),
-          // new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
+          new MaxFileSizeValidator({ maxSize: 10000000 }),
+          new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
         ],
       }),
     )
-    images: [Express.Multer.File],
+    image: Express.Multer.File,
     @Body() { relatedToID, alt, title }: CreateStorageDto,
     @Request() { user }
   ) {
-    let result = []
-    for (let i = 0; i < images.length; i++) {
-      const image = images[i];
-      const f = await this.storageService.create(image, user, RelatedToEnum.Estate, relatedToID, alt, title)
-      result.push(f)
-    }
-    return result
+    return this.storageService.create(image, user, RelatedToEnum.Estate, relatedToID, alt, title)
   }
 
 
@@ -145,28 +139,22 @@ export class StorageController {
   @ApiOperation({ summary: "Upload blog post images", description: "No Description" })
   @ApiResponse({ status: 201 })
   @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: UploadMultipleImageDto })
-  @UseInterceptors(FilesInterceptor('images'))
-  async create(
-    @UploadedFiles(
+  @ApiBody({ type: UploadSingleImageDto })
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadBlogPostImage(
+    @UploadedFile(
       new ParseFilePipe({
         validators: [
-          // new MaxFileSizeValidator({ maxSize: 10000000 }),
-          // new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
+          new MaxFileSizeValidator({ maxSize: 10000000 }),
+          new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
         ],
       }),
     )
-    images: [Express.Multer.File],
+    image: Express.Multer.File,
     @Body() { relatedToID, alt, title }: CreateStorageDto,
     @Request() { user }
   ) {
-    let result = []
-    for (let i = 0; i < images.length; i++) {
-      const image = images[i];
-      const f = await this.storageService.create(image, user, RelatedToEnum.Blog, relatedToID, alt, title)
-      result.push(f)
-    }
-    return result
+    return this.storageService.create(image, user, RelatedToEnum.Blog, relatedToID, alt, title)
   }
 
 
@@ -178,28 +166,22 @@ export class StorageController {
   @ApiOperation({ summary: "Upload estate images", description: "No Description" })
   @ApiResponse({ status: 201 })
   @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: UploadMultipleImageDto })
-  @UseInterceptors(FilesInterceptor('images'))
+  @ApiBody({ type: UploadSingleImageDto })
+  @UseInterceptors(FileInterceptor('image'))
   async uploadMain(
-    @UploadedFiles(
+    @UploadedFile(
       new ParseFilePipe({
         validators: [
-          // new MaxFileSizeValidator({ maxSize: 10000000 }),
-          // new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
+          new MaxFileSizeValidator({ maxSize: 10000000 }),
+          new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
         ],
       }),
     )
-    images: [Express.Multer.File],
+    image: Express.Multer.File,
     @Body() { alt, title }: CreateStorageDto,
     @Request() { user }
   ) {
-    let result = []
-    for (let i = 0; i < images.length; i++) {
-      const image = images[i];
-      const f = await this.storageService.create(image, user, undefined, undefined, alt, title)
-      result.push(f)
-    }
-    return result
+    return this.storageService.create(image, user, undefined, undefined, alt, title)
   }
 
 
