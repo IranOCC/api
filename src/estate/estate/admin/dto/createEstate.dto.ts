@@ -6,6 +6,8 @@ import slugify from "slugify";
 import { Office } from "src/office/schemas/office.schema";
 import { EstateStatusEnum } from "../../enum/estateStatus.enum";
 import { EstateVisibilityEnum } from "../../enum/estateVisibility.enum";
+import { Estate } from "../../schemas/estate.schema";
+import { IsUnique } from "src/utils/decorator/unique.decorator";
 
 export class CreateEstateDto {
     @ApiProperty()
@@ -25,6 +27,7 @@ export class CreateEstateDto {
             trim: true,
         })
     })
+    @IsUnique(Estate, "slug")
     slug: string;
 
     @ApiPropertyOptional()

@@ -3,6 +3,8 @@ import { User } from "aws-sdk/clients/appstream";
 import { Transform } from "class-transformer";
 import { IsBoolean, IsDate, IsEnum, IsLatLong, IsLongitude, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, MinLength } from "class-validator";
 import slugify from "slugify";
+import { BlogCategory } from "../../schemas/blogCategory.schema";
+import { IsUnique } from "src/utils/decorator/unique.decorator";
 
 
 export class CreateBlogCategoryDto {
@@ -23,6 +25,7 @@ export class CreateBlogCategoryDto {
             trim: true,
         })
     })
+    @IsUnique(BlogCategory, "slug")
     slug: string;
 
     @ApiPropertyOptional()

@@ -4,6 +4,8 @@ import { Transform } from "class-transformer";
 import { IsBoolean, IsDate, IsDateString, IsEnum, IsLatLong, IsLongitude, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
 import slugify from "slugify";
 import { PageStatusEum } from "src/page/enum/pageStatus.enum";
+import { Page } from "src/page/schemas/page.schema";
+import { IsUnique } from "src/utils/decorator/unique.decorator";
 
 
 export class CreatePageDto {
@@ -24,6 +26,7 @@ export class CreatePageDto {
             trim: true,
         })
     })
+    @IsUnique(Page, "slug")
     slug: string;
 
     @ApiProperty()

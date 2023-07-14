@@ -6,6 +6,8 @@ import slugify from "slugify";
 import { PostStatusEum } from "../../enum/postStatus.enum";
 import { PostVisibilityEum } from "../../enum/postVisibility.enum";
 import { Office } from "src/office/schemas/office.schema";
+import { BlogPost } from "../../schemas/blogPost.schema";
+import { IsUnique } from "src/utils/decorator/unique.decorator";
 
 
 export class CreateBlogPostDto {
@@ -26,6 +28,7 @@ export class CreateBlogPostDto {
             trim: true,
         })
     })
+    @IsUnique(BlogPost, "slug")
     slug: string;
 
     @ApiProperty()

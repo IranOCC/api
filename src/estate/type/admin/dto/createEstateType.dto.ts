@@ -2,6 +2,8 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
 import { IsNotEmpty, IsOptional, MinLength, IsMongoId, IsString } from "class-validator";
 import slugify from "slugify";
+import { EstateType } from "../../schemas/estateType.schema";
+import { IsUnique } from "src/utils/decorator/unique.decorator";
 
 export class CreateEstateTypeDto {
     @ApiProperty()
@@ -21,6 +23,7 @@ export class CreateEstateTypeDto {
             trim: true,
         })
     })
+    @IsUnique(EstateType, "slug")
     slug: string;
 
     @ApiPropertyOptional()
