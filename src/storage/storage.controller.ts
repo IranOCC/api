@@ -119,7 +119,7 @@ export class StorageController {
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: 10000000 }),
-          new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
+          new FileTypeValidator({ fileType: /image\/jpeg|image\/jpg|image\/png$/ }),
         ],
       }),
     )
@@ -146,7 +146,7 @@ export class StorageController {
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: 10000000 }),
-          new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
+          new FileTypeValidator({ fileType: /image\/jpeg|image\/jpg|image\/png$/ }),
         ],
       }),
     )
@@ -173,7 +173,7 @@ export class StorageController {
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: 10000000 }),
-          new FileTypeValidator({ fileType: /\.(image\/jpeg|image\/jpg|image\/png)$/ }),
+          new FileTypeValidator({ fileType: /image\/jpeg|image\/jpg|image\/png$/ }),
         ],
       }),
     )
