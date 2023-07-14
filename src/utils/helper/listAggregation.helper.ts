@@ -38,11 +38,14 @@ const listAggregation =
                     pipeline: [...$pipes, ...$p]
                 }
             })
+            console.log(path, db, isArray);
+
             if (!isArray) $project[path] = { $first: `$${path}` }
             else $project[path] = `$${path}`
         })
         select?.split(" ").map((path) => { $project[path] = `$${path}` })
 
+        console.log($pipelines[0]["$lookup"]);
 
 
 
@@ -51,71 +54,71 @@ const listAggregation =
 
 
 
-        // search & filter
-        let $and = []
-        if (!!newRoot) {
-            if (!!filterRoot && !!Object.keys(filterRoot).length) $and.push(filterRoot)
-            if ($and.length) {
-                $pipelines.push({
-                    $match: { $and }
-                })
-            }
-        }
-        else {
-            if (!!filter && !!Object.keys(filter).length) $and.push(filter)
-            if (!!searchFields && !!search) {
-                $and.push({
-                    $or: searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } }))
-                })
-            }
-            if ($and.length) {
-                $pipelines.push({
-                    $match: { $and }
-                })
-            }
-        }
+        // // search & filter
+        // let $and = []
+        // if (!!newRoot) {
+        //     if (!!filterRoot && !!Object.keys(filterRoot).length) $and.push(filterRoot)
+        //     if ($and.length) {
+        //         $pipelines.push({
+        //             $match: { $and }
+        //         })
+        //     }
+        // }
+        // else {
+        //     if (!!filter && !!Object.keys(filter).length) $and.push(filter)
+        //     if (!!searchFields && !!search) {
+        //         $and.push({
+        //             $or: searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } }))
+        //         })
+        //     }
+        //     if ($and.length) {
+        //         $pipelines.push({
+        //             $match: { $and }
+        //         })
+        //     }
+        // }
 
 
 
 
-        // sort
-        if (!!sort && !!Object.keys(sort)?.length) $pipelines.push({ $sort: sort })
-        else $pipelines.push({ $sort: { createdAt: -1 } })
+        // // sort
+        // if (!!sort && !!Object.keys(sort)?.length) $pipelines.push({ $sort: sort })
+        // else $pipelines.push({ $sort: { createdAt: -1 } })
 
         // project
         $pipelines.push({ $project })
 
 
 
-        // change root
-        if (newRoot) {
-            $pipelines.push({
-                $unwind: "$" + newRoot
-            })
-            if (!!newRootPipelines?.length) $pipelines.push(...newRootPipelines)
-            $pipelines.push({
-                $replaceRoot: {
-                    "newRoot": "$" + newRoot
-                }
-            })
-        }
+        // // change root
+        // if (newRoot) {
+        //     $pipelines.push({
+        //         $unwind: "$" + newRoot
+        //     })
+        //     if (!!newRootPipelines?.length) $pipelines.push(...newRootPipelines)
+        //     $pipelines.push({
+        //         $replaceRoot: {
+        //             "newRoot": "$" + newRoot
+        //         }
+        //     })
+        // }
 
 
-        // search & filtering when new root
-        $and = []
-        if (!!newRoot) {
-            if (!!filter && !!Object.keys(filter).length) $and.push(filter)
-            if (!!searchFields && !!search) {
-                $and.push({
-                    $or: searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } }))
-                })
-            }
-            if ($and.length) {
-                $pipelines.push({
-                    $match: { $and }
-                })
-            }
-        }
+        // // search & filtering when new root
+        // $and = []
+        // if (!!newRoot) {
+        //     if (!!filter && !!Object.keys(filter).length) $and.push(filter)
+        //     if (!!searchFields && !!search) {
+        //         $and.push({
+        //             $or: searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } }))
+        //         })
+        //     }
+        //     if ($and.length) {
+        //         $pipelines.push({
+        //             $match: { $and }
+        //         })
+        //     }
+        // }
 
 
 

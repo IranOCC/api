@@ -146,7 +146,6 @@ export class BlogPostAdminService {
       ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["users", "confirmedBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["offices", "office", "name", false],
-      ["blogcategories", "categories", "title"]
     ]
     const project = "title slug status visibility publishedAt createdAt"
     const virtualFields = {}
