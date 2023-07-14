@@ -23,7 +23,7 @@ export class BlogPostAdminService {
   ) { }
 
 
-  // Create SuperAdmin BlogPost
+  // Create BlogPost
   async create(data: CreateBlogPostDto, user: CurrentUser) {
 
     // get office
@@ -144,7 +144,9 @@ export class BlogPostAdminService {
   findAll(pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
       ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
-      ["blogcategories", "category", "title"]
+      ["users", "confirmedBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      ["offices", "office", "name _id", false],
+      ["blogcategories", "categories", "title"]
     ]
     const project = "title slug status visibility publishedAt"
     const virtualFields = {}

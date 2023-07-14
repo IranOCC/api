@@ -55,7 +55,7 @@ async function bootstrap() {
       return _errors
     }
   }));
-  // app.useGlobalPipes(new I18nValidationPipe());
+  app.useGlobalPipes(new I18nValidationPipe());
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     skipUndefinedProperties: true,

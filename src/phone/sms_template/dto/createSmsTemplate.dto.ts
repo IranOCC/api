@@ -36,3 +36,5 @@ export class CreateSmsTemplateDto {
     @IsString()
     serviceID: string;
 }
+
+
