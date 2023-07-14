@@ -145,10 +145,10 @@ export class BlogPostAdminService {
     const populate: PopulatedType[] = [
       ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["users", "confirmedBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
-      ["offices", "office", "name _id", false],
+      ["offices", "office", "name", false],
       ["blogcategories", "categories", "title"]
     ]
-    const project = "title slug status visibility publishedAt"
+    const project = "title slug status visibility publishedAt createdAt"
     const virtualFields = {}
     const searchFields = "title slug excerpt content"
     return listAggregation(this.blogPostModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
