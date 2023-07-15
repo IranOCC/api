@@ -121,7 +121,7 @@ export class BlogPostAdminService {
       ["users", "confirmedBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["offices", "office", "name", false],
     ]
-    const project = "title slug status visibility isConfirmed publishedAt createdAt"
+    const project = "title slug status visibility isConfirmed confirmedAt publishedAt createdAt"
     const virtualFields = {}
     const searchFields = "title slug excerpt content"
     return listAggregation(this.blogPostModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
