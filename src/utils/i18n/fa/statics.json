@@ -10,7 +10,6 @@
     },
     "estate": {
         "status": {
-            "Pending": "در انتظار تایید",
             "Draft": "پیش نویس",
             "Publish": "منتشر شده"
         },
@@ -20,7 +19,6 @@
     },
     "blogPost": {
         "status": {
-            "Pending": "در انتظار تایید",
             "Draft": "پیش نویس",
             "Publish": "منتشر شده"
         },

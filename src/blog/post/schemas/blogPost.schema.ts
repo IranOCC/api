@@ -6,6 +6,8 @@ import { PostVisibilityEum } from '../enum/postVisibility.enum';
 @Schema({ timestamps: true })
 export class BlogPost extends Document {
 
+
+
   @Prop({ type: String, required: true, trim: true })
   title: string;
 
@@ -23,6 +25,8 @@ export class BlogPost extends Document {
     ref: 'Storage',
   })
   image: any;
+
+
 
 
 
@@ -51,10 +55,12 @@ export class BlogPost extends Document {
 
 
 
+
+
   @Prop({
     type: String,
     enum: PostStatusEum,
-    default: PostStatusEum.Pending
+    default: PostStatusEum.Publish
   })
   status: PostStatusEum;
 
@@ -72,6 +78,15 @@ export class BlogPost extends Document {
   publishedAt: Date;
 
 
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  })
+  author: any;
+
+
+
+
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
@@ -87,12 +102,21 @@ export class BlogPost extends Document {
   })
   createdBy: any;
 
+
+
+
+
+  @Prop({ default: false })
+  isConfirmed: boolean;
+
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   })
   confirmedBy: any;
 
+  @Prop({ default: null })
+  confirmedAt: Date;
 }
 
 export const BlogPostSchema = SchemaFactory.createForClass(BlogPost);

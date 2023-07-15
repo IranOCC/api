@@ -27,7 +27,7 @@ export class Estate extends Document {
   @Prop({
     type: String,
     enum: EstateStatusEnum,
-    default: EstateStatusEnum.Pending,
+    default: EstateStatusEnum.Publish,
   })
   status: EstateStatusEnum;
 

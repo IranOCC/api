@@ -5,7 +5,6 @@ import { IsBoolean, IsDate, IsDateString, IsEnum, IsLatLong, IsLongitude, IsMong
 import slugify from "slugify";
 import { PostStatusEum } from "../../enum/postStatus.enum";
 import { PostVisibilityEum } from "../../enum/postVisibility.enum";
-import { Office } from "src/office/schemas/office.schema";
 import { BlogPost } from "../../schemas/blogPost.schema";
 import { IsUnique } from "src/utils/decorator/unique.decorator";
 
@@ -89,18 +88,17 @@ export class CreateBlogPostDto {
     publishedAt: Date;
 
 
-    // ==> detail
-    @ApiProperty()
-    @IsMongoId()
-    office: string;
-
-    @ApiProperty()
-    @IsMongoId()
-    createdBy: string;
 
     @ApiPropertyOptional()
     @IsOptional()
     @IsMongoId()
-    confirmedBy?: string | null;
+    author: string;
+
+
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsMongoId()
+    office: string;
 }
 

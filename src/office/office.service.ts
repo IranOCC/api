@@ -15,6 +15,7 @@ import { UpdateOfficeDto } from './dto/updateOffice.dto';
 import { OfficeMemberAdminService } from './members/admin/member.admin.service';
 import { Office, OfficeDocument } from './schemas/office.schema';
 import { ObjectId } from 'mongodb';
+import { RoleEnum } from 'src/user/enum/role.enum';
 
 
 
@@ -111,9 +112,9 @@ export class OfficeService {
 
 
   // ==========================> get my offices
-  async getMyOffices(user_id: string) {
-    return this.officeModel.find({ members: new ObjectId(user_id) })
-      .select("_id name active verified")
+  async getMyOffices(user: User) {
+    if (user.roles.includes(RoleEnum.SuperAdmin)) return this.officeModel.find().select("_id name active verified")
+    return this.officeModel.find({ members: new ObjectId(user._id) }).select("_id name active verified")
   }
 
 

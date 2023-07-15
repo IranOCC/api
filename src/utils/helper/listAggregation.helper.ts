@@ -45,8 +45,6 @@ const listAggregation =
         })
         select?.split(" ").map((path) => { $project[path] = `$${path}` })
 
-        console.log($pipelines[0]["$lookup"]);
-
 
 
         // virtualFields

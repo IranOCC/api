@@ -30,35 +30,35 @@ export class BlogPostAdminService {
     const _office = await this.officeService.checkOffice(data.office)
 
 
-    if (user.roles.includes(RoleEnum.SuperAdmin)) {
-      if (!data?.status) data.status = PostStatusEum.Publish
-      if (!data?.visibility) data.visibility = PostVisibilityEum.Public
-      if (!data?.createdBy) data.createdBy = user._id
-      if (data.status === PostStatusEum.Publish) {
-        if (!data?.publishedAt) data.publishedAt = new Date()
-        if (!data?.confirmedBy) data.confirmedBy = user._id
-      }
-      return this.blogPostModel.create(data);
-    }
-    // is Admin & management of office
-    else if (user.roles.includes(RoleEnum.Admin) && ((_office.management as User)._id.equals(user._id))) {
-      if (!data?.status) data.status = PostStatusEum.Publish
-      if (!data?.visibility) data.visibility = PostVisibilityEum.Public
-      if (!data?.createdBy) data.createdBy = user._id
-      if (data.status === PostStatusEum.Publish) {
-        if (!data?.publishedAt) data.publishedAt = new Date()
-        data.confirmedBy = user._id
-      }
-      return this.blogPostModel.create(data);
-    }
-    // is Author & member of office
-    else if (user.roles.includes(RoleEnum.Author) && (_office.members.includes(user._id))) {
-      data.status = PostStatusEum.Pending
-      data.visibility = PostVisibilityEum.Public
-      data.publishedAt = null
-      data.createdBy = user._id
-      return this.blogPostModel.create(data);
-    }
+    // if (user.roles.includes(RoleEnum.SuperAdmin)) {
+    //   if (!data?.status) data.status = PostStatusEum.Publish
+    //   if (!data?.visibility) data.visibility = PostVisibilityEum.Public
+    //   if (!data?.createdBy) data.createdBy = user._id
+    //   if (data.status === PostStatusEum.Publish) {
+    //     if (!data?.publishedAt) data.publishedAt = new Date()
+    //     if (!data?.confirmedBy) data.confirmedBy = user._id
+    //   }
+    //   return this.blogPostModel.create(data);
+    // }
+    // // is Admin & management of office
+    // if (user.roles.includes(RoleEnum.Admin) && ((_office.management as User)._id.equals(user._id))) {
+    //   if (!data?.status) data.status = PostStatusEum.Publish
+    //   if (!data?.visibility) data.visibility = PostVisibilityEum.Public
+    //   if (!data?.createdBy) data.createdBy = user._id
+    //   if (data.status === PostStatusEum.Publish) {
+    //     if (!data?.publishedAt) data.publishedAt = new Date()
+    //     data.confirmedBy = user._id
+    //   }
+    //   return this.blogPostModel.create(data);
+    // }
+    // // is Author & member of office
+    // if (user.roles.includes(RoleEnum.Author) && (_office.members.includes(user._id))) {
+    //   data.status = PostStatusEum.Publish
+    //   data.visibility = PostVisibilityEum.Public
+    //   data.publishedAt = null
+    //   data.createdBy = user._id
+    //   return this.blogPostModel.create(data);
+    // }
 
 
     // throw
@@ -69,7 +69,7 @@ export class BlogPostAdminService {
 
   // Edit BlogPost
   async update(id: string, data: UpdateBlogPostDto, user: CurrentUser) {
-    const post = await this.blogPostModel.findById(id)
+    const post = await this.blogPostModel.findById(id).populate("office", "_id management members")
     if (!post) throw new NotFoundException("Post not found", "PostNotFound")
 
     if (user.roles.includes(RoleEnum.SuperAdmin)) {
@@ -83,75 +83,101 @@ export class BlogPostAdminService {
       pinned,
 
       office,
-      createdBy,
-      confirmedBy,
+
     } = data
 
-    // const _office = await this.officeService.checkOffice(data.office)
 
 
+    if (user.roles.includes(RoleEnum.SuperAdmin)) {
+      return this.blogPostModel.updateOne({ _id: id }, data).exec();
+    }
+    // is Admin & management of office
+    if (user.roles.includes(RoleEnum.Admin) && ((post.office.management as User)._id.equals(user._id))) {
+      const {
+        // status,
+        // visibility,
+        // pinned,
+        // publishedAt,
+        office,
+        // createdBy,
+        // confirmedBy,
+        ...props
+      } = data
+      return this.blogPostModel.updateOne({ _id: id }, data).exec();
+    }
+    // is Author & member of office
+    if (user.roles.includes(RoleEnum.Author) && !post.confirmedBy && post.createdBy.equals(user._id) && (post.office.members.includes(user._id))) {
+      const {
+        status,
+        visibility,
+        pinned,
+        publishedAt,
+        // office,
+        // createdBy,
+        // confirmedBy,
+        ...props
+      } = data
+      return this.blogPostModel.updateOne({ _id: id }, props).exec();
+    }
 
-    // // is Admin & management of office
-    // else if (user.roles.includes(RoleEnum.Admin) && ((_office.management as User)._id.equals(user._id))) {
-    //   if (!data?.status) data.status = PostStatusEum.Publish
-    //   if (!data?.visibility) data.visibility = PostVisibilityEum.Public
-    //   if (!data?.createdBy) data.createdBy = user._id
-    //   if (data.status === PostStatusEum.Publish) {
-    //     if (!data?.publishedAt) data.publishedAt = new Date()
-    //     data.confirmedBy = user._id
-    //   }
-    //   return this.blogPostModel.create(data);
-    // }
-    // // is Author & member of office
-    // else if (user.roles.includes(RoleEnum.Author) && (_office.members.includes(user._id))) {
-    //   data.status = PostStatusEum.Pending
-    //   data.visibility = PostVisibilityEum.Public
-    //   data.publishedAt = null
-    //   data.createdBy = user._id
-    //   return this.blogPostModel.create(data);
-    // }
-
-
-    return this.blogPostModel.updateOne({ _id: id }, data).exec();
+    // throw
+    throw new ForbiddenException("You don't have access to edit this post", "EditAccessDenied")
   }
 
 
 
   // confirm publish post
   async confirmPublish(id: string, user: CurrentUser) {
-    const post = await (await this.blogPostModel.findById(id)).populate("office", "_id management")
+    const post = await (await this.blogPostModel.findById(id)).populate("office", "_id management members")
     if (!post) throw new NotFoundException("Post not found", "PostNotFound")
-    if (user.roles.includes(RoleEnum.SuperAdmin)) {
-      post.status = PostStatusEum.Publish
-      post.publishedAt = new Date()
+    if (
+      (user.roles.includes(RoleEnum.SuperAdmin))
+      ||
+      (user.roles.includes(RoleEnum.Admin) && (post.office.management as User)._id.equals(user._id))
+    ) {
+      post.isConfirmed = true
+      post.confirmedAt = new Date()
       post.confirmedBy = user._id
       return await post.save()
     }
-    if (user.roles.includes(RoleEnum.Admin)) {
-      // check access
-      if (!(post.office.management as User)._id.equals(user._id)) {
-        throw new ForbiddenException("You don't have access to confirm this post", "ConfirmAccessDenied")
-      }
-      post.status = PostStatusEum.Publish
-      post.publishedAt = new Date()
-      post.confirmedBy = user._id
+
+    throw new ForbiddenException("You don't have access to confirm or reject this post", "ConfirmRejectAccessDenied")
+  }
+
+
+  // reject publish post
+  async rejectPublish(id: string, user: CurrentUser) {
+    const post = await (await this.blogPostModel.findById(id)).populate("office", "_id management members")
+    if (!post) throw new NotFoundException("Post not found", "PostNotFound")
+    if (
+      (user.roles.includes(RoleEnum.SuperAdmin))
+      ||
+      (user.roles.includes(RoleEnum.Admin) && (post.office.management as User)._id.equals(user._id))
+    ) {
+      post.isConfirmed = false
+      post.confirmedAt = null
+      post.confirmedBy = null
       return await post.save()
     }
+
+    throw new ForbiddenException("You don't have access to confirm or reject this post", "ConfirmRejectAccessDenied")
   }
 
 
   // List BlogPost
   findAll(pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
+      ["users", "author", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["users", "confirmedBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["offices", "office", "name", false],
     ]
-    const project = "title slug status visibility publishedAt createdAt"
+    const project = "title slug status visibility isConfirmed publishedAt createdAt"
     const virtualFields = {}
     const searchFields = "title slug excerpt content"
     return listAggregation(this.blogPostModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
   }
+
 
   // Get BlogPost
   findOne(id: string) {
@@ -160,24 +186,43 @@ export class BlogPostAdminService {
       .exec();
   }
 
-
-
   // Remove Single BlogPost
-  remove(id: string) {
-    // TODO: remove other
-    return this.blogPostModel.deleteOne({ _id: id })
+  async remove(id: string, user: CurrentUser) {
+    const post = await this.blogPostModel.findById(id).populate("office", "_id management members")
+    if (!post) throw new NotFoundException("Post not found", "PostNotFound")
+
+    if (
+      (user.roles.includes(RoleEnum.SuperAdmin))
+      ||
+      (user.roles.includes(RoleEnum.Admin) && ((post.office.management as User)._id.equals(user._id)))
+      ||
+      (user.roles.includes(RoleEnum.Author) && !post.isConfirmed && post.createdBy.equals(user._id) && (post.office.members.includes(user._id)))
+    ) {
+      // TODO: remove other
+      return await post.delete()
+    }
+    throw new ForbiddenException("You can not delete this post", "ForbiddenDeletePost")
   }
 
   // Remove Bulk BlogPost
-  async bulkRemove(id: string[]) {
-    // TODO: remove other
-    await this.blogPostModel.deleteMany({ _id: { $in: id } })
+  async bulkRemove(id: string[], user: CurrentUser) {
+    const posts = await this.blogPostModel.find({ _id: { $in: id } }).populate("office")
+
+    for (let i = 0; i < posts.length; i++) {
+      const post = posts[i];
+      if (
+        (user.roles.includes(RoleEnum.SuperAdmin))
+        ||
+        (user.roles.includes(RoleEnum.Admin) && ((post.office.management as User)._id.equals(user._id)))
+        ||
+        (user.roles.includes(RoleEnum.Author) && !post.isConfirmed && post.createdBy.equals(user._id) && (post.office.members.includes(user._id)))
+      ) {
+        // TODO: remove other
+        await post.delete()
+      }
+    }
+    return null
   }
-
-
-
-
-
 
 
 

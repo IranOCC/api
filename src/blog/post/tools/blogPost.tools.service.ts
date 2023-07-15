@@ -1,6 +1,6 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Injectable, NotAcceptableException, } from '@nestjs/common';
+import { Injectable, NotAcceptableException, NotFoundException, } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import { AutoCompleteDto } from 'src/utils/dto/autoComplete.dto';
 import { translateStatics } from 'src/utils/helper/translateStatics.helper';
@@ -46,135 +46,53 @@ export class BlogPostToolsService {
     }
 
     if (action === "create") {
-      if (user.roles.includes(RoleEnum.SuperAdmin)) {
-        return {
-          allowSubmit: true,
-          title: { disabled: false },
-          slug: { disabled: false },
-          excerpt: { disabled: false },
-          content: { disabled: false },
-          image: { disabled: false },
-          categories: { disabled: false },
-          tags: { disabled: false },
-          status: {
-            disabled: false,
-            default: PostStatusEum.Publish,
-          },
-          visibility: {
-            disabled: false,
-            default: PostVisibilityEum.Public,
-          },
-          pinned: {
-            disabled: false,
-            default: false,
-          },
-          publishedAt: {
-            disabled: false,
-            default: new Date().toISOString(),
-          },
-          office: {
-            disabled: false,
-            default: null,
-          },
-          createdBy: {
-            disabled: false,
-            default: user._id,
-          },
-          // =========================
-          confirmedBy: {
-            disabled: false,
-            default: user._id,
-          },
-        }
-      }
-      if (user.roles.includes(RoleEnum.Admin)) {
-        return {
-          allowSubmit: true,
-          title: { disabled: false },
-          slug: { disabled: false },
-          excerpt: { disabled: false },
-          content: { disabled: false },
-          image: { disabled: false },
-          categories: { disabled: false },
-          tags: { disabled: false },
-          status: {
-            disabled: false,
-            default: PostStatusEum.Publish,
-          },
-          visibility: {
-            disabled: false,
-            default: PostVisibilityEum.Public,
-          },
-          pinned: {
-            disabled: false,
-            default: false,
-          },
-          publishedAt: {
-            disabled: false,
-            default: new Date().toISOString(),
-          },
-          office: {
-            disabled: false,
-            default: user.offices[0]._id,
-          },
-          createdBy: {
-            disabled: false,
-            default: user._id,
-          },
-          confirmedBy: {
-            disabled: false,
-            default: user._id,
-          },
-        }
-      }
-      if (user.roles.includes(RoleEnum.Author)) {
-        return {
-          allowSubmit: true,
-          title: { disabled: false },
-          slug: { disabled: false },
-          excerpt: { disabled: false },
-          content: { disabled: false },
-          image: { disabled: false },
-          categories: { disabled: false },
-          tags: { disabled: false },
-          status: {
-            disabled: true,
-            default: PostStatusEum.Pending,
-          },
-          visibility: {
-            disabled: true,
-            default: PostVisibilityEum.Public,
-          },
-          pinned: {
-            disabled: true,
-            default: false,
-          },
-          publishedAt: {
-            hidden: true,
-            disabled: true,
-            default: new Date().toISOString(),
-          },
-          office: {
-            disabled: false,
-            default: user.offices[0]._id,
-          },
-          createdBy: {
-            disabled: true,
-            default: user._id,
-          },
-          confirmedBy: {
-            hidden: true,
-            disabled: true,
-          },
+      return {
+        allowSubmit: true,
+        title: { disabled: false },
+        slug: { disabled: false },
+        excerpt: { disabled: false },
+        content: { disabled: false },
+        image: { disabled: false },
+        categories: { disabled: false },
+        tags: { disabled: false },
+        status: {
+          disabled: false,
+          default: PostStatusEum.Publish,
+        },
+        visibility: {
+          disabled: false,
+          default: PostVisibilityEum.Public,
+        },
+        pinned: {
+          disabled: false,
+          default: false,
+        },
+        publishedAt: {
+          disabled: false,
+          default: new Date().toISOString(),
+        },
+        author: {
+          disabled: false,
+          default: user._id,
+        },
+        office: {
+          disabled: false,
+          default: user.offices[0]._id,
         }
       }
     }
 
     if (action === "update") {
       const doc = await this.blogPostModel.findById(id).populate("office")
-      console.log(doc, "update doc check");
+      if (!doc) throw new NotFoundException("Post not found", "PostNotFound")
 
-      if (user.roles.includes(RoleEnum.SuperAdmin)) {
+      if (
+        user.roles.includes(RoleEnum.SuperAdmin)
+        ||
+        user.roles.includes(RoleEnum.Admin) && ((doc.office.management as User)._id.equals(user._id))
+        ||
+        user.roles.includes(RoleEnum.Author) && doc.createdBy.equals(user._id) && (doc.office.members.includes(user._id))
+      ) {
         return {
           allowSubmit: true,
           title: { disabled: false },
@@ -188,75 +106,10 @@ export class BlogPostToolsService {
           visibility: { disabled: false },
           pinned: { disabled: false },
           publishedAt: { disabled: false },
+          author: { disabled: false },
           office: { disabled: false },
-          createdBy: { disabled: false },
-          confirmedBy: { disabled: false },
         }
       }
-      // check is office management
-      if (user.roles.includes(RoleEnum.Admin) && ((doc.office.management as User)._id.equals(user._id))) {
-        return {
-          allowSubmit: true,
-          title: { disabled: false },
-          slug: { disabled: false },
-          excerpt: { disabled: false },
-          content: { disabled: false },
-          image: { disabled: false },
-          categories: { disabled: false },
-          tags: { disabled: false },
-          status: {
-            disabled: false,
-          },
-          visibility: {
-            disabled: false,
-          },
-          pinned: {
-            disabled: false,
-          },
-          publishedAt: {
-            disabled: false,
-          },
-          office: {
-            disabled: true,
-          },
-          createdBy: {
-            disabled: false,
-          },
-          confirmedBy: {
-            disabled: true,
-          },
-        }
-      }
-      // check is createdBy & office
-      if (user.roles.includes(RoleEnum.Author) && doc.createdBy.equals(user._id) && (doc.office.members.includes(user._id))) {
-        return {
-          allowSubmit: !doc.confirmedBy,
-          title: { disabled: !!doc.confirmedBy },
-          slug: { disabled: !!doc.confirmedBy },
-          excerpt: { disabled: !!doc.confirmedBy },
-          content: { disabled: !!doc.confirmedBy },
-          image: { disabled: !!doc.confirmedBy },
-          categories: { disabled: !!doc.confirmedBy },
-          tags: { disabled: !!doc.confirmedBy },
-          status: { disabled: true },
-          visibility: { disabled: true },
-          pinned: { disabled: true },
-          publishedAt: {
-            hidden: !doc.confirmedBy,
-            disabled: true
-          },
-          office: {
-            disabled: !!doc.confirmedBy,
-          },
-          createdBy: { disabled: true },
-          confirmedBy: {
-            hidden: !doc.confirmedBy,
-            disabled: true
-          },
-        }
-      }
-
-
 
       return {
         allowSubmit: false,
@@ -271,14 +124,10 @@ export class BlogPostToolsService {
         visibility: { disabled: true },
         pinned: { disabled: true },
         publishedAt: { disabled: true },
+        author: { disabled: true },
         office: { disabled: true },
-        createdBy: { disabled: true },
-        confirmedBy: { disabled: true },
       }
     }
-
-
-
 
   }
 

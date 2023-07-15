@@ -45,12 +45,20 @@ export class BlogPostAdminController {
     return this.blogPostAdminService.update(id, data, { ...user, offices });
   }
 
-  @Patch(':id')
+  @Patch('confirm/:id')
   @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
-  @ApiOperation({ summary: "Confirm & publish post", description: "No Description" })
+  @ApiOperation({ summary: "Confirm post", description: "No Description" })
   @ApiResponse({ status: 201 })
   confirm(@Param() { id }: MongoIDQueryDto, @Request() { user }, @Request() { offices }) {
     return this.blogPostAdminService.confirmPublish(id, { ...user, offices });
+  }
+
+  @Patch('reject/:id')
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
+  @ApiOperation({ summary: "Reject post", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  reject(@Param() { id }: MongoIDQueryDto, @Request() { user }, @Request() { offices }) {
+    return this.blogPostAdminService.rejectPublish(id, { ...user, offices });
   }
 
   @Get()
@@ -72,14 +80,14 @@ export class BlogPostAdminController {
   @Delete(':id')
   @ApiOperation({ summary: "Delete single Model by id", description: "No Description" })
   @ApiResponse({ status: 200 })
-  remove(@Param() { id }: MongoIDQueryDto) {
-    return this.blogPostAdminService.remove(id);
+  remove(@Param() { id }: MongoIDQueryDto, @Request() { user }, @Request() { offices }) {
+    return this.blogPostAdminService.remove(id, { ...user, offices });
   }
 
   @Delete()
   @ApiOperation({ summary: "Delete bulk of Model by id", description: "No Description" })
   @ApiResponse({ status: 200 })
-  bulkRemove(@Query() { id }: MongoArrayIDQueryDto) {
-    return this.blogPostAdminService.bulkRemove(id);
+  bulkRemove(@Query() { id }: MongoArrayIDQueryDto, @Request() { user }, @Request() { offices }) {
+    return this.blogPostAdminService.bulkRemove(id, { ...user, offices });
   }
 }
