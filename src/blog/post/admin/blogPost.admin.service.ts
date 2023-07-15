@@ -131,7 +131,8 @@ export class BlogPostAdminService {
   // Get BlogPost
   findOne(id: string) {
     return this.blogPostModel.findById(id)
-      .populate(["image"])
+      .populate("image", 'path title alt')
+      .populate("confirmedBy", "fistName lastName fullName")
       .exec();
   }
 
