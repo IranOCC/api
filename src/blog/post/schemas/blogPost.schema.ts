@@ -74,18 +74,20 @@ export class BlogPost extends Document {
   @Prop({ default: false })
   pinned: boolean;
 
-  @Prop({ default: null })
+  @Prop({ default: Date.now })
   publishedAt: Date;
+
+
+
+
 
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true
   })
   author: any;
-
-
-
 
 
   @Prop({
@@ -94,6 +96,8 @@ export class BlogPost extends Document {
     required: true
   })
   office: any;
+
+
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
@@ -104,7 +108,7 @@ export class BlogPost extends Document {
 
 
 
-
+  // ==> confirm
 
   @Prop({ default: false })
   isConfirmed: boolean;

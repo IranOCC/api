@@ -70,35 +70,32 @@ export class CreateBlogPostDto {
     @ApiPropertyOptional({ enum: PostStatusEum })
     @IsOptional()
     @IsEnum(PostStatusEum)
-    status: string;
+    status: string = PostStatusEum.Publish;
 
     @ApiPropertyOptional({ enum: PostVisibilityEum })
     @IsOptional()
     @IsEnum(PostVisibilityEum)
-    visibility: string;
+    visibility: string = PostVisibilityEum.Public;
 
     @ApiPropertyOptional()
     @IsOptional()
     @IsBoolean()
-    pinned: boolean;
+    pinned: boolean = false;
 
     @ApiPropertyOptional()
     @IsOptional()
     @IsDateString()
-    publishedAt: Date;
+    publishedAt: string = new Date().toISOString();
 
 
 
-    @ApiPropertyOptional()
-    @IsOptional()
+    @ApiProperty()
+    @IsMongoId()
+    office: string;
+
+    @ApiProperty()
     @IsMongoId()
     author: string;
 
-
-
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsMongoId()
-    office: string;
 }
 

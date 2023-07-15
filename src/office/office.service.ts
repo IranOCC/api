@@ -120,9 +120,13 @@ export class OfficeService {
 
   // get office
   async checkOffice(office_id: string) {
-    const o = await this.officeModel.findById(office_id)
-    if (!o) throw new NotFoundException("Office not found", "OfficeNotFound")
-    return o
+    try {
+      const o = await this.officeModel.findById(office_id)
+      if (!o) throw new NotFoundException("Office not found", "OfficeNotFound")
+      return o
+    } catch (error) {
+      throw new NotFoundException("Office not found", "OfficeNotFound")
+    }
   }
 
 

@@ -29,37 +29,18 @@ export class BlogPostAdminService {
     // get office
     const _office = await this.officeService.checkOffice(data.office)
 
-
-    // if (user.roles.includes(RoleEnum.SuperAdmin)) {
-    //   if (!data?.status) data.status = PostStatusEum.Publish
-    //   if (!data?.visibility) data.visibility = PostVisibilityEum.Public
-    //   if (!data?.createdBy) data.createdBy = user._id
-    //   if (data.status === PostStatusEum.Publish) {
-    //     if (!data?.publishedAt) data.publishedAt = new Date()
-    //     if (!data?.confirmedBy) data.confirmedBy = user._id
-    //   }
-    //   return this.blogPostModel.create(data);
-    // }
-    // // is Admin & management of office
-    // if (user.roles.includes(RoleEnum.Admin) && ((_office.management as User)._id.equals(user._id))) {
-    //   if (!data?.status) data.status = PostStatusEum.Publish
-    //   if (!data?.visibility) data.visibility = PostVisibilityEum.Public
-    //   if (!data?.createdBy) data.createdBy = user._id
-    //   if (data.status === PostStatusEum.Publish) {
-    //     if (!data?.publishedAt) data.publishedAt = new Date()
-    //     data.confirmedBy = user._id
-    //   }
-    //   return this.blogPostModel.create(data);
-    // }
-    // // is Author & member of office
-    // if (user.roles.includes(RoleEnum.Author) && (_office.members.includes(user._id))) {
-    //   data.status = PostStatusEum.Publish
-    //   data.visibility = PostVisibilityEum.Public
-    //   data.publishedAt = null
-    //   data.createdBy = user._id
-    //   return this.blogPostModel.create(data);
-    // }
-
+    // is SuperAdmin
+    if (user.roles.includes(RoleEnum.SuperAdmin)) {
+      return this.blogPostModel.create({ ...data, createdBy: user._id });
+    }
+    // is Admin & management of office
+    if (user.roles.includes(RoleEnum.Admin) && ((_office.management as User)._id.equals(user._id))) {
+      return this.blogPostModel.create({ ...data, createdBy: user._id });
+    }
+    // is Author & member of office
+    if (user.roles.includes(RoleEnum.Author) && (_office.members.includes(user._id))) {
+      return this.blogPostModel.create({ ...data, createdBy: user._id });
+    }
 
     // throw
     throw new ForbiddenException("You don't have access to create post for this office", "NoAccessCreatePost")
@@ -72,52 +53,20 @@ export class BlogPostAdminService {
     const post = await this.blogPostModel.findById(id).populate("office", "_id management members")
     if (!post) throw new NotFoundException("Post not found", "PostNotFound")
 
+    // get office
+    const _office = await this.officeService.checkOffice(data?.office || post?.office)
+
+    // is SuperAdmin
     if (user.roles.includes(RoleEnum.SuperAdmin)) {
-
-    }
-
-    const {
-      status,
-      visibility,
-      publishedAt,
-      pinned,
-
-      office,
-
-    } = data
-
-
-
-    if (user.roles.includes(RoleEnum.SuperAdmin)) {
-      return this.blogPostModel.updateOne({ _id: id }, data).exec();
+      return this.blogPostModel.updateOne({ _id: id }, { ...data, isConfirmed: false, confirmedAt: null, confirmedBy: null });
     }
     // is Admin & management of office
-    if (user.roles.includes(RoleEnum.Admin) && ((post.office.management as User)._id.equals(user._id))) {
-      const {
-        // status,
-        // visibility,
-        // pinned,
-        // publishedAt,
-        office,
-        // createdBy,
-        // confirmedBy,
-        ...props
-      } = data
-      return this.blogPostModel.updateOne({ _id: id }, data).exec();
+    if (user.roles.includes(RoleEnum.Admin) && ((_office.management as User)._id.equals(user._id))) {
+      return this.blogPostModel.updateOne({ _id: id }, { ...data, isConfirmed: false, confirmedAt: null, confirmedBy: null });
     }
     // is Author & member of office
-    if (user.roles.includes(RoleEnum.Author) && !post.confirmedBy && post.createdBy.equals(user._id) && (post.office.members.includes(user._id))) {
-      const {
-        status,
-        visibility,
-        pinned,
-        publishedAt,
-        // office,
-        // createdBy,
-        // confirmedBy,
-        ...props
-      } = data
-      return this.blogPostModel.updateOne({ _id: id }, props).exec();
+    if (user.roles.includes(RoleEnum.Author) && post.createdBy.equals(user._id) && (_office.members.includes(user._id))) {
+      return this.blogPostModel.updateOne({ _id: id }, { ...data, isConfirmed: false, confirmedAt: null, confirmedBy: null });
     }
 
     // throw
