@@ -40,6 +40,7 @@ export class EstateCategoryAdminController {
   }
 
   @Get(':id')
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent)
   @ApiOperation({ summary: "Get single Model by id", description: "No Description" })
   @ApiResponse({ status: 200 })
   findOne(@Param() { id }: MongoIDQueryDto) {
