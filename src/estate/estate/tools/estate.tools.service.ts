@@ -49,13 +49,15 @@ export class EstateToolsService {
     if (action === "create") {
       return {
         allowSubmit: true,
+        allowSelectCategory: true,
+        allowConfirm: false,
         title: { disabled: false },
         slug: { disabled: false },
         excerpt: { disabled: false },
         content: { disabled: false },
         gallery: { disabled: false },
         image: { disabled: false },
-        category: { disabled: false },
+        category: { disabled: true },
         tags: { disabled: false },
         status: {
           disabled: false,
@@ -125,6 +127,7 @@ export class EstateToolsService {
       ) {
         return {
           allowSubmit: true,
+          allowSelectCategory: false,
           allowConfirm: user.roles.includes(RoleEnum.SuperAdmin) || user.roles.includes(RoleEnum.Admin) && ((doc.office.management as User)._id.equals(user._id)),
           title: { disabled: false },
           slug: { disabled: false },
@@ -132,7 +135,7 @@ export class EstateToolsService {
           content: { disabled: false },
           gallery: { disabled: false },
           image: { disabled: false },
-          category: { disabled: false },
+          category: { disabled: true },
           tags: { disabled: false },
           status: { disabled: false },
           visibility: { disabled: false },
@@ -173,6 +176,7 @@ export class EstateToolsService {
 
       return {
         allowSubmit: false,
+        allowSelectCategory: false,
         allowConfirm: false,
         title: { disabled: true },
         slug: { disabled: true },
