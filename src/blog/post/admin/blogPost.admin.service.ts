@@ -133,6 +133,7 @@ export class BlogPostAdminService {
     return this.blogPostModel.findById(id)
       .populate("image", 'path title alt')
       .populate("confirmedBy", "fistName lastName fullName")
+      .populate("createdBy", "fistName lastName fullName")
       .exec();
   }
 
