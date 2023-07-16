@@ -37,12 +37,14 @@ import { EstateAdminController } from './estate/admin/estate.admin.controller';
 import { EstateAdminService } from './estate/admin/estate.admin.service';
 import { EstateToolsController } from './estate/tools/estate.tools.controller';
 import { EstateToolsService } from './estate/tools/estate.tools.service';
+import { OfficeModule } from 'src/office/office.module';
 
 
 
 
 @Module({
   imports: [
+    OfficeModule,
     MongooseModule.forFeature([{ name: Estate.name, schema: EstateSchema }]),
     MongooseModule.forFeature([{ name: EstateCategory.name, schema: EstateCategorySchema }]),
     MongooseModule.forFeature([{ name: EstateFeature.name, schema: EstateFeatureSchema }]),
