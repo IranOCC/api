@@ -24,6 +24,40 @@ export class Estate extends Document {
   })
   image: any;
 
+
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Storage',
+    default: []
+  })
+  gallery: any[];
+
+
+
+
+
+
+
+
+  @Prop({
+    type: [String],
+    default: []
+  })
+  tags: string[];
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EstateCategory',
+    default: null
+  })
+  category: EstateCategory;
+
+
+
+
+
+
+
   @Prop({
     type: String,
     enum: EstateStatusEnum,
@@ -44,46 +78,58 @@ export class Estate extends Document {
   @Prop({ default: Date.now })
   publishedAt: Date;
 
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    // select: false,
-  })
-  createdBy: any;
+
+
+
+
+
+
+
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    // select: false,
+    required: true
   })
-  confirmedBy: any;
+  owner: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Office',
-    // select: false,
+    required: true
   })
   office: any;
 
   @Prop({
-    type: [String],
-    default: []
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   })
-  tags: string[];
+  createdBy: any;
+
+  // ==> confirm
+  @Prop({ default: false })
+  isConfirmed: boolean;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'EstateCategory',
-    default: null
+    ref: 'User',
   })
-  category: EstateCategory;
+  confirmedBy: any;
 
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'EstateType',
-    default: null
-  })
-  type: any;
+  @Prop({ default: null })
+  confirmedAt: Date;
+
+
+
+
+
+
+
+
+
+
+
 
   // @@@@
 
@@ -130,24 +176,25 @@ export class Estate extends Document {
   @Prop({ type: String })
   description: string;
 
-  @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Storage',
-    default: []
-  })
-  gallery: any[];
-
   @Prop({ type: Boolean, default: false })
   canBarter: boolean;
 
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  })
-  owner: any;
+
 
   @Prop({ type: Number })
   area: number;
+
+
+
+
+  // ==========
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EstateType',
+    default: null
+  })
+  type: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,

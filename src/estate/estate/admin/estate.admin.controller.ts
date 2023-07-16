@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  Request,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/guard/roles.decorator';
@@ -31,9 +32,33 @@ export class EstateAdminController {
   @Post()
   @ApiOperation({ summary: "Create new Model", description: "No Description" })
   @ApiResponse({ status: 201 })
-  create(@Body() data: CreateEstateDto) {
-    return this.estateAdminService.create(data);
+  create(@Body() data: CreateEstateDto, @Request() { user }, @Request() { offices }) {
+    return this.estateAdminService.create(data, { ...user, offices });
   }
+
+  @Patch(':id')
+  @ApiOperation({ summary: "Edit single Model by id", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  update(@Param() { id }: MongoIDQueryDto, @Body() data: UpdateEstateDto, @Request() { user }, @Request() { offices }) {
+    return this.estateAdminService.update(id, data, { ...user, offices });
+  }
+
+  @Patch('confirm/:id')
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
+  @ApiOperation({ summary: "Confirm estate", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  confirm(@Param() { id }: MongoIDQueryDto, @Request() { user }, @Request() { offices }) {
+    return this.estateAdminService.confirmPublish(id, { ...user, offices });
+  }
+
+  @Patch('reject/:id')
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
+  @ApiOperation({ summary: "Reject estate", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  reject(@Param() { id }: MongoIDQueryDto, @Request() { user }, @Request() { offices }) {
+    return this.estateAdminService.rejectPublish(id, { ...user, offices });
+  }
+
 
   @Get()
   @ApiOperation({ summary: "Get list of Model", description: "No Description" })
@@ -49,24 +74,19 @@ export class EstateAdminController {
     return this.estateAdminService.findOne(id);
   }
 
-  @Patch(':id')
-  @ApiOperation({ summary: "Edit single Model by id", description: "No Description" })
-  @ApiResponse({ status: 201 })
-  update(@Param() { id }: MongoIDQueryDto, @Body() data: UpdateEstateDto) {
-    return this.estateAdminService.update(id, data);
-  }
+
 
   @Delete(':id')
   @ApiOperation({ summary: "Delete single Model by id", description: "No Description" })
   @ApiResponse({ status: 200 })
-  remove(@Param() { id }: MongoIDQueryDto) {
-    return this.estateAdminService.remove(id);
+  remove(@Param() { id }: MongoIDQueryDto, @Request() { user }, @Request() { offices }) {
+    return this.estateAdminService.remove(id, { ...user, offices });
   }
 
   @Delete()
   @ApiOperation({ summary: "Delete bulk of Model by id", description: "No Description" })
   @ApiResponse({ status: 200 })
-  bulkRemove(@Query() { id }: MongoArrayIDQueryDto) {
-    return this.estateAdminService.bulkRemove(id);
+  bulkRemove(@Query() { id }: MongoArrayIDQueryDto, @Request() { user }, @Request() { offices }) {
+    return this.estateAdminService.bulkRemove(id, { ...user, offices });
   }
 }

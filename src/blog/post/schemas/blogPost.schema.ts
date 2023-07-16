@@ -5,9 +5,6 @@ import { PostVisibilityEum } from '../enum/postVisibility.enum';
 
 @Schema({ timestamps: true })
 export class BlogPost extends Document {
-
-
-
   @Prop({ type: String, required: true, trim: true })
   title: string;
 
@@ -109,7 +106,6 @@ export class BlogPost extends Document {
 
 
   // ==> confirm
-
   @Prop({ default: false })
   isConfirmed: boolean;
 

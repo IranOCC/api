@@ -38,8 +38,12 @@ export class CreateEstateDto {
     @IsOptional()
     excerpt?: string;
 
-    // == media
 
+
+
+
+
+    // == media
     @ApiPropertyOptional()
     @Transform(({ value }) => {
         return value?._id ? value?._id : value
@@ -56,44 +60,65 @@ export class CreateEstateDto {
     @IsMongoId({ each: true })
     gallery?: string[];
 
-    // == status
 
-    @ApiProperty({ enum: EstateStatusEnum })
-    @IsEnum(EstateStatusEnum)
-    status: string;
-
-    @ApiProperty({ enum: EstateVisibilityEnum })
-    @IsEnum(EstateVisibilityEnum)
-    visibility: string;
-
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsBoolean()
-    pinned: boolean;
-
-    @ApiProperty()
-    // @IsDate()
-    @IsDateString({})
-    publishedAt: Date;
-
-
-    // == tags
+    // ==> tags & categories
     @ApiPropertyOptional()
     @IsOptional()
     @IsString({ each: true })
     tags?: string[];
 
+    @ApiProperty()
+    @IsMongoId()
+    category: string;
 
-    // == general
+
+
+
+    // ==> status
+    @ApiPropertyOptional({ enum: EstateStatusEnum })
+    @IsOptional()
+    @IsEnum(EstateStatusEnum)
+    status: string = EstateStatusEnum.Publish;
+
+    @ApiPropertyOptional({ enum: EstateVisibilityEnum })
+    @IsOptional()
+    @IsEnum(EstateVisibilityEnum)
+    visibility: string = EstateVisibilityEnum.Public;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsBoolean()
+    pinned: boolean = false;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsDateString()
+    publishedAt: string = new Date().toISOString();
+
+
+
+    @ApiProperty()
+    @IsMongoId()
+    office: string;
+
+    @ApiProperty()
+    @IsMongoId()
+    owner: string;
+
+
+
+
+
+    // ===========================================================
+    // ===========================================================
+    // === general
     @ApiPropertyOptional()
     @IsOptional()
     @IsString()
     code?: string;
 
-    @ApiProperty()
-    @IsMongoId()
-    category: string;
 
+    // ======
     @ApiProperty()
     @IsMongoId()
     type?: string;
@@ -101,6 +126,14 @@ export class CreateEstateDto {
     @ApiProperty()
     @IsMongoId()
     documentType?: string[];
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsMongoId({ each: true })
+    features?: string[];
+
+
+
 
     @ApiProperty()
     @Transform(({ value }) => (parseInt(value) || 0))
@@ -117,6 +150,8 @@ export class CreateEstateDto {
     @IsPositive()
     totalPrice?: number;
 
+
+
     @ApiPropertyOptional()
     @IsOptional()
     description?: string;
@@ -125,6 +160,8 @@ export class CreateEstateDto {
     @IsOptional()
     @IsBoolean()
     canBarter?: boolean;
+
+
 
     // == special
     @ApiPropertyOptional()
@@ -135,54 +172,59 @@ export class CreateEstateDto {
     @ApiPropertyOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
+    @IsPositive()
     roomsCount?: number;
 
     @ApiPropertyOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
+    @IsPositive()
     mastersCount?: number;
 
     @ApiPropertyOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
+    @IsPositive()
     buildingArea?: number;
 
     @ApiPropertyOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
+    @IsPositive()
     floorsCount?: number;
 
     @ApiPropertyOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
+    @IsPositive()
     unitsCount?: number;
 
     @ApiPropertyOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
+    @IsPositive()
     floor?: number;
 
     @ApiPropertyOptional()
     @IsOptional()
+    @IsBoolean()
     withOldBuilding?: boolean;
 
-    @ApiPropertyOptional()
-    @IsOptional()
-    features?: string[];
+
 
 
     // location
     @ApiProperty()
     @IsString()
-    province?: string;
+    province: string;
 
     @ApiProperty()
     @IsString()
-    city?: string;
+    city: string;
 
     @ApiProperty()
     @IsString()
-    district?: string;
+    district: string;
 
     @ApiProperty()
     @IsString()
@@ -203,20 +245,5 @@ export class CreateEstateDto {
 
 
 
-    @ApiPropertyOptional()
-    @IsOptional()
-    owner?: User | string;
 
-    // detail
-    @ApiPropertyOptional()
-    @IsOptional()
-    createdBy?: User | string;
-
-    @ApiPropertyOptional()
-    @IsOptional()
-    confirmedBy?: User | string;
-
-    @ApiPropertyOptional()
-    @IsOptional()
-    office?: Office | string;
 }
