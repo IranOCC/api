@@ -91,7 +91,7 @@ export class EstateToolsService {
         district: { disabled: false },
         quarter: { disabled: false },
         alley: { disabled: false },
-        location: { disabled: false, default: [55.333, 33.666] },
+        location: { disabled: false, default: [58.333, 33.666] },
 
         price: { disabled: false },
         totalPrice: { disabled: false },
@@ -116,7 +116,7 @@ export class EstateToolsService {
 
     if (action === "update") {
       const doc = await this.estateModel.findById(id).populate("office")
-      if (!doc) throw new NotFoundException("Post not found", "PostNotFound")
+      if (!doc) throw new NotFoundException("Estate not found", "EstateNotFound")
 
       if (
         user.roles.includes(RoleEnum.SuperAdmin)
