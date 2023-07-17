@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { User } from "aws-sdk/clients/appstream";
 import { Transform } from "class-transformer";
-import { IsBoolean, IsDate, IsDateString, IsEnum, IsLatLong, IsLongitude, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsDateString, IsEnum, IsLatLong, IsLongitude, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, ValidateIf } from "class-validator";
 import slugify from "slugify";
 import { Office } from "src/office/schemas/office.schema";
 import { EstateStatusEnum } from "../../enum/estateStatus.enum";
@@ -117,7 +117,6 @@ export class CreateEstateDto {
     @IsString()
     code?: string;
 
-
     // ======
     @ApiProperty()
     @IsMongoId()
@@ -127,10 +126,10 @@ export class CreateEstateDto {
     @IsMongoId()
     documentType?: string[];
 
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsMongoId({ each: true })
-    features?: string[];
+
+
+
+
 
 
 
@@ -141,15 +140,14 @@ export class CreateEstateDto {
     area?: number;
 
     @ApiProperty()
-    @Transform(({ value }) => (parseInt(value.replaceAll(",", "")) || 0))
+    @Transform(({ value }) => (parseInt(value) || 0))
     @IsPositive()
     price?: number;
 
     @ApiProperty()
-    @Transform(({ value }) => (parseInt(value.replaceAll(",", "")) || 0))
+    @Transform(({ value }) => (parseInt(value) || 0))
     @IsPositive()
     totalPrice?: number;
-
 
 
     @ApiPropertyOptional()
@@ -163,6 +161,10 @@ export class CreateEstateDto {
 
 
 
+
+
+
+
     // == special
     @ApiPropertyOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
@@ -172,43 +174,50 @@ export class CreateEstateDto {
     @ApiPropertyOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
-    @IsPositive()
+    // @IsPositive()
     roomsCount?: number;
 
     @ApiPropertyOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
-    @IsPositive()
+    // @IsPositive()
     mastersCount?: number;
 
     @ApiPropertyOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
-    @IsPositive()
+    // @IsPositive()
     buildingArea?: number;
 
     @ApiPropertyOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
-    @IsPositive()
+    // @IsPositive()
     floorsCount?: number;
 
     @ApiPropertyOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
-    @IsPositive()
+    // @IsPositive()
     unitsCount?: number;
 
     @ApiPropertyOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
-    @IsPositive()
+    // @IsPositive()
     floor?: number;
 
     @ApiPropertyOptional()
     @IsOptional()
-    @IsBoolean()
+    // @IsBoolean()
     withOldBuilding?: boolean;
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    // @IsMongoId({ each: true })
+    features?: string[];
+
+
 
 
 

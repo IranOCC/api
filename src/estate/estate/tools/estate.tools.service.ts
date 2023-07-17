@@ -78,7 +78,7 @@ export class EstateToolsService {
 
         owner: {
           disabled: false,
-          default: user._id,
+          default: null,
         },
         office: {
           disabled: false,
@@ -86,12 +86,12 @@ export class EstateToolsService {
         },
 
         code: { disabled: false },
-        province: { disabled: false, default: "گیلان" },
-        city: { disabled: false, default: "رشت" },
+        province: { disabled: false, default: "مازندران" },
+        city: { disabled: false, default: "چالوس" },
         district: { disabled: false },
         quarter: { disabled: false },
         alley: { disabled: false },
-        location: { disabled: false, default: [58.333, 33.666] },
+        location: { disabled: false, default: "40.333,33.666" },
 
         price: { disabled: false },
         totalPrice: { disabled: false },
