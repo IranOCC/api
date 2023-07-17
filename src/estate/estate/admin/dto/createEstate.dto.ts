@@ -141,12 +141,12 @@ export class CreateEstateDto {
     area?: number;
 
     @ApiProperty()
-    @Transform(({ value }) => (parseInt(value) || 0))
+    @Transform(({ value }) => (parseInt(value.replaceAll(",", "")) || 0))
     @IsPositive()
     price?: number;
 
     @ApiProperty()
-    @Transform(({ value }) => (parseInt(value) || 0))
+    @Transform(({ value }) => (parseInt(value.replaceAll(",", "")) || 0))
     @IsPositive()
     totalPrice?: number;
 
