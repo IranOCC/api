@@ -113,6 +113,7 @@ export class EstateAdminService {
       ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["users", "confirmedBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["offices", "office", "name", false],
+      ["estatecategories", "category", "title"],
     ]
     const project = "title slug status visibility isConfirmed confirmedAt publishedAt createdAt code"
     const virtualFields = {}
