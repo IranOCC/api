@@ -124,6 +124,7 @@ export class EstateAdminService {
   // Get Estate
   findOne(id: string) {
     return this.estateModel.findById(id)
+      .populate("gallery", 'path title alt')
       .populate("image", 'path title alt')
       .populate("confirmedBy", "fistName lastName fullName")
       .populate("createdBy", "fistName lastName fullName")

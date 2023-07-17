@@ -167,42 +167,42 @@ export class CreateEstateDto {
 
     // == special
     @ApiPropertyOptional()
-    @Transform(({ value }) => (parseInt(value) || 0))
+    // @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
     constructionYear?: number;
 
     @ApiPropertyOptional()
-    @Transform(({ value }) => (parseInt(value) || 0))
+    // @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
     // @IsPositive()
     roomsCount?: number;
 
     @ApiPropertyOptional()
-    @Transform(({ value }) => (parseInt(value) || 0))
+    // @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
     // @IsPositive()
     mastersCount?: number;
 
     @ApiPropertyOptional()
-    @Transform(({ value }) => (parseInt(value) || 0))
+    // @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
     // @IsPositive()
     buildingArea?: number;
 
     @ApiPropertyOptional()
-    @Transform(({ value }) => (parseInt(value) || 0))
+    // @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
     // @IsPositive()
     floorsCount?: number;
 
     @ApiPropertyOptional()
-    @Transform(({ value }) => (parseInt(value) || 0))
+    // @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
     // @IsPositive()
     unitsCount?: number;
 
     @ApiPropertyOptional()
-    @Transform(({ value }) => (parseInt(value) || 0))
+    // @Transform(({ value }) => (parseInt(value) || 0))
     @IsOptional()
     // @IsPositive()
     floor?: number;
@@ -215,7 +215,7 @@ export class CreateEstateDto {
     @ApiPropertyOptional()
     @IsOptional()
     // @IsMongoId({ each: true })
-    features?: string[];
+    features?: string[] = [];
 
 
 
