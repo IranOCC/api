@@ -70,20 +70,13 @@ export class UserServiceTools {
         roles: {
           disabled: false,
           default: [RoleEnum.User],
-          allowItems: user.roles.includes(RoleEnum.SuperAdmin)
+          disabledItems: user.roles.includes(RoleEnum.SuperAdmin)
             ?
-            [
-              RoleEnum.User,
-              RoleEnum.Agent,
-              RoleEnum.Author,
-              RoleEnum.Admin,
-              RoleEnum.SuperAdmin,
-            ]
+            []
             :
             [
-              RoleEnum.User,
-              RoleEnum.Agent,
-              RoleEnum.Author
+              RoleEnum.Admin,
+              RoleEnum.SuperAdmin,
             ]
         },
         avatar: { disabled: false },
@@ -111,20 +104,13 @@ export class UserServiceTools {
           lastName: { disabled: false },
           roles: {
             disabled: false,
-            allowItems: user.roles.includes(RoleEnum.SuperAdmin)
+            disabledItems: user.roles.includes(RoleEnum.SuperAdmin)
               ?
-              [
-                RoleEnum.User,
-                RoleEnum.Agent,
-                RoleEnum.Author,
-                RoleEnum.Admin,
-                RoleEnum.SuperAdmin,
-              ]
+              []
               :
               [
-                RoleEnum.User,
-                RoleEnum.Agent,
-                RoleEnum.Author
+                RoleEnum.Admin,
+                RoleEnum.SuperAdmin,
               ]
           },
           avatar: { disabled: false },
