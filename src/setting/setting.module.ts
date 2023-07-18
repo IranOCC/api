@@ -16,3 +16,4 @@ import { SettingService } from './public/setting.service';
   providers: [SettingServiceAdmin, SettingService],
 })
 export class SettingModule { }
+
