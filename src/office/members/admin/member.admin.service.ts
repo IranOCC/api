@@ -32,14 +32,14 @@ export class OfficeMemberAdminService {
 
 
 
-    async add(_office: Office | string, users: User | string | User[] | string[], user: CurrentUser) {
+    async add(_office: Office | string, users: User | string | User[] | string[], user?: CurrentUser) {
 
         // get office
         const office = await this.getOfficeById(_office)
 
         const mngID = (office.management as User)._id
 
-        if (!user.roles.includes(RoleEnum.SuperAdmin) && user.roles.includes(RoleEnum.Admin) && !new ObjectId(mngID).equals(new ObjectId(user._id))) {
+        if (user && !user.roles.includes(RoleEnum.SuperAdmin) && user.roles.includes(RoleEnum.Admin) && !new ObjectId(mngID).equals(new ObjectId(user._id))) {
             throw new ForbiddenException("You can not add members to this office", "ForbiddenAddOfficeMembers")
         }
 
