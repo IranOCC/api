@@ -39,7 +39,7 @@ export class UserServiceTools {
   // actions: create update findOne find remove
   async checking(user: CurrentUser, action: string, id?: string) {
     // check is SuperAdmin
-    if (!user.roles.includes(RoleEnum.SuperAdmin)) {
+    if (!user.roles.includes(RoleEnum.SuperAdmin) || !user.roles.includes(RoleEnum.Admin)) {
       return {
         allowSubmit: false,
         firstName: { disabled: true },
@@ -67,7 +67,25 @@ export class UserServiceTools {
         allowSubmit: true,
         firstName: { disabled: false },
         lastName: { disabled: false },
-        roles: { disabled: false, default: [RoleEnum.User] },
+        roles: {
+          disabled: false,
+          default: [RoleEnum.User],
+          allowItems: user.roles.includes(RoleEnum.SuperAdmin)
+            ?
+            [
+              RoleEnum.User,
+              RoleEnum.Agent,
+              RoleEnum.Author,
+              RoleEnum.Admin,
+              RoleEnum.SuperAdmin,
+            ]
+            :
+            [
+              RoleEnum.User,
+              RoleEnum.Agent,
+              RoleEnum.Author
+            ]
+        },
         avatar: { disabled: false },
         phone: {
           value: { disabled: false },
@@ -91,7 +109,24 @@ export class UserServiceTools {
           allowSubmit: true,
           firstName: { disabled: false },
           lastName: { disabled: false },
-          roles: { disabled: false },
+          roles: {
+            disabled: false,
+            allowItems: user.roles.includes(RoleEnum.SuperAdmin)
+              ?
+              [
+                RoleEnum.User,
+                RoleEnum.Agent,
+                RoleEnum.Author,
+                RoleEnum.Admin,
+                RoleEnum.SuperAdmin,
+              ]
+              :
+              [
+                RoleEnum.User,
+                RoleEnum.Agent,
+                RoleEnum.Author
+              ]
+          },
           avatar: { disabled: false },
           phone: {
             value: { disabled: false },
