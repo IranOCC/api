@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Request,
   Param,
   Patch,
   Post,
@@ -32,8 +33,8 @@ export class PageAdminController {
   @Post()
   @ApiOperation({ summary: "Create new Model", description: "No Description" })
   @ApiResponse({ status: 201 })
-  create(@Body() data: CreatePageDto) {
-    return this.pageAdminService.create(data);
+  create(@Body() data: CreatePageDto, @Request() { user }, @Request() { offices }) {
+    return this.pageAdminService.create(data, { ...user, offices });
   }
 
   @Get()
@@ -53,8 +54,8 @@ export class PageAdminController {
   @Patch(':id')
   @ApiOperation({ summary: "Edit single Model by id", description: "No Description" })
   @ApiResponse({ status: 201 })
-  update(@Param() { id }: MongoIDQueryDto, @Body() data: UpdatePageDto) {
-    return this.pageAdminService.update(id, data);
+  update(@Param() { id }: MongoIDQueryDto, @Body() data: UpdatePageDto, @Request() { user }, @Request() { offices }) {
+    return this.pageAdminService.update(id, data, { ...user, offices });
   }
 
   @Delete(':id')

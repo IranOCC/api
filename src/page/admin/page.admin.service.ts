@@ -6,6 +6,7 @@ import { listAggregation, PopulatedType } from 'src/utils/helper/listAggregation
 import { Page, PageDocument } from '../schemas/page.schema';
 import { CreatePageDto } from './dto/createPage.dto';
 import { UpdatePageDto } from './dto/updatePage.dto';
+import { CurrentUser } from 'src/user/schemas/user.schema';
 
 
 
@@ -19,8 +20,13 @@ export class PageAdminService {
 
 
   // Create Page
-  create(data: CreatePageDto) {
-    return this.pageModel.create(data);
+  create(data: CreatePageDto, user: CurrentUser) {
+    return this.pageModel.create({ ...data, createdBy: user._id });
+  }
+
+  // Edit Page
+  update(id: string, data: UpdatePageDto, user: CurrentUser) {
+    return this.pageModel.updateOne({ _id: id }, data).exec();
   }
 
   // List Page
@@ -28,7 +34,7 @@ export class PageAdminService {
     const populate: PopulatedType[] = [
       ["users", "createdBy"],
     ]
-    const project = "title slug publishedAt createdBy"
+    const project = "title slug status publishedAt createdAt updatedAt"
     const virtualFields = {}
     const searchFields = "title slug content"
     return listAggregation(this.pageModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
@@ -37,14 +43,11 @@ export class PageAdminService {
   // Get Page
   findOne(id: string) {
     return this.pageModel.findById(id)
-      // .populate(["icon", "parent"])
+      .populate("createdBy", "fistName lastName fullName")
       .exec();
   }
 
-  // Edit Page
-  update(id: string, data: UpdatePageDto) {
-    return this.pageModel.updateOne({ _id: id }, data).exec();
-  }
+
 
   // Remove Single Page
   remove(id: string) {

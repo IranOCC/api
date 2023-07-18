@@ -14,7 +14,11 @@ export class Page extends Document {
   @Prop({ required: true, trim: true, unique: true })
   slug: string;
 
-  @Prop({ type: String, enum: PageStatusEum, default: PageStatusEum.Publish })
+  @Prop({
+    type: String,
+    enum: PageStatusEum,
+    default: PageStatusEum.Publish
+  })
   status: PageStatusEum;
 
   @Prop({ default: Date.now })
@@ -23,11 +27,13 @@ export class Page extends Document {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true
   })
   createdBy: any;
 
   @Prop({
     type: [String],
+    default: []
   })
   tags: string[];
 }

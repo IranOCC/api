@@ -33,15 +33,19 @@ export class CreatePageDto {
     @IsNotEmpty()
     content?: string;
 
-    @ApiProperty({ enum: PageStatusEum })
+    @ApiPropertyOptional({ enum: PageStatusEum })
+    @IsOptional()
     @IsEnum(PageStatusEum)
-    status: string;
-
-    @ApiProperty()
-    @IsDateString({})
-    publishedAt: Date;
+    status: string = PageStatusEum.Publish;
 
     @ApiPropertyOptional()
     @IsOptional()
-    createdBy?: User | string;
+    @IsDateString()
+    publishedAt: string = new Date().toISOString();
+
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString({ each: true })
+    tags?: string[];
 }
