@@ -1,6 +1,6 @@
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
-import { Injectable, } from '@nestjs/common';
+import { Injectable, NotFoundException, } from '@nestjs/common';
 import { CurrentUser, User, UserDocument } from '../schemas/user.schema';
 import { RoleEnum } from '../enum/role.enum';
 import { I18nService } from 'nestjs-i18n';
@@ -97,39 +97,43 @@ export class UserServiceTools {
       }
     }
     if (action === "update") {
-      if (user.roles.includes(RoleEnum.SuperAdmin)) {
-        return {
-          allowSubmit: true,
-          firstName: { disabled: false },
-          lastName: { disabled: false },
-          roles: {
-            disabled: false,
-            disabledItems: user.roles.includes(RoleEnum.SuperAdmin)
-              ?
-              []
-              :
-              [
-                RoleEnum.Admin,
-                RoleEnum.SuperAdmin,
-              ]
-          },
-          avatar: { disabled: false },
-          phone: {
-            value: { disabled: false },
-            verified: { disabled: false },
-          },
-          email: {
-            value: { disabled: false },
-            verified: { disabled: false },
-          },
-          province: { disabled: false },
-          city: { disabled: false },
-          address: { disabled: false },
-          location: { disabled: false, default: "36.699735, 51.196246" },
-          verified: { disabled: false },
-          active: { disabled: false },
-        }
+
+      const doc = await this.userModel.findById(id)
+      if (!doc) throw new NotFoundException("User not found", "UserNotFound")
+
+      const deny = !user.roles.includes(RoleEnum.SuperAdmin) && (doc.roles.includes(RoleEnum.SuperAdmin) || doc.roles.includes(RoleEnum.Admin))
+      return {
+        allowSubmit: !deny,
+        firstName: { disabled: deny },
+        lastName: { disabled: deny },
+        roles: {
+          disabled: deny,
+          disabledItems: user.roles.includes(RoleEnum.SuperAdmin)
+            ?
+            []
+            :
+            [
+              RoleEnum.Admin,
+              RoleEnum.SuperAdmin,
+            ]
+        },
+        avatar: { disabled: deny },
+        phone: {
+          value: { disabled: deny },
+          verified: { disabled: deny },
+        },
+        email: {
+          value: { disabled: deny },
+          verified: { disabled: deny },
+        },
+        province: { disabled: deny },
+        city: { disabled: deny },
+        address: { disabled: deny },
+        location: { disabled: deny, default: "36.699735, 51.196246" },
+        verified: { disabled: deny },
+        active: { disabled: deny },
       }
+
     }
   }
 

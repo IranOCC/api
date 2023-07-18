@@ -82,28 +82,26 @@ export class OfficeServiceTools {
       }
     }
     if (action === "update") {
-      if (user.roles.includes(RoleEnum.SuperAdmin)) {
-        return {
-          allowSubmit: true,
-          name: { disabled: false },
-          management: { disabled: false },
-          description: { disabled: false },
-          logo: { disabled: false },
-          phone: {
-            value: { disabled: false },
-            verified: { disabled: false },
-          },
-          email: {
-            value: { disabled: false },
-            verified: { disabled: false },
-          },
-          province: { disabled: false },
-          city: { disabled: false },
-          address: { disabled: false },
-          location: { disabled: false, default: "36.699735, 51.196246" },
+      return {
+        allowSubmit: true,
+        name: { disabled: false },
+        management: { disabled: false },
+        description: { disabled: false },
+        logo: { disabled: false },
+        phone: {
+          value: { disabled: false },
           verified: { disabled: false },
-          active: { disabled: false },
-        }
+        },
+        email: {
+          value: { disabled: false },
+          verified: { disabled: false },
+        },
+        province: { disabled: false },
+        city: { disabled: false },
+        address: { disabled: false },
+        location: { disabled: false, default: "36.699735, 51.196246" },
+        verified: { disabled: false },
+        active: { disabled: false },
       }
     }
   }

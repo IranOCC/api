@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Request } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiPropertyOptional, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsString, IsOptional, IsBoolean, IsBooleanString, IsEnum } from 'class-validator';
@@ -34,8 +34,8 @@ export class UserControllerAdmin {
   @Post()
   @ApiOperation({ summary: "Create new Model", description: "No Description" })
   @ApiResponse({ status: 201 })
-  create(@Body() data: CreateUserDto) {
-    return this.userAdminService.create(data);
+  create(@Body() data: CreateUserDto, @Request() { user }, @Request() { offices }) {
+    return this.userAdminService.create(data, { ...user, offices });
   }
 
   @Get()
@@ -55,21 +55,21 @@ export class UserControllerAdmin {
   @Patch(':id')
   @ApiOperation({ summary: "Edit single Model by id", description: "No Description" })
   @ApiResponse({ status: 201 })
-  update(@Param() { id }: MongoIDQueryDto, @Body() data: UpdateUserDto) {
-    return this.userAdminService.update(id, data);
+  update(@Param() { id }: MongoIDQueryDto, @Body() data: UpdateUserDto, @Request() { user }, @Request() { offices }) {
+    return this.userAdminService.update(id, data, { ...user, offices });
   }
 
   @Delete(':id')
   @ApiOperation({ summary: "Delete single Model by id", description: "No Description" })
   @ApiResponse({ status: 200 })
-  remove(@Param() { id }: MongoIDQueryDto) {
-    return this.userAdminService.remove(id);
+  remove(@Param() { id }: MongoIDQueryDto, @Request() { user }, @Request() { offices }) {
+    return this.userAdminService.remove(id, { ...user, offices });
   }
 
   @Delete()
   @ApiOperation({ summary: "Delete bulk of Model by id", description: "No Description" })
   @ApiResponse({ status: 200 })
-  bulkRemove(@Query() { id }: MongoArrayIDQueryDto) {
-    return this.userAdminService.bulkRemove(id);
+  bulkRemove(@Query() { id }: MongoArrayIDQueryDto, @Request() { user }, @Request() { offices }) {
+    return this.userAdminService.bulkRemove(id, { ...user, offices });
   }
 }

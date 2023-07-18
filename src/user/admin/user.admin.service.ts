@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
-import { forwardRef, Inject, Injectable, UnauthorizedException, } from '@nestjs/common';
-import { User, UserDocument } from '../schemas/user.schema';
+import { ForbiddenException, forwardRef, Inject, Injectable, NotFoundException, UnauthorizedException, } from '@nestjs/common';
+import { CurrentUser, User, UserDocument } from '../schemas/user.schema';
 import { CreateUserDto } from '../dto/createUser.dto';
 import { UpdateUserDto } from '../dto/updateUser.dto';
 import { RoleEnum } from '../enum/role.enum';
@@ -34,8 +34,15 @@ export class UserServiceAdmin {
 
 
   // Create User
-  async create(data: CreateUserDto): Promise<any> {
+  async create(data: CreateUserDto, user: CurrentUser): Promise<any> {
     const { phone, email, ...props } = data
+
+    if (props.roles.includes(RoleEnum.SuperAdmin)) {
+      throw new ForbiddenException("You can not add user with SuperAdmin role", "ForbiddenCreateUserHighRole")
+    }
+    if (props.roles.includes(RoleEnum.Admin)) {
+      throw new ForbiddenException("You can not add user with Admin role", "ForbiddenCreateUserHighRole")
+    }
     const _user = new this.userModel(props)
 
     if (phone) await this.userService.setPhone(_user, phone)
@@ -47,9 +54,16 @@ export class UserServiceAdmin {
   }
 
   // Edit User
-  async update(id: string, data: UpdateUserDto): Promise<any> {
+  async update(id: string, data: UpdateUserDto, user: CurrentUser): Promise<any> {
     const { phone, email, ...props } = data
     const _user = await this.userModel.findById(id)
+
+    if (_user.roles.includes(RoleEnum.SuperAdmin)) {
+      throw new ForbiddenException("You can not edit SuperAdmin", "ForbiddenEditUserHighRole")
+    }
+    if (_user.roles.includes(RoleEnum.Admin)) {
+      throw new ForbiddenException("You can not edit Admin", "ForbiddenEditUserHighRole")
+    }
 
     if (phone) await this.userService.setPhone(_user, phone)
     if (email) await this.userService.setEmail(_user, email)
@@ -62,6 +76,7 @@ export class UserServiceAdmin {
 
   // List User
   findAll(pagination: PaginationDto, filter: any, sort: any): Promise<User[]> {
+
     const populate: PopulatedType[] = [
       ["storages", "avatar", "path title alt"],
       ["phonenumbers", "phone", "value verified"],
@@ -84,19 +99,41 @@ export class UserServiceAdmin {
   }
 
   // Remove Single User
-  async remove(id: string) {
-    await this.phoneService.removeByUser(id);
-    await this.emailService.removeByUser(id);
-
-    await this.userModel.deleteOne({ _id: id })
+  async remove(id: string, user: CurrentUser) {
+    const _user = await this.userModel.findById(id)
+    if (!_user) throw new NotFoundException("User not found", "UserNotFound")
+    if (
+      (user.roles.includes(RoleEnum.SuperAdmin))
+      ||
+      (user.roles.includes(RoleEnum.Admin) && !_user.roles.includes(RoleEnum.SuperAdmin) && !_user.roles.includes(RoleEnum.Admin))
+    ) {
+      // TODO: delete from office
+      await this.phoneService.removeByUser(id);
+      await this.emailService.removeByUser(id);
+      return await _user.delete()
+    }
+    throw new ForbiddenException("You can not delete this user", "ForbiddenDeleteUser")
   }
 
   // Remove Bulk User
-  async bulkRemove(id: string[]) {
-    await this.phoneService.removeByBulkUser(id);
-    await this.emailService.removeByBulkUser(id);
+  async bulkRemove(id: string[], user: CurrentUser) {
+    const _users = await this.userModel.find({ _id: { $in: id } })
 
-    await this.userModel.deleteMany({ _id: { $in: id } });
+    for (let i = 0; i < _users.length; i++) {
+      const _user = _users[i];
+      if (
+        (user.roles.includes(RoleEnum.SuperAdmin))
+        ||
+        (user.roles.includes(RoleEnum.Admin) && !_user.roles.includes(RoleEnum.SuperAdmin) && !_user.roles.includes(RoleEnum.Admin))
+      ) {
+        // TODO: remove other
+        // TODO: delete from office
+        await this.phoneService.removeByUser(_user.id);
+        await this.emailService.removeByUser(_user.id);
+        await _user.delete()
+      }
+    }
+    return null
   }
 
 
