@@ -153,7 +153,7 @@ export class EstateToolsService {
           district: { disabled: false },
           quarter: { disabled: false },
           alley: { disabled: false },
-          location: { disabled: false },
+          location: { disabled: false, default: "36.699735, 51.196246" },
 
           price: { disabled: false },
           totalPrice: { disabled: false },
@@ -202,7 +202,7 @@ export class EstateToolsService {
         district: { disabled: true },
         quarter: { disabled: true },
         alley: { disabled: true },
-        location: { disabled: true },
+        location: { disabled: true, default: "36.699735, 51.196246" },
 
         price: { disabled: true },
         totalPrice: { disabled: true },

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Request, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AutoCompleteDto } from 'src/utils/dto/autoComplete.dto';
 import { UserServiceTools } from './user.tools.service';
@@ -32,6 +32,16 @@ export class UserControllerTools {
   @ApiResponse({ status: 200 })
   statics(@Param('subject') subject: string) {
     return this.userServiceTools.statics(subject);
+  }
+
+
+  // ==================================================================================================> checking
+  // actions: create update findOne find remove
+  @Get('checking/:action')
+  @ApiOperation({ summary: "Checking ", description: "No Description" })
+  @ApiResponse({ status: 200 })
+  checking(@Request() { user }, @Request() { offices }, @Param('action') action: string, @Query('id') id?: string) {
+    return this.userServiceTools.checking({ ...user, offices }, action, id);
   }
 
 }

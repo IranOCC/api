@@ -26,12 +26,13 @@ export class OfficeControllerTools {
   }
 
 
-  // ==================================================================================================> statics
-  // @Get('statics/:subject')
-  // @ApiOperation({ summary: "Get statics variables", description: "No Description" })
-  // @ApiResponse({ status: 200 })
-  // statics(@Param('subject') subject: string) {
-  //   return this.userServiceTools.statics(subject);
-  // }
+  // ==================================================================================================> checking
+  // actions: create update findOne find remove
+  @Get('checking/:action')
+  @ApiOperation({ summary: "Checking ", description: "No Description" })
+  @ApiResponse({ status: 200 })
+  checking(@Request() { user }, @Request() { offices }, @Param('action') action: string, @Query('id') id?: string) {
+    return this.officeServiceTools.checking({ ...user, offices }, action, id);
+  }
 
 }
