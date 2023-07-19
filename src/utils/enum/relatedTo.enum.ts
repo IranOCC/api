@@ -3,4 +3,5 @@ export enum RelatedToEnum {
   Office = 'office',
   Estate = 'estate',
   Blog = 'blog',
+  Page = 'page',
 }

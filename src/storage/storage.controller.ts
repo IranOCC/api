@@ -161,6 +161,35 @@ export class StorageController {
 
 
 
+
+
+  @Post("page")
+  @Roles(RoleEnum.SuperAdmin)
+  @ApiOperation({ summary: "Upload page images", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UploadSingleImageDto })
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadPageImage(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10000000 }),
+          new FileTypeValidator({ fileType: /image\/jpeg|image\/jpg|image\/png$/ }),
+        ],
+      }),
+    )
+    image: Express.Multer.File,
+    @Body() { relatedToID, alt, title }: CreateStorageDto,
+    @Request() { user }
+  ) {
+    return this.storageService.create(image, user, RelatedToEnum.Page, relatedToID, alt, title)
+  }
+
+
+
+
+
   @Post("main")
   @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
   @ApiOperation({ summary: "Upload estate images", description: "No Description" })
