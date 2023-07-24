@@ -5,7 +5,6 @@ import { BlogPost, BlogPostDocument } from '../schemas/blogPost.schema';
 import { ObjectId } from 'mongodb';
 import { PostStatusEum } from '../enum/postStatus.enum';
 import { PostVisibilityEum } from '../enum/postVisibility.enum';
-import moment from 'moment';
 
 
 
