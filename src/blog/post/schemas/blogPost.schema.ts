@@ -45,7 +45,8 @@ export class BlogPost extends Document {
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'BlogComment',
-    default: []
+    default: [],
+    select: false,
   })
   comments: any[];
 

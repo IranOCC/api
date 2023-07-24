@@ -19,9 +19,9 @@ import { BlogCategoryAdminController } from './category/admin/blogCategory.admin
 import { BlogCategoryAdminService } from './category/admin/blogCategory.admin.service';
 import { BlogCategoryToolsController } from './category/tools/blogCategory.tools.controller';
 import { BlogCategoryToolsService } from './category/tools/blogCategory.tools.service';
-import { OfficeService } from 'src/office/office.service';
 import { OfficeModule } from 'src/office/office.module';
-import { Office, OfficeSchema } from 'src/office/schemas/office.schema';
+import { BlogPostPublicService } from './post/public/blogPost.public.service';
+import { BlogPostPublicController } from './post/public/blogPost.public.controller';
 
 
 @Module({
@@ -34,6 +34,7 @@ import { Office, OfficeSchema } from 'src/office/schemas/office.schema';
   controllers: [
     BlogPostAdminController,
     BlogPostToolsController,
+    BlogPostPublicController,
 
     BlogCommentAdminController,
     BlogCommentToolsController,
@@ -44,6 +45,7 @@ import { Office, OfficeSchema } from 'src/office/schemas/office.schema';
   providers: [
     BlogPostAdminService,
     BlogPostToolsService,
+    BlogPostPublicService,
 
     BlogCommentAdminService,
     BlogCommentToolsService,
