@@ -37,8 +37,9 @@ import { EstateAdminController } from './estate/admin/estate.admin.controller';
 import { EstateAdminService } from './estate/admin/estate.admin.service';
 import { EstateToolsController } from './estate/tools/estate.tools.controller';
 import { EstateToolsService } from './estate/tools/estate.tools.service';
+import { EstatePublicController } from './estate/public/estate.public.controller';
+import { EstatePublicService } from './estate/public/estate.public.service';
 import { OfficeModule } from 'src/office/office.module';
-
 
 
 
@@ -55,6 +56,7 @@ import { OfficeModule } from 'src/office/office.module';
     EstateTypeAdminController,
     EstateTypeToolsController,
 
+
     EstateCategoryAdminController,
     EstateCategoryToolsController,
 
@@ -66,10 +68,12 @@ import { OfficeModule } from 'src/office/office.module';
 
     EstateAdminController,
     EstateToolsController,
+    EstatePublicController,
   ],
   providers: [
     EstateTypeAdminService,
     EstateTypeToolsService,
+
 
     EstateCategoryAdminService,
     EstateCategoryToolsService,
@@ -82,6 +86,7 @@ import { OfficeModule } from 'src/office/office.module';
 
     EstateAdminService,
     EstateToolsService,
+    EstatePublicService,
   ],
 })
 
