@@ -29,7 +29,8 @@ export class EstatePublicService {
       .populate("image", "path alt title")
       .populate("gallery", "path alt title")
       .populate("owner", "firstName lastName fullName")
-      .populate("office", "name")
+      .populate("createdBy", "firstName lastName fullName")
+      .populate("office", "name verified")
       .select("-status -visibility -id -office -isConfirmed -confirmedAt -confirmedBy -createdBy -createdAt -updatedAt -__v")
       .exec();
   }
