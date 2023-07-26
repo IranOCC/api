@@ -31,7 +31,7 @@ export class EstatePublicService {
       .populate("owner", "firstName lastName fullName")
       .populate("createdBy", "firstName lastName fullName")
       .populate("office", "name verified")
-      .select("-status -visibility -id -office -isConfirmed -confirmedAt -confirmedBy -createdBy -createdAt -updatedAt -__v")
+      .select("-status -visibility -id -isConfirmed -confirmedAt -confirmedBy -createdAt -updatedAt -__v")
       .exec();
   }
 
