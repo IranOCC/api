@@ -26,6 +26,9 @@ export class EstatePublicService {
 
     return this.estateModel.findOne(query)
       .populate("category", "title slug")
+      .populate("type", "title slug")
+      .populate("documentType", "title slug")
+      .populate("features", "title slug")
       .populate("image", "path alt title")
       .populate("gallery", "path alt title")
       .populate("owner", "firstName lastName fullName")
