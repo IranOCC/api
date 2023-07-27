@@ -25,10 +25,10 @@ export class EstatePublicService {
     query["publishedAt"] = { $lte: Date.now() }
 
     return this.estateModel.findOne(query)
-      .populate("category", "title slug")
-      .populate("type", "title slug")
-      .populate("documentType", "title slug")
-      .populate("features", "title slug")
+      .populate({ path: "category", select: "title slug icon", populate: "icon" })
+      .populate({ path: "type", select: "title slug icon", populate: "icon" })
+      .populate({ path: "documentType", select: "title slug icon", populate: "icon" })
+      .populate({ path: "features", select: "title slug icon", populate: "icon" })
       .populate("image", "path alt title")
       .populate("gallery", "path alt title")
       .populate("owner", "firstName lastName fullName")
