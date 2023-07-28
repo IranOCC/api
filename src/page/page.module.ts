@@ -3,6 +3,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PageAdminController } from './admin/page.admin.controller';
 import { PageAdminService } from './admin/page.admin.service';
 import { Page, PageSchema } from './schemas/page.schema';
+import { PagePublicController } from './public/page.public.controller';
+import { PagePublicService } from './public/page.public.service';
 
 
 
@@ -13,9 +15,11 @@ import { Page, PageSchema } from './schemas/page.schema';
   ],
   controllers: [
     PageAdminController,
+    PagePublicController,
   ],
   providers: [
     PageAdminService,
+    PagePublicService,
   ],
 })
 export class PageModule { }
