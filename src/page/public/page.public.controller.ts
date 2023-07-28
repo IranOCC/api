@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/auth/guard/jwt-auth.guard';
-
+import { PagePublicService } from "./page.public.service"
 
 
 
@@ -21,7 +21,7 @@ import { Public } from 'src/auth/guard/jwt-auth.guard';
 @ApiTags("Page")
 @ApiBearerAuth()
 export class PagePublicController {
-  constructor(private readonly pagePublicService: PagePublicController) { }
+  constructor(private readonly pagePublicService: PagePublicService) { }
 
   @Get(':id_or_slug')
   @ApiOperation({ summary: "Get single Model by id or slug", description: "No Description" })
