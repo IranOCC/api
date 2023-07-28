@@ -44,19 +44,17 @@ export class CreateEstateDto {
 
 
     // == media
-    @ApiPropertyOptional()
+    @ApiProperty()
     @Transform(({ value }) => {
         return value?._id ? value?._id : value
     })
-    @IsOptional()
     @IsMongoId()
     image?: string;
 
-    @ApiPropertyOptional()
+    @ApiProperty()
     @Transform(({ value }) => {
         return value.map((v: any) => (v?._id ? v?._id : v))
     })
-    @IsOptional()
     @IsMongoId({ each: true })
     gallery?: string[];
 
