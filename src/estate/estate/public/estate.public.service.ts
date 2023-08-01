@@ -5,6 +5,8 @@ import { ObjectId } from 'mongodb';
 import { Estate, EstateDocument } from '../schemas/estate.schema';
 import { EstateStatusEnum } from '../enum/estateStatus.enum';
 import { EstateVisibilityEnum } from '../enum/estateVisibility.enum';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
+import { PopulatedType, listAggregation } from 'src/utils/helper/listAggregation.helper';
 
 
 
@@ -36,6 +38,28 @@ export class EstatePublicService {
       .populate("office", "name verified")
       .select("-status -visibility -id -isConfirmed -confirmedAt -confirmedBy -createdAt -updatedAt -__v")
       .exec();
+  }
+
+
+  // List Estate
+  findAll(pagination: PaginationDto, filter: any, sort: any) {
+    const populate: PopulatedType[] = [
+      ["users", "owner", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      ["offices", "office", "name", false],
+      // 
+      ["estatecategories", "category", "title slug icon", false, [{ $populate: { path: "icon", select: "content" } }]],
+      ["estatetypes", "type", "title slug icon", false],
+      ["estatefeatures", "features", "title slug icon", false],
+      ["estatedocumenttypes", "documentType", "title slug icon", false],
+      // 
+      ["storages", "image", "path alt title", false],
+      ["storages", "gallery", "path alt title", true],
+    ]
+    const project = "title slug excerpt area canBarter buildingArea roomCount mastersCount buildingArea floorsCount unitsCount floor withOldBuilding publishedAt createdAt code province city district"
+    const virtualFields = {}
+    const searchFields = "title slug excerpt content code province city district quarter alley address"
+    return listAggregation(this.estateModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
   }
 
 

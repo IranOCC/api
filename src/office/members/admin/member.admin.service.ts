@@ -19,8 +19,6 @@ export class OfficeMemberAdminService {
     // === getOfficeById
     async getOfficeById(_office: Office | string): Promise<Office> {
         let office: Office
-        console.log();
-
         if (typeof _office === "string") office = await this.officeModel.findById(_office)
         else office = _office as Office
         if (!office) throw new NotFoundException("The office not found", "OfficeNotFound")
