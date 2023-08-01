@@ -48,10 +48,10 @@ export class EstatePublicService {
       ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["offices", "office", "name", false],
       // 
-      ["estatecategories", "category", "title slug icon", false, [{ $populate: { path: "icon", select: "content" } }]],
-      ["estatetypes", "type", "title slug icon", false],
-      ["estatefeatures", "features", "title slug icon", false],
-      ["estatedocumenttypes", "documentType", "title slug icon", false],
+      ["estatecategories", "category", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
+      ["estatetypes", "type", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
+      ["estatefeatures", "features", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
+      ["estatedocumenttypes", "documentType", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
       // 
       ["storages", "image", "path alt title", false],
       ["storages", "gallery", "path alt title", true],
