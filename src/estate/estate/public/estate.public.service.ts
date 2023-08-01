@@ -59,6 +59,10 @@ export class EstatePublicService {
     const project = "title slug excerpt area canBarter buildingArea roomCount mastersCount buildingArea floorsCount unitsCount floor withOldBuilding publishedAt createdAt code province city district"
     const virtualFields = {}
     const searchFields = "title slug excerpt content code province city district quarter alley address"
+    filter["status"] = EstateStatusEnum.Publish
+    filter["visibility"] = EstateVisibilityEnum.Public
+    filter["isConfirmed"] = true
+    filter["publishedAt"] = { $lte: Date.now() }
     return listAggregation(this.estateModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
   }
 
