@@ -69,6 +69,8 @@ const listAggregation =
                     $or: searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } }))
                 })
             }
+            console.log(filter);
+
             if ($and.length) {
                 $pipelines.push({
                     $match: { $and }

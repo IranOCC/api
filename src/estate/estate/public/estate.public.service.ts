@@ -63,7 +63,7 @@ export class EstatePublicService {
     filter["status"] = EstateStatusEnum.Publish
     filter["visibility"] = EstateVisibilityEnum.Public
     filter["isConfirmed"] = true
-    filter["publishedAt"] = { $lte: Date.now() }
+    filter["publishedAt"] = { $lte: new Date() }
     return listAggregation(this.estateModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
   }
 
