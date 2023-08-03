@@ -10,7 +10,7 @@ import { Public } from 'src/auth/guard/jwt-auth.guard';
 
 
 @Controller('tools/estate/type')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
+@Public()
 @ApiTags('EstateType')
 @ApiBearerAuth()
 export class EstateTypeToolsController {

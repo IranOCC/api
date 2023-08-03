@@ -31,6 +31,128 @@ export class EstateToolsService {
     return await listAutoComplete(this.estateModel, query, searchFields, displayPath)
   }
 
+  async totalPriceRange() {
+    return await this.estateModel.aggregate([
+      {
+        "$group": {
+          "_id": null,
+          "max": { "$max": "$totalPrice" },
+          "min": { "$min": "$totalPrice" }
+        }
+      },
+      {
+        "$project": {
+          "_id": false,
+          "max": "$max",
+          "min": "$min",
+        }
+      }
+    ]);
+  }
+
+  async priceRange() {
+    return await this.estateModel.aggregate([
+      {
+        "$group": {
+          "_id": null,
+          "max": { "$max": "$price" },
+          "min": { "$min": "$price" }
+        }
+      },
+      {
+        "$project": {
+          "_id": false,
+          "max": "$max",
+          "min": "$min",
+        }
+      }
+    ]);
+  }
+
+
+  async areaRange() {
+    return await this.estateModel.aggregate([
+      {
+        "$group": {
+          "_id": null,
+          "max": { "$max": "$area" },
+          "min": { "$min": "$area" }
+        }
+      },
+      {
+        "$project": {
+          "_id": false,
+          "max": "$max",
+          "min": "$min",
+        }
+      }
+    ]);
+  }
+
+
+  async autoCompleteProvince() {
+    return await this.estateModel.aggregate([
+      {
+        "$group": {
+          "_id": "$province",
+        }
+      },
+      {
+        "$project": {
+          "_id": false,
+          "title": "$_id",
+          "value": "$_id",
+        }
+      }
+    ]);
+  }
+
+  async autoCompleteCity(province?: string) {
+    return await this.estateModel.aggregate([
+      {
+        "$match": {
+          province
+        }
+      },
+      {
+        "$group": {
+          "_id": "$city",
+        }
+      },
+      {
+        "$project": {
+          "_id": false,
+          "title": "$_id",
+          "value": "$_id",
+        }
+      }
+    ]);
+  }
+
+
+  async autoCompleteDistrict(province?: string, city?: string) {
+    return await this.estateModel.aggregate([
+      {
+        "$match": {
+          province,
+          city
+        }
+      },
+      {
+        "$group": {
+          "_id": "$district",
+        }
+      },
+      {
+        "$project": {
+          "_id": false,
+          "title": "$_id",
+          "value": "$_id",
+        }
+      }
+    ]);
+  }
+
 
   statics(subject: string) {
     const data = { visibility: EstateVisibilityEnum, status: EstateStatusEnum }

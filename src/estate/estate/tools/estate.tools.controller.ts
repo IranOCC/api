@@ -9,7 +9,7 @@ import { EstateToolsService } from './estate.tools.service';
 
 
 @Controller('tools/estate')
-@Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
+@Public()
 @ApiTags('Estate')
 @ApiBearerAuth()
 export class EstateToolsController {
@@ -24,9 +24,60 @@ export class EstateToolsController {
     return this.estateToolsService.autoComplete(query);
   }
 
+  // ==================================================================================================> totalPriceRange
+  @Get('range/totalPrice')
+  @ApiOperation({ summary: "Get Range of totalPrices", description: "No Description" })
+  @ApiResponse({ status: 200 })
+  totalPriceRange() {
+    return this.estateToolsService.totalPriceRange();
+  }
+
+  // ==================================================================================================> priceRange
+  @Get('range/price')
+  @ApiOperation({ summary: "Get Range of prices", description: "No Description" })
+  @ApiResponse({ status: 200 })
+  priceRange() {
+    return this.estateToolsService.priceRange();
+  }
+
+  // ==================================================================================================> areaRange
+  @Get('range/area')
+  @ApiOperation({ summary: "Get Range of areas", description: "No Description" })
+  @ApiResponse({ status: 200 })
+  areaRange() {
+    return this.estateToolsService.areaRange();
+  }
+
+
+  // ==================================================================================================> autoComplete/province
+  @Get('autoComplete/province')
+  @ApiOperation({ summary: "Get province list in autoComplete structure", description: "No Description" })
+  @ApiResponse({ status: 200 })
+  autoCompleteProvince() {
+    return this.estateToolsService.autoCompleteProvince();
+  }
+
+  // ==================================================================================================> autoComplete/city
+  @Get('autoComplete/city')
+  @ApiOperation({ summary: "Get city list in autoComplete structure", description: "No Description" })
+  @ApiResponse({ status: 200 })
+  autoCompleteCity(@Query('province') province?: string) {
+    return this.estateToolsService.autoCompleteCity(province);
+  }
+
+
+  // ==================================================================================================> autoComplete/city
+  @Get('autoComplete/district')
+  @ApiOperation({ summary: "Get district list in autoComplete structure", description: "No Description" })
+  @ApiResponse({ status: 200 })
+  autoCompleteDistrict(@Query('province') province?: string, @Query('city') city?: string) {
+    return this.estateToolsService.autoCompleteDistrict(province, city);
+  }
+
 
   // ==================================================================================================> statics
   @Get('statics/:subject')
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
   @ApiOperation({ summary: "Get statics variables", description: "No Description" })
   @ApiResponse({ status: 200 })
   statics(@Param('subject') subject: string) {
@@ -39,6 +90,7 @@ export class EstateToolsController {
   // ==================================================================================================> checking
   // actions: create update findOne find remove
   @Get('checking/:action')
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
   @ApiOperation({ summary: "Checking ", description: "No Description" })
   @ApiResponse({ status: 200 })
   checking(@Request() { user }, @Request() { offices }, @Param('action') action: string, @Query('id') id?: string) {
