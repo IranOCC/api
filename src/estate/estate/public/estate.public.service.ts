@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { Estate, EstateDocument } from '../schemas/estate.schema';
 import { EstateStatusEnum } from '../enum/estateStatus.enum';
@@ -64,7 +64,34 @@ export class EstatePublicService {
     filter["visibility"] = EstateVisibilityEnum.Public
     filter["isConfirmed"] = true
     filter["publishedAt"] = { $lte: new Date() }
-    return listAggregation(this.estateModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
+
+    // convert
+    if (filter.category) {
+      filter["category._id"] = { $eq: new ObjectId(filter.category) }
+      delete filter.category
+    }
+    if (filter.type) {
+      if (typeof filter.type === "string") filter.type = [filter.type]
+      filter["type._id"] = { $in: filter.type.map((v: string) => new ObjectId(v)) }
+      delete filter.type
+    }
+    if (filter.documentType) {
+      if (typeof filter.documentType === "string") filter.documentType = [filter.documentType]
+      filter["documentType._id"] = { $in: filter.documentType.map((v: string) => new ObjectId(v)) }
+      delete filter.documentType
+    }
+    if (filter.features) {
+      if (typeof filter.features === "string") filter.features = [filter.features]
+      filter["features._id"] = { $in: filter.features.map((v: string) => new ObjectId(v)) }
+      delete filter.features
+    }
+    // =>ok province
+    // =>ok city
+    if (filter.district) {
+      if (typeof filter.district === "string") filter.district = [filter.district]
+      filter["district"] = { $in: filter.district.map((v: string) => (v)) }
+    }
+    return listAggregation(this.estateModel, pagination, filter, sort, populate, project, virtualFields, searchFields, undefined, undefined, undefined)
   }
 
 
