@@ -61,7 +61,7 @@ export class EstateToolsController {
   @Get('autoComplete/city')
   @ApiOperation({ summary: "Get city list in autoComplete structure", description: "No Description" })
   @ApiResponse({ status: 200 })
-  autoCompleteCity(@Query('province') province?: string) {
+  autoCompleteCity(@Query('filter') { province }: any) {
     return this.estateToolsService.autoCompleteCity(province);
   }
 
@@ -70,7 +70,7 @@ export class EstateToolsController {
   @Get('autoComplete/district')
   @ApiOperation({ summary: "Get district list in autoComplete structure", description: "No Description" })
   @ApiResponse({ status: 200 })
-  autoCompleteDistrict(@Query('province') province?: string, @Query('city') city?: string) {
+  autoCompleteDistrict(@Query('filter') { province, city }: any) {
     return this.estateToolsService.autoCompleteDistrict(province, city);
   }
 
