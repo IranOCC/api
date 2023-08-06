@@ -32,7 +32,7 @@ export class EstateToolsService {
   }
 
   async totalPriceRange() {
-    return await this.estateModel.aggregate([
+    return (await this.estateModel.aggregate([
       {
         "$group": {
           "_id": null,
@@ -44,14 +44,15 @@ export class EstateToolsService {
         "$project": {
           "_id": false,
           "max": "$max",
+          "step": "10000000",
           "min": "$min",
         }
       }
-    ]);
+    ]))[0];
   }
 
   async priceRange() {
-    return await this.estateModel.aggregate([
+    return (await this.estateModel.aggregate([
       {
         "$group": {
           "_id": null,
@@ -63,15 +64,16 @@ export class EstateToolsService {
         "$project": {
           "_id": false,
           "max": "$max",
+          "step": "10000000",
           "min": "$min",
         }
       }
-    ]);
+    ]))[0];
   }
 
 
   async areaRange() {
-    return await this.estateModel.aggregate([
+    return (await this.estateModel.aggregate([
       {
         "$group": {
           "_id": null,
@@ -83,10 +85,11 @@ export class EstateToolsService {
         "$project": {
           "_id": false,
           "max": "$max",
+          "step": "10",
           "min": "$min",
         }
       }
-    ]);
+    ]))[0];
   }
 
 
