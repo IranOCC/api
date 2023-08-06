@@ -5,6 +5,8 @@ import { BlogPost, BlogPostDocument } from '../schemas/blogPost.schema';
 import { ObjectId } from 'mongodb';
 import { PostStatusEum } from '../enum/postStatus.enum';
 import { PostVisibilityEum } from '../enum/postVisibility.enum';
+import { PopulatedType, listAggregation } from 'src/utils/helper/listAggregation.helper';
+import { PaginationDto } from 'src/utils/dto/pagination.dto';
 
 
 
@@ -30,6 +32,29 @@ export class BlogPostPublicService {
       .populate("author", "firstName lastName fullName")
       .select("-status -visibility -id -office -isConfirmed -confirmedAt -confirmedBy -createdBy -createdAt -updatedAt -__v")
       .exec();
+  }
+
+
+  // List Estate
+  findAll(pagination: PaginationDto, filter: any, sort: any) {
+    const populate: PopulatedType[] = [
+      ["users", "author", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      // 
+      ["blogcategories", "categories", "title slug icon", true, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
+      ["storages", "image", "path alt title", false],
+    ]
+    const project = "title slug excerpt publishedAt createdAt"
+    const virtualFields = {}
+    const searchFields = "title slug excerpt content"
+    if (!filter) filter = {}
+    filter["status"] = PostStatusEum.Publish
+    filter["visibility"] = PostVisibilityEum.Public
+    filter["isConfirmed"] = true
+    filter["publishedAt"] = { $lte: new Date() }
+
+
+    return listAggregation(this.blogPostModel, pagination, filter, sort, populate, project, virtualFields, searchFields, undefined, undefined, undefined)
   }
 
 

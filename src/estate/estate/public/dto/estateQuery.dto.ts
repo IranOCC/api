@@ -1,7 +1,8 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsEnum, IsMongoId, IsOptional, IsPositive, IsString } from "class-validator";
-import { RoleEnum } from "src/user/enum/role.enum";
+import { IsMongoId, IsOptional, IsString } from "class-validator";
+
+
 
 class WebEstateSortingDto {
     @ApiPropertyOptional({ name: "sort[createdAt]", enum: ["Desc", "Asc"] })
