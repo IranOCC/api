@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsEnum, IsMongoId, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsMongoId, IsOptional, IsPositive, IsString } from "class-validator";
 import { RoleEnum } from "src/user/enum/role.enum";
 
 class WebEstateSortingDto {
@@ -58,19 +58,28 @@ class WebEstateFilteringDto {
     @IsString({ each: true })
     readonly district?: string[];
 
-    // @ApiPropertyOptional({ name: "filter[active]", enum: ["True", "False"] })
-    // @Transform(({ value }) => {
-    //     return ([1, true, 'True'].includes(value)) ? true : false
-    // })
-    // @IsOptional()
-    // readonly active?: boolean;
+    // 
 
-    // @ApiPropertyOptional({ name: "filter[roles]", isArray: true, enum: RoleEnum })
-    // @Transform(({ value }) => {
-    //     return Array.isArray(value) ? { $in: value } : value
-    // })
-    // @IsOptional()
-    // readonly roles?: RoleEnum[];
+    @ApiPropertyOptional({ name: "filter[area]" })
+    @IsOptional()
+    readonly area?: number[] | number;
+
+    @ApiPropertyOptional({ name: "filter[price]" })
+    @IsOptional()
+    readonly price?: number[] | number;
+
+    @ApiPropertyOptional({ name: "filter[totalPrice]" })
+    @IsOptional()
+    readonly totalPrice?: number[] | number;
+
+    // 
+
+    @ApiPropertyOptional({ name: "filter[barter]", enum: ["True", "False"] })
+    @Transform(({ value }) => {
+        return ([1, true, 'True'].includes(value)) ? true : false
+    })
+    @IsOptional()
+    readonly barter?: boolean;
 }
 
 

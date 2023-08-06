@@ -44,7 +44,7 @@ export class EstateToolsService {
         "$project": {
           "_id": false,
           "max": "$max",
-          "step": "10000000",
+          "step": 10000000,
           "min": "$min",
         }
       }
@@ -64,7 +64,7 @@ export class EstateToolsService {
         "$project": {
           "_id": false,
           "max": "$max",
-          "step": "10000000",
+          "step": 10000000,
           "min": "$min",
         }
       }
@@ -85,7 +85,7 @@ export class EstateToolsService {
         "$project": {
           "_id": false,
           "max": "$max",
-          "step": "10",
+          "step": 10,
           "min": "$min",
         }
       }

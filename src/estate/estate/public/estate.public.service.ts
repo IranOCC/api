@@ -91,6 +91,20 @@ export class EstatePublicService {
       if (typeof filter.district === "string") filter.district = [filter.district]
       filter["district"] = { $in: filter.district.map((v: string) => (v)) }
     }
+
+    if (filter.area) {
+      if (typeof filter.area === "string") filter.area = [filter.area]
+      filter["area"] = !!filter.area[1] ? { $gte: parseFloat(filter.area[0]), $lte: parseFloat(filter.area[1]) } : { $gte: parseFloat(filter.area[0]) }
+    }
+    if (filter.price) {
+      if (typeof filter.price === "string") filter.price = [filter.price]
+      filter["price"] = !!filter.price[1] ? { $gte: parseFloat(filter.price[0]), $lte: parseFloat(filter.price[1]) } : { $gte: parseFloat(filter.price[0]) }
+    }
+    if (filter.totalPrice) {
+      if (typeof filter.totalPrice === "string") filter.totalPrice = [filter.totalPrice]
+      filter["totalPrice"] = !!filter.totalPrice[1] ? { $gte: parseFloat(filter.totalPrice[0]), $lte: parseFloat(filter.totalPrice[1]) } : { $gte: parseFloat(filter.totalPrice[0]) }
+    }
+    // =>ok barter
     return listAggregation(this.estateModel, pagination, filter, sort, populate, project, virtualFields, searchFields, undefined, undefined, undefined)
   }
 
