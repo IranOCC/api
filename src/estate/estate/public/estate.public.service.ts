@@ -104,7 +104,10 @@ export class EstatePublicService {
       if (typeof filter.totalPrice === "string") filter.totalPrice = [filter.totalPrice]
       filter["totalPrice"] = !!filter.totalPrice[1] ? { $gte: parseFloat(filter.totalPrice[0]), $lte: parseFloat(filter.totalPrice[1]) } : { $gte: parseFloat(filter.totalPrice[0]) }
     }
-    // =>ok barter
+    if (filter.barter) {
+      filter["canBarter"] = filter.barter
+      delete filter.barter
+    }
     return listAggregation(this.estateModel, pagination, filter, sort, populate, project, virtualFields, searchFields, undefined, undefined, undefined)
   }
 
