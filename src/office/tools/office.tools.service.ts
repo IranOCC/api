@@ -56,6 +56,7 @@ export class OfficeServiceTools {
         location: { disabled: true },
         verified: { disabled: true },
         active: { disabled: true },
+        showPublic: { disabled: true },
       }
     }
     if (action === "create") {
@@ -79,6 +80,7 @@ export class OfficeServiceTools {
         location: { disabled: false, default: "36.699735, 51.196246" },
         verified: { disabled: false, default: false },
         active: { disabled: false, default: true },
+        showPublic: { disabled: false, default: false },
       }
     }
     if (action === "update") {
@@ -102,6 +104,7 @@ export class OfficeServiceTools {
         location: { disabled: false, default: "36.699735, 51.196246" },
         verified: { disabled: false },
         active: { disabled: false },
+        showPublic: { disabled: false },
       }
     }
   }
