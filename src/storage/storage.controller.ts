@@ -13,7 +13,8 @@ import {
   FileTypeValidator,
   MaxFileSizeValidator,
   ParseFilePipe,
-  Query
+  Query,
+  NotAcceptableException
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { StorageService } from './storage.service';
@@ -23,6 +24,13 @@ import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
 import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
 import { CreateStorageDto } from './dto/createStorage.dto';
+import { UploadFromUrlDto } from './dto/uploadFromUrl.dto';
+import fetch from 'node-fetch';
+import { Public } from 'src/auth/guard/jwt-auth.guard';
+import { get } from 'https';
+import { buffer } from 'stream/consumers';
+import { Readable } from 'stream';
+
 
 
 
@@ -211,6 +219,52 @@ export class StorageController {
     @Request() { user }
   ) {
     return this.storageService.create(image, user, undefined, undefined, alt, title)
+  }
+
+
+
+
+
+  // =======> from url
+
+
+  @Post("url")
+  @Public()
+  // @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
+  @ApiOperation({ summary: "Upload from url", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  async uploadImageFromUrl(
+    @Body() { url, relatedTo, relatedToID, alt, title, }: UploadFromUrlDto,
+    @Request() { user }
+  ) {
+    const data: Uint8Array[] = []
+    get(url, (result) => {
+      result.on("data", (chunk: Uint8Array) => {
+        data.push(chunk)
+      })
+      result.on("end", () => {
+        console.log(result, "result");
+
+        const buffer = Buffer.concat(data)
+        const image: Express.Multer.File = {
+          buffer,
+          fieldname: '',
+          originalname: "",
+          encoding: '',
+          mimetype: '',
+          size: buffer.length,
+          stream: new Readable,
+          destination: '',
+          filename: '',
+          path: ''
+        }
+        return this.storageService.create(image, user, relatedTo, relatedToID, alt, title)
+      })
+      result.on("error", () => {
+        throw new NotAcceptableException("Cant Upload this file", "UploadErrorUrl")
+      })
+    })
+    // 
   }
 
 
