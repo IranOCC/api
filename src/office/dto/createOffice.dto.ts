@@ -5,7 +5,8 @@ import {
   IsNotEmpty,
   IsMongoId,
   ValidateNested,
-  IsLatLong
+  IsLatLong,
+  IsBoolean
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
@@ -74,9 +75,17 @@ export class CreateOfficeDto {
 
   @ApiPropertyOptional({ default: false })
   @IsOptional()
+  @IsBoolean()
   verified: boolean = false;
 
   @ApiPropertyOptional({ default: true })
   @IsOptional()
+  @IsBoolean()
   active: boolean = true;
+
+
+  @ApiPropertyOptional({ default: false })
+  @IsOptional()
+  @IsBoolean()
+  showPublic: boolean = false;
 }

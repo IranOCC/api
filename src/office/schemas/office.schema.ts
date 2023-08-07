@@ -105,7 +105,8 @@ export class Office extends Document {
   @Prop({ default: true, select: true, })
   active: boolean;
 
-
+  @Prop({ default: false, select: true, })
+  showPublic: boolean;
 
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],

@@ -35,7 +35,7 @@ export class BlogPostPublicService {
   }
 
 
-  // List Estate
+  // List BlogPost
   findAll(pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
       ["users", "author", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
