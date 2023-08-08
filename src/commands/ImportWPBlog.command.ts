@@ -83,7 +83,7 @@ export class ImportWPBlogCommand {
             // => generate data
             const _data: CreateBlogPostDto = {
                 "title": p.title,
-                "slug": p.slug,
+                "slug": decodeURI(p.slug),
                 "content": content,
                 "excerpt": p.title,
                 "image": image,
