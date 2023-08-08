@@ -12,6 +12,7 @@ import { StorageAdminService } from './admin/storage.admin.service';
 
 
 @Module({
+  exports: [StorageService],
   imports: [
     S3ManagerModule,
     AwsSdkModule.forRootAsync({

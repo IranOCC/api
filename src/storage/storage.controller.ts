@@ -232,8 +232,7 @@ export class StorageController {
 
 
   @Post("url")
-  @Public()
-  // @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
+  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
   @ApiOperation({ summary: "Upload from url", description: "No Description" })
   @ApiResponse({ status: 201 })
   async uploadImageFromUrl(
@@ -267,8 +266,6 @@ export class StorageController {
         })
       })
     })
-
-    // 
   }
 
 

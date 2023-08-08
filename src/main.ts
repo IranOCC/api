@@ -9,6 +9,7 @@ import { useContainer } from 'class-validator';
 import { ContextInterceptor } from './utils/helper/context.interceptor';
 
 async function bootstrap() {
+
   const app = await NestFactory.create(AppModule);
 
   // prefix
@@ -74,5 +75,8 @@ async function bootstrap() {
   // run app
   await app.listen(8000, '0.0.0.0');
   console.log(`Application is running on: ${await app.getUrl()}`);
+
+  // await CommandFactory.run(SayHelloModule);
+
 }
 bootstrap();

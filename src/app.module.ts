@@ -33,12 +33,16 @@ import { PhoneModule } from './phone/phone.module';
 import { IsUniqueProvider } from './utils/decorator/unique.decorator';
 import { PageModule } from './page/page.module';
 import { StaticModule } from './static/static.module';
+import { CommandModule } from 'nestjs-command';
+import { ImportWPBlogCommand } from './commands/ImportWPBlog.command';
+import { HttpModule } from '@nestjs/axios';
 
 
 
 
 @Module({
   imports: [
+
     ConfigModule.forRoot({ isGlobal: true, expandVariables: true }),
     MongooseModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
@@ -71,6 +75,8 @@ import { StaticModule } from './static/static.module';
     PageModule,
     SettingModule,
     StaticModule,
+    CommandModule,
+    HttpModule
   ],
   controllers: [AppController],
   providers: [
@@ -84,6 +90,7 @@ import { StaticModule } from './static/static.module';
       useClass: RolesGuard,
     },
     IsUniqueProvider,
+    ImportWPBlogCommand
   ],
 })
 

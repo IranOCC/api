@@ -49,11 +49,6 @@ export class CreateBlogPostDto {
     image?: string;
 
 
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsUrl({})
-    image_url?: string;
-
 
 
     // ==> tags & categories
