@@ -25,7 +25,7 @@ export class StorageService {
 
 
   // Create Storage
-  async create(file: Express.Multer.File, user?: User, relatedTo?: RelatedToEnum, relatedToID?: string, alt?: string, title?: string) {
+  async create(file: Express.Multer.File, user?: User, relatedTo: RelatedToEnum = RelatedToEnum.Unspecific, relatedToID?: string, alt?: string, title?: string) {
     const ext = "." + file.originalname.split('.').filter(Boolean).slice(1).join('.')
     const fileKey = relatedTo + "/" + nanoid() + ext
 

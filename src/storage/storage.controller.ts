@@ -199,7 +199,8 @@ export class StorageController {
 
 
   @Post("main")
-  @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
+  @Public()
+  // @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
   @ApiOperation({ summary: "Upload estate images", description: "No Description" })
   @ApiResponse({ status: 201 })
   @ApiConsumes('multipart/form-data')
@@ -218,6 +219,8 @@ export class StorageController {
     @Body() { alt, title }: CreateStorageDto,
     @Request() { user }
   ) {
+    console.log(image, "image");
+
     return this.storageService.create(image, user, undefined, undefined, alt, title)
   }
 
@@ -238,32 +241,33 @@ export class StorageController {
     @Request() { user }
   ) {
     const data: Uint8Array[] = []
-    get(url, (result) => {
-      result.on("data", (chunk: Uint8Array) => {
-        data.push(chunk)
-      })
-      result.on("end", () => {
-        console.log(result, "result");
-
-        const buffer = Buffer.concat(data)
-        const image: Express.Multer.File = {
-          buffer,
-          fieldname: '',
-          originalname: "",
-          encoding: '',
-          mimetype: '',
-          size: buffer.length,
-          stream: new Readable,
-          destination: '',
-          filename: '',
-          path: ''
-        }
-        return this.storageService.create(image, user, relatedTo, relatedToID, alt, title)
-      })
-      result.on("error", () => {
-        throw new NotAcceptableException("Cant Upload this file", "UploadErrorUrl")
+    return new Promise((resolve, reject) => {
+      get(url, (result) => {
+        result.on("data", (chunk: Uint8Array) => {
+          data.push(chunk)
+        })
+        result.on("end", () => {
+          const buffer = Buffer.concat(data)
+          const image: Express.Multer.File = {
+            buffer,
+            fieldname: '',
+            originalname: url.split("/").reverse()[0],
+            encoding: '',
+            mimetype: result.headers['content-type'],
+            size: buffer.length,
+            stream: new Readable,
+            destination: '',
+            filename: url.split("/").reverse()[0],
+            path: url
+          }
+          resolve(this.storageService.create(image, user, relatedTo, relatedToID, alt, title))
+        })
+        result.on("error", () => {
+          throw new NotAcceptableException("Cant Upload this file", "UploadErrorUrl")
+        })
       })
     })
+
     // 
   }
 

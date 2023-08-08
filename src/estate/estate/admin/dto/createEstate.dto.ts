@@ -83,7 +83,7 @@ export class CreateEstateDto {
     @IsEnum(EstateVisibilityEnum)
     visibility: string = EstateVisibilityEnum.Public;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({ default: false })
     @IsOptional()
     @IsBoolean()
     pinned: boolean = false;

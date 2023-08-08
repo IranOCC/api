@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { User } from "aws-sdk/clients/appstream";
 import { Transform } from "class-transformer";
-import { IsBoolean, IsDate, IsDateString, IsEnum, IsLatLong, IsLongitude, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsDateString, IsEnum, IsLatLong, IsLongitude, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUrl } from "class-validator";
 import slugify from "slugify";
 import { PostStatusEum } from "../../enum/postStatus.enum";
 import { PostVisibilityEum } from "../../enum/postVisibility.enum";
@@ -49,6 +49,12 @@ export class CreateBlogPostDto {
     image?: string;
 
 
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsUrl({})
+    image_url?: string;
+
+
 
     // ==> tags & categories
     @ApiPropertyOptional()
@@ -77,7 +83,7 @@ export class CreateBlogPostDto {
     @IsEnum(PostVisibilityEum)
     visibility: string = PostVisibilityEum.Public;
 
-    @ApiPropertyOptional()
+    @ApiPropertyOptional({ default: false })
     @IsOptional()
     @IsBoolean()
     pinned: boolean = false;
