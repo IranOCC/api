@@ -9,6 +9,8 @@ import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/schemas/user.schema';
 import { Storage } from 'src/storage/schemas/storage.schema';
 import { Types } from 'mongoose';
+import { BlogPostAdminService } from 'src/blog/post/admin/blogPost.admin.service';
+import { CreateBlogPostDto } from 'src/blog/post/admin/dto/createBlogPost.dto';
 
 
 
@@ -19,6 +21,7 @@ export class ImportWPBlogCommand {
         private readonly http: HttpService,
         private storageService: StorageService,
         private userService: UserService,
+        private blogPostService: BlogPostAdminService,
     ) { }
 
     @Command({
@@ -78,7 +81,7 @@ export class ImportWPBlogCommand {
             const n = image.replace("dl.iranocc.com", "iranocc.com")
             image = (await this.uploadByUrl(n, me, RelatedToEnum.Blog))._id.toString()
             // => generate data
-            const _data = {
+            const _data: CreateBlogPostDto = {
                 "title": p.title,
                 "slug": p.slug,
                 "content": content,
@@ -104,11 +107,12 @@ export class ImportWPBlogCommand {
                 "status": "Publish",
                 "visibility": "Public",
                 "pinned": false,
-                "publishedAt": new Date(p.created + " UTC+00:00"),
+                "publishedAt": new Date(p.created + " UTC+00:00").toISOString(),
                 "office": "649c9097df135411a6c3b622",
                 "author": "64942e083da4c1fbea6bd7c3",
             }
-            console.log(_data)
+            await this.blogPostService.create(_data, me)
+            console.log("Imported", (i + 1), "/", _count + skip, "==>", p.id)
         }
         return data
     }

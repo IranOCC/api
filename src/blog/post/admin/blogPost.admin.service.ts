@@ -24,7 +24,7 @@ export class BlogPostAdminService {
 
 
   // Create BlogPost
-  async create(data: CreateBlogPostDto, user: CurrentUser) {
+  async create(data: CreateBlogPostDto, user: CurrentUser | User) {
     // get office
     const _office = await this.officeService.checkOffice(data.office)
 

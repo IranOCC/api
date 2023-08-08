@@ -25,6 +25,9 @@ import { BlogPostPublicController } from './post/public/blogPost.public.controll
 
 
 @Module({
+  exports: [
+    BlogPostAdminService
+  ],
   imports: [
     OfficeModule,
     MongooseModule.forFeature([{ name: BlogPost.name, schema: BlogPostSchema }]),
