@@ -85,7 +85,7 @@ export class ImportWPBlogCommand {
                 "title": p.title,
                 "slug": p.slug,
                 "content": content,
-                "excerpt": "",
+                "excerpt": p.title,
                 "image": image,
                 "tags": p.tags?.map(({ name }) => (name)),
                 "categories": p.categories?.map(({ cat_ID }) => {
