@@ -450,10 +450,14 @@ export class ImportWPPropertyCommand {
                         }
                     })
                 }
-                let gallery = !!p.gallery ? p.gallery.map(async (img: string) => {
-                    const n = img.replace("dl.iranocc.com", "iranocc.com")
-                    return (await this.uploadByUrl(n, me, RelatedToEnum.Estate))._id.toString()
-                }) : []
+                let gallery = []
+                if (!!p.gallery) {
+                    for (let i = 0; i < p.gallery.length; i++) {
+                        const n = p.gallery[i].replace("dl.iranocc.com", "iranocc.com")
+                        const im = (await this.uploadByUrl(n, me, RelatedToEnum.Estate))._id.toString()
+                        gallery.push(im)
+                    }
+                }
 
 
 
