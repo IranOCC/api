@@ -38,6 +38,23 @@ export class ImportWPPropertyCommand {
             default: 0
         })
         page: number,
+        @Option({
+            name: 'skip',
+            describe: 'skip index',
+            type: 'number',
+            alias: 's',
+            required: false,
+            default: 0
+        })
+        skip: number,
+        @Option({
+            name: 'count',
+            describe: 'count index',
+            type: 'number',
+            alias: 'c',
+            required: false,
+        })
+        count?: number
     ) {
 
         for (let ppp = page; ppp < 68; ppp++) {
@@ -45,11 +62,11 @@ export class ImportWPPropertyCommand {
             console.log("Importing started");
             const { data } = await this.http.get('https://iranocc.com/wp-json/rapp/v1/exportProperty', { params: { page: ppp } }).toPromise();
             const _all_count = data.length
-            // const _count = (_all_count - skip) > count ? count : (_all_count - skip)
+            const _count = (_all_count - skip) > count ? count : (_all_count - skip)
 
             console.log("items count:", _all_count)
-            // console.log("import from:", skip)
-            // console.log("import count:", _count)
+            console.log("import from:", skip)
+            console.log("import count:", _count)
 
             const me: User = await this.userService.getUserById("64942e083da4c1fbea6bd7c3")
 
@@ -468,7 +485,7 @@ export class ImportWPPropertyCommand {
                     roomsCount: +p.roomsCount || undefined
                 }
                 await this.estateService.create(_data, me)
-                console.log("Imported", (ppp * 100) + (i + 1), "/", (ppp * 100) + _all_count, "==>", p.id)
+                console.log("Imported", (ppp * 100) + (i + 1), "/", (ppp * 100) + _count + skip, "==>", p.id)
             }
             return data
         }
