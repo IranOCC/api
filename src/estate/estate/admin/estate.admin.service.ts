@@ -21,7 +21,7 @@ export class EstateAdminService {
 
 
   // Create Estate
-  async create(data: CreateEstateDto, user: CurrentUser) {
+  async create(data: CreateEstateDto, user: CurrentUser | User) {
     // get office
     const _office = await this.officeService.checkOffice(data.office)
 

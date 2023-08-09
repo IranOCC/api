@@ -13,7 +13,7 @@ import { BlogPostAdminService } from 'src/blog/post/admin/blogPost.admin.service
 import { CreateBlogPostDto } from 'src/blog/post/admin/dto/createBlogPost.dto';
 
 
-
+// CLI_PATH=./dist/cli.js npx nestjs-command import:wpBlog -s 89
 
 @Injectable()
 export class ImportWPBlogCommand {
@@ -54,7 +54,7 @@ export class ImportWPBlogCommand {
         count?: number
     ) {
         console.log("Importing started");
-        const { data } = await this.http.get('https://iranocc.com/wp-json/rapp/v1/exportFiles').toPromise();
+        const { data } = await this.http.get('https://iranocc.com/wp-json/rapp/v1/exportBlog').toPromise();
         const _all_count = data.length
         const _count = (_all_count - skip) > count ? count : (_all_count - skip)
 

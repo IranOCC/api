@@ -122,7 +122,7 @@ export class CreateEstateDto {
 
     @ApiProperty()
     @IsMongoId()
-    documentType?: string[];
+    documentType?: string;
 
 
 
@@ -248,7 +248,7 @@ export class CreateEstateDto {
     @ApiPropertyOptional()
     @IsOptional()
     @IsLatLong()
-    location: string;
+    location?: string;
 
 
 
