@@ -44,6 +44,7 @@ import { OfficeModule } from 'src/office/office.module';
 
 
 @Module({
+  exports: [EstateAdminService],
   imports: [
     OfficeModule,
     MongooseModule.forFeature([{ name: Estate.name, schema: EstateSchema }]),
