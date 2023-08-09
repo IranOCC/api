@@ -87,8 +87,8 @@ export class ImportWPBlogCommand {
                 "content": content,
                 "excerpt": p.title,
                 "image": image,
-                "tags": p.tags?.map(({ name }) => (name)),
-                "categories": p.categories?.map(({ cat_ID }) => {
+                "tags": p.tags ? p.tags?.map(({ name }) => (name)) : [],
+                "categories": p.categories ? p.categories?.map(({ cat_ID }) => {
                     switch (cat_ID) {
                         case 106:
                             return "64d154306970b9d5194639d9"
@@ -103,7 +103,7 @@ export class ImportWPBlogCommand {
                         case 101:
                             return "64d154ea6970b9d519463aee"
                     }
-                }),
+                }) : [],
                 "status": "Publish",
                 "visibility": "Public",
                 "pinned": false,
