@@ -13,7 +13,7 @@ import { CreateEstateDto } from 'src/estate/estate/admin/dto/createEstate.dto';
 import { EstateAdminService } from 'src/estate/estate/admin/estate.admin.service';
 
 
-// CLI_PATH=./dist/cli.js npx nestjs-command import:wpProperty -p -s 0 -c 1
+// CLI_PATH=./dist/cli.js npx nestjs-command import:wpProperty -p 1 -s 0 -c 1
 
 @Injectable()
 export class ImportWPPropertyCommand {
@@ -95,9 +95,9 @@ export class ImportWPPropertyCommand {
                 const pcity = p.city
                 // 
 
-                let category = undefined
-                let type = ""
-                let documentType = ""
+                let category = null
+                let type = null
+                let documentType = null
                 let features = []
                 for (let i = 0; i < ptype.length; i++) {
                     switch (ptype[i].term_id) {

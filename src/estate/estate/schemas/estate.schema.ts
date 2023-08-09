@@ -199,6 +199,7 @@ export class Estate extends Document {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'EstateDocumentType',
+    default: null
   })
   documentType: any;
 
