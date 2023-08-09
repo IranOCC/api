@@ -78,8 +78,10 @@ export class ImportWPBlogCommand {
             }
             // thumbnail
             let image: string = p.image
-            const n = image.replace("dl.iranocc.com", "iranocc.com")
-            image = (await this.uploadByUrl(n, me, RelatedToEnum.Blog))._id.toString()
+            if (!!image) {
+                const n = image.replace("dl.iranocc.com", "iranocc.com")
+                image = (await this.uploadByUrl(n, me, RelatedToEnum.Blog))._id.toString()
+            }
             // => generate data
             const _data: CreateBlogPostDto = {
                 "title": p.title,
