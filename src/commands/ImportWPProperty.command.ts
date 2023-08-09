@@ -101,99 +101,104 @@ export class ImportWPPropertyCommand {
                 let type = null
                 let documentType = null
                 let features = []
+                if (!ptype) continue
                 for (let i = 0; i < ptype.length; i++) {
                     switch (ptype[i].term_id) {
                         // hectare
                         case 265:
                             category = "645cd1844b4819ffd958c95e"
-                            pfeatures.map(({ term_id }) => {
-                                switch (term_id) {
-                                    // ========================> features
-                                    // داخل بافت
-                                    case 79:
-                                        features = ["64a1ca0be1385b7cf6c99005"]
-                                        break;
-                                    // خارج بافت
-                                    case 273:
-                                        features = ["64a1d1c1e1385b7cf6c99021"]
-                                        break;
-                                    // الحاق بافت
-                                    case 275:
-                                        features = ["64a1d1b2e1385b7cf6c9901e"]
-                                        break;
-                                    // =======================> type
-                                    // کاربری مسکونی
-                                    case 94:
-                                        type = "645d77a54df9dc306ef4ac0e"
-                                        break;
-                                    // ساحلی
-                                    case 82:
-                                        type = "645d77fe4df9dc306ef4ac1e"
-                                        break;
-                                    // کاربری باغات
-                                    case 122:
-                                        type = "645d78274df9dc306ef4ac26"
-                                        break;
-                                    // کاربری تجاری
-                                    case 98:
-                                        type = "645d77f04df9dc306ef4ac1a"
-                                        break;
-                                    // کاربری جنگل جلگه ای
-                                    case 96:
-                                        type = "645d77d54df9dc306ef4ac16"
-                                        break;
-                                    // کاربری زراعی کشاورزی
-                                    case 272:
-                                        type = "645d77be4df9dc306ef4ac12"
-                                        break;
-                                }
-                            })
+                            if (!!pfeatures) {
+                                pfeatures.map(({ term_id }) => {
+                                    switch (term_id) {
+                                        // ========================> features
+                                        // داخل بافت
+                                        case 79:
+                                            features = ["64a1ca0be1385b7cf6c99005"]
+                                            break;
+                                        // خارج بافت
+                                        case 273:
+                                            features = ["64a1d1c1e1385b7cf6c99021"]
+                                            break;
+                                        // الحاق بافت
+                                        case 275:
+                                            features = ["64a1d1b2e1385b7cf6c9901e"]
+                                            break;
+                                        // =======================> type
+                                        // کاربری مسکونی
+                                        case 94:
+                                            type = "645d77a54df9dc306ef4ac0e"
+                                            break;
+                                        // ساحلی
+                                        case 82:
+                                            type = "645d77fe4df9dc306ef4ac1e"
+                                            break;
+                                        // کاربری باغات
+                                        case 122:
+                                            type = "645d78274df9dc306ef4ac26"
+                                            break;
+                                        // کاربری تجاری
+                                        case 98:
+                                            type = "645d77f04df9dc306ef4ac1a"
+                                            break;
+                                        // کاربری جنگل جلگه ای
+                                        case 96:
+                                            type = "645d77d54df9dc306ef4ac16"
+                                            break;
+                                        // کاربری زراعی کشاورزی
+                                        case 272:
+                                            type = "645d77be4df9dc306ef4ac12"
+                                            break;
+                                    }
+                                })
+                            }
                             break;
                         // land
                         case 57:
                             category = "645cd1554b4819ffd958c958"
-                            pfeatures.map(({ term_id }) => {
-                                switch (term_id) {
-                                    // ========================> features
-                                    // داخل بافت
-                                    case 79:
-                                        features = ["64a1ca0be1385b7cf6c99005"]
-                                        break;
-                                    // خارج بافت
-                                    case 273:
-                                        features = ["64a1d1c1e1385b7cf6c99021"]
-                                        break;
-                                    // الحاق بافت
-                                    case 275:
-                                        features = ["64a1d1b2e1385b7cf6c9901e"]
-                                        break;
-                                    // =======================> type
-                                    // کاربری مسکونی
-                                    case 94:
-                                        type = "645d77a54df9dc306ef4ac0e"
-                                        break;
-                                    // ساحلی
-                                    case 82:
-                                        type = "645d77fe4df9dc306ef4ac1e"
-                                        break;
-                                    // کاربری باغات
-                                    case 122:
-                                        type = "645d78274df9dc306ef4ac26"
-                                        break;
-                                    // کاربری تجاری
-                                    case 98:
-                                        type = "645d77f04df9dc306ef4ac1a"
-                                        break;
-                                    // کاربری جنگل جلگه ای
-                                    case 96:
-                                        type = "645d77d54df9dc306ef4ac16"
-                                        break;
-                                    // کاربری زراعی کشاورزی
-                                    case 272:
-                                        type = "645d77be4df9dc306ef4ac12"
-                                        break;
-                                }
-                            })
+                            if (!!pfeatures) {
+                                pfeatures.map(({ term_id }) => {
+                                    switch (term_id) {
+                                        // ========================> features
+                                        // داخل بافت
+                                        case 79:
+                                            features = ["64a1ca0be1385b7cf6c99005"]
+                                            break;
+                                        // خارج بافت
+                                        case 273:
+                                            features = ["64a1d1c1e1385b7cf6c99021"]
+                                            break;
+                                        // الحاق بافت
+                                        case 275:
+                                            features = ["64a1d1b2e1385b7cf6c9901e"]
+                                            break;
+                                        // =======================> type
+                                        // کاربری مسکونی
+                                        case 94:
+                                            type = "645d77a54df9dc306ef4ac0e"
+                                            break;
+                                        // ساحلی
+                                        case 82:
+                                            type = "645d77fe4df9dc306ef4ac1e"
+                                            break;
+                                        // کاربری باغات
+                                        case 122:
+                                            type = "645d78274df9dc306ef4ac26"
+                                            break;
+                                        // کاربری تجاری
+                                        case 98:
+                                            type = "645d77f04df9dc306ef4ac1a"
+                                            break;
+                                        // کاربری جنگل جلگه ای
+                                        case 96:
+                                            type = "645d77d54df9dc306ef4ac16"
+                                            break;
+                                        // کاربری زراعی کشاورزی
+                                        case 272:
+                                            type = "645d77be4df9dc306ef4ac12"
+                                            break;
+                                    }
+                                })
+                            }
                             break;
                         // ==== commercial
                         case 24:
@@ -216,233 +221,239 @@ export class ImportWPPropertyCommand {
                         case 47:
                             category = "645cd1214b4819ffd958c955"
                             type = "64627678979b5983b8b7ced2"
-                            pfeatures.map(({ term_id }) => {
-                                switch (term_id) {
-                                    // ========================> features
-                                    // آسانسور
-                                    case 79:
-                                        features.push("645d0c34c4e32bac366cbfce")
-                                        break;
-                                    // جکوزی
-                                    case 273:
-                                        features.push("645d0e3398a6fe36672b5730")
-                                        break;
-                                    // سونا
-                                    case 273:
-                                        features.push("645d0e4b98a6fe36672b5734")
-                                        break;
-                                    // انباری
-                                    case 273:
-                                        features.push("645d0ee798a6fe36672b574c")
-                                        break;
-                                    // پارکینگ
-                                    case 273:
-                                        features.push("645d0ef998a6fe36672b5750")
-                                        break;
-                                    // مبله
-                                    case 273:
-                                        features.push("645d0f4c98a6fe36672b5781")
-                                        break;
-                                    // کمد دیواری
-                                    case 273:
-                                        features.push("645d0f6498a6fe36672b5785")
-                                        break;
-                                    // ویو
-                                    case 273:
-                                        features.push("645d0f7598a6fe36672b5789")
-                                        break;
-                                }
-                            })
+                            if (!!pfeatures) {
+                                pfeatures.map(({ term_id }) => {
+                                    switch (term_id) {
+                                        // ========================> features
+                                        // آسانسور
+                                        case 79:
+                                            features.push("645d0c34c4e32bac366cbfce")
+                                            break;
+                                        // جکوزی
+                                        case 273:
+                                            features.push("645d0e3398a6fe36672b5730")
+                                            break;
+                                        // سونا
+                                        case 273:
+                                            features.push("645d0e4b98a6fe36672b5734")
+                                            break;
+                                        // انباری
+                                        case 273:
+                                            features.push("645d0ee798a6fe36672b574c")
+                                            break;
+                                        // پارکینگ
+                                        case 273:
+                                            features.push("645d0ef998a6fe36672b5750")
+                                            break;
+                                        // مبله
+                                        case 273:
+                                            features.push("645d0f4c98a6fe36672b5781")
+                                            break;
+                                        // کمد دیواری
+                                        case 273:
+                                            features.push("645d0f6498a6fe36672b5785")
+                                            break;
+                                        // ویو
+                                        case 273:
+                                            features.push("645d0f7598a6fe36672b5789")
+                                            break;
+                                    }
+                                })
+                            }
                             break;
                         // villa
                         case 46:
                         case 42:
                             category = "645cd0444b4819ffd958c940"
-                            pfeatures.map(({ term_id }) => {
-                                switch (term_id) {
-                                    // ========================> features
-                                    // آسانسور
-                                    case 79:
-                                        features.push("645d0c34c4e32bac366cbfce")
-                                        break;
-                                    // استخر
-                                    case 273:
-                                        features.push("645d0d9998a6fe36672b5716")
-                                        break;
-                                    // حیاط سازی
-                                    case 275:
-                                        features.push("645d0e0398a6fe36672b5728")
-                                        break;
-                                    // روف گاردن
-                                    case 273:
-                                        features.push("645d0e1b98a6fe36672b572c")
-                                        break;
-                                    // جکوزی
-                                    case 273:
-                                        features.push("645d0e3398a6fe36672b5730")
-                                        break;
-                                    // سونا
-                                    case 273:
-                                        features.push("645d0e4b98a6fe36672b5734")
-                                        break;
-                                    // ساحلی
-                                    case 273:
-                                        features.push("645d0e6298a6fe36672b5738")
-                                        break;
-                                    // جنگلی
-                                    case 273:
-                                        features.push("645d0e7598a6fe36672b573c")
-                                        break;
-                                    // شهرکی
-                                    case 273:
-                                        features.push("645d0e8998a6fe36672b5740")
-                                        break;
-                                    // شاه نشین
-                                    case 273:
-                                        features.push("645d0eb398a6fe36672b5744")
-                                        break;
-                                    // فول فرنیش
-                                    case 273:
-                                        features.push("645d0ec898a6fe36672b5748")
-                                        break;
-                                    // =======================> type
-                                    // فلت
-                                    case 288:
-                                        type = "645d76884df9dc306ef4abdd"
-                                        break;
-                                    // دوبلکس
-                                    case 80:
-                                        type = "645d76c34df9dc306ef4abe1"
-                                        break;
-                                    // تریبلکس
-                                    case 81:
-                                        type = "645d77534df9dc306ef4abfa"
-                                        break;
-                                    // طبقات جداگانه
-                                    case 356:
-                                        type = "645d776a4df9dc306ef4abfe"
-                                        break;
-                                }
-                            })
+                            if (!!pfeatures) {
+                                pfeatures.map(({ term_id }) => {
+                                    switch (term_id) {
+                                        // ========================> features
+                                        // آسانسور
+                                        case 79:
+                                            features.push("645d0c34c4e32bac366cbfce")
+                                            break;
+                                        // استخر
+                                        case 273:
+                                            features.push("645d0d9998a6fe36672b5716")
+                                            break;
+                                        // حیاط سازی
+                                        case 275:
+                                            features.push("645d0e0398a6fe36672b5728")
+                                            break;
+                                        // روف گاردن
+                                        case 273:
+                                            features.push("645d0e1b98a6fe36672b572c")
+                                            break;
+                                        // جکوزی
+                                        case 273:
+                                            features.push("645d0e3398a6fe36672b5730")
+                                            break;
+                                        // سونا
+                                        case 273:
+                                            features.push("645d0e4b98a6fe36672b5734")
+                                            break;
+                                        // ساحلی
+                                        case 273:
+                                            features.push("645d0e6298a6fe36672b5738")
+                                            break;
+                                        // جنگلی
+                                        case 273:
+                                            features.push("645d0e7598a6fe36672b573c")
+                                            break;
+                                        // شهرکی
+                                        case 273:
+                                            features.push("645d0e8998a6fe36672b5740")
+                                            break;
+                                        // شاه نشین
+                                        case 273:
+                                            features.push("645d0eb398a6fe36672b5744")
+                                            break;
+                                        // فول فرنیش
+                                        case 273:
+                                            features.push("645d0ec898a6fe36672b5748")
+                                            break;
+                                        // =======================> type
+                                        // فلت
+                                        case 288:
+                                            type = "645d76884df9dc306ef4abdd"
+                                            break;
+                                        // دوبلکس
+                                        case 80:
+                                            type = "645d76c34df9dc306ef4abe1"
+                                            break;
+                                        // تریبلکس
+                                        case 81:
+                                            type = "645d77534df9dc306ef4abfa"
+                                            break;
+                                        // طبقات جداگانه
+                                        case 356:
+                                            type = "645d776a4df9dc306ef4abfe"
+                                            break;
+                                    }
+                                })
+                            }
                             break;
                     }
                 }
-
-                pfeatures.map(({ term_id }) => {
-                    switch (term_id) {
-                        // ==> documentType
-                        // بنجاق
-                        case 123:
-                            documentType = "645d096cc4e32bac366cbf9e"
-                            break;
-                        // تک برگ
-                        case 95:
-                            documentType = "645d0793c4e32bac366cbf6e"
-                            break;
-                        // شاهی
-                        case 403:
-                            documentType = "645d0a23c4e32bac366cbfb0"
-                            break;
-                        // شش دانگ
-                        case 70:
-                            documentType = "645d07f3c4e32bac366cbf71"
-                            break;
-                        // قولنامه ای
-                        case 414:
-                            documentType = "645d09c8c4e32bac366cbfa4"
-                            break;
-                        // مشاع
-                        case 354:
-                            documentType = "645d09aac4e32bac366cbfa1"
-                            break;
-                    }
-                })
+                if (!!pfeatures) {
+                    pfeatures.map(({ term_id }) => {
+                        switch (term_id) {
+                            // ==> documentType
+                            // بنجاق
+                            case 123:
+                                documentType = "645d096cc4e32bac366cbf9e"
+                                break;
+                            // تک برگ
+                            case 95:
+                                documentType = "645d0793c4e32bac366cbf6e"
+                                break;
+                            // شاهی
+                            case 403:
+                                documentType = "645d0a23c4e32bac366cbfb0"
+                                break;
+                            // شش دانگ
+                            case 70:
+                                documentType = "645d07f3c4e32bac366cbf71"
+                                break;
+                            // قولنامه ای
+                            case 414:
+                                documentType = "645d09c8c4e32bac366cbfa4"
+                                break;
+                            // مشاع
+                            case 354:
+                                documentType = "645d09aac4e32bac366cbfa1"
+                                break;
+                        }
+                    })
+                }
 
 
                 let province = ""
                 let city = ""
                 let district = ""
                 let quarter = ""
-                pcity.map(({ term_id }) => {
-                    switch (term_id) {
-                        // تنکابن
-                        case 66:
-                            city = "تنکابن"
-                            break;
-                        // چالوس
-                        case 62:
-                        case 61:
-                        case 289:
-                            city = "چالوس"
-                            if (term_id === 61) {
-                                district = "هیچرود"
-                            }
-                            if (term_id === 289) {
-                                district = "رادیو دریا"
-                            }
-                            break;
-                        // رامسر
-                        case 67:
-                            city = "رامسر"
-                            break;
-                        // عباس آباد
-                        case 64:
-                        case 125:
-                            city = "عباس آباد"
-                            if (term_id === 125) {
-                                district = "کرکاس"
-                            }
-                            break;
-                        // کلارآباد
-                        case 59:
-                            city = "کلارآباد"
-                            break;
-                        // کلاردشت
-                        case 107:
-                        case 60:
-                            city = "کلاردشت"
-                            if (term_id === 60) {
-                                district = "نمک آبرود"
-                            }
-                            break;
-                        // مرزن آباد
-                        case 124:
-                            city = "مرزن آباد"
-                            break;
-                        // نشتارود
-                        case 65:
-                            city = "نشتارود"
-                            break;
-                        // نوشهر
-                        case 100:
-                            city = "نوشهر"
-                            break;
-                        // سلمانشهر
-                        case 410:
-                        case 63:
-                        case 352:
-                        case 411:
-                            city = "سلمان شهر"
-                            if (term_id === 63 || term_id === 352) {
-                                district = "متل قو"
-                            }
-                            if (term_id === 411) {
-                                district = "دریاگوشه"
-                            }
-                            break;
-                    }
-                    if (city) {
-                        province = "مازندران"
-                        if (!district) district = city
-                        quarter = district
-                    }
-                })
 
-
-                let gallery = p.gallery.map(async (img: string) => {
+                if (!!pcity) {
+                    pcity.map(({ term_id }) => {
+                        switch (term_id) {
+                            // تنکابن
+                            case 66:
+                                city = "تنکابن"
+                                break;
+                            // چالوس
+                            case 62:
+                            case 61:
+                            case 289:
+                                city = "چالوس"
+                                if (term_id === 61) {
+                                    district = "هیچرود"
+                                }
+                                if (term_id === 289) {
+                                    district = "رادیو دریا"
+                                }
+                                break;
+                            // رامسر
+                            case 67:
+                                city = "رامسر"
+                                break;
+                            // عباس آباد
+                            case 64:
+                            case 125:
+                                city = "عباس آباد"
+                                if (term_id === 125) {
+                                    district = "کرکاس"
+                                }
+                                break;
+                            // کلارآباد
+                            case 59:
+                                city = "کلارآباد"
+                                break;
+                            // کلاردشت
+                            case 107:
+                            case 60:
+                                city = "کلاردشت"
+                                if (term_id === 60) {
+                                    district = "نمک آبرود"
+                                }
+                                break;
+                            // مرزن آباد
+                            case 124:
+                                city = "مرزن آباد"
+                                break;
+                            // نشتارود
+                            case 65:
+                                city = "نشتارود"
+                                break;
+                            // نوشهر
+                            case 100:
+                                city = "نوشهر"
+                                break;
+                            // سلمانشهر
+                            case 410:
+                            case 63:
+                            case 352:
+                            case 411:
+                                city = "سلمان شهر"
+                                if (term_id === 63 || term_id === 352) {
+                                    district = "متل قو"
+                                }
+                                if (term_id === 411) {
+                                    district = "دریاگوشه"
+                                }
+                                break;
+                        }
+                        if (city) {
+                            province = "مازندران"
+                            if (!district) district = city
+                            quarter = district
+                        }
+                    })
+                }
+                let gallery = !!p.gallery ? p.gallery.map(async (img: string) => {
                     const n = img.replace("dl.iranocc.com", "iranocc.com")
                     return (await this.uploadByUrl(n, me, RelatedToEnum.Estate))._id.toString()
-                })
+                }) : []
 
 
 
