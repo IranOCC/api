@@ -72,7 +72,7 @@ export class ImportWPPropertyCommand {
 
             const me: User = await this.userService.getUserById("64942e083da4c1fbea6bd7c3")
 
-            for (let i = 0; i < _all_count; i++) {
+            for (let i = skip; i < _count + skip; i++) {
                 const p = data[i];
                 let content: string = p.content
                 const pattern = /<img[^>]+src="([^">]+)"/g
@@ -500,6 +500,8 @@ export class ImportWPPropertyCommand {
                 await this.estateService.create(_data, me)
                 console.log("Imported", (ppp * 100) + (i + 1), "/", (ppp * 100) + _count + skip, "==>", p.id)
             }
+
+            skip = 0
         }
     }
 
