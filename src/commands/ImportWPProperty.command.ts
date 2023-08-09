@@ -30,10 +30,10 @@ export class ImportWPPropertyCommand {
     })
     async create(
         @Option({
-            name: 'skip',
-            describe: 'skip index',
+            name: 'page',
+            describe: 'page number',
             type: 'number',
-            alias: 's',
+            alias: 'p',
             required: false,
             default: 0
         })
