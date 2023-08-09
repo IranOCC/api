@@ -496,12 +496,17 @@ export class ImportWPPropertyCommand {
                     location: !!p.location ? p.location.split(",").slice(0, 2).join(",") : undefined,
 
 
-                    area: +p.area || undefined,
-                    buildingArea: +p.buildingArea || undefined,
+                    area: (+p.area ? +p.area : +p.buildingArea) || undefined,
+                    buildingArea: (+p.area ? +p.buildingArea : 0) || undefined,
                     constructionYear: +p.constructionYear || undefined,
                     roomsCount: +p.roomsCount || undefined
                 }
-                await this.estateService.create(_data, me)
+                try {
+                    await this.estateService.create(_data, me)
+                } catch (error) {
+                    console.log(error, p.id);
+                }
+
                 console.log("Imported", (ppp * 100) + (i + 1), "/", (ppp * 100) + _count + skip, "==>", p.id)
             }
         }
