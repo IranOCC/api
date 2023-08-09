@@ -116,7 +116,6 @@ export class ImportWPBlogCommand {
             await this.blogPostService.create(_data, me)
             console.log("Imported", (i + 1), "/", _count + skip, "==>", p.id)
         }
-        return data
     }
 
 

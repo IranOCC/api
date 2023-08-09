@@ -60,6 +60,8 @@ export class ImportWPPropertyCommand {
         for (let ppp = page; ppp < 68; ppp++) {
 
             console.log("Importing started");
+            console.log("page Number:", ppp)
+
             const { data } = await this.http.get('https://iranocc.com/wp-json/rapp/v1/exportProperty', { params: { page: ppp } }).toPromise();
             const _all_count = data.length
             const _count = (_all_count - skip) > count ? count : (_all_count - skip)
@@ -487,7 +489,6 @@ export class ImportWPPropertyCommand {
                 await this.estateService.create(_data, me)
                 console.log("Imported", (ppp * 100) + (i + 1), "/", (ppp * 100) + _count + skip, "==>", p.id)
             }
-            return data
         }
     }
 
