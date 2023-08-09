@@ -36,6 +36,7 @@ import { StaticModule } from './static/static.module';
 import { CommandModule } from 'nestjs-command';
 import { ImportWPBlogCommand } from './commands/ImportWPBlog.command';
 import { HttpModule } from '@nestjs/axios';
+import { ImportWPPropertyCommand } from './commands/ImportWPProperty.command';
 
 
 
@@ -90,7 +91,8 @@ import { HttpModule } from '@nestjs/axios';
       useClass: RolesGuard,
     },
     IsUniqueProvider,
-    ImportWPBlogCommand
+    ImportWPBlogCommand,
+    ImportWPPropertyCommand,
   ],
 })
 
