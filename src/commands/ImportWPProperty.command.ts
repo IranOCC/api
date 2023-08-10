@@ -453,9 +453,11 @@ export class ImportWPPropertyCommand {
                 let gallery = []
                 if (!!p.gallery) {
                     for (let i = 0; i < p.gallery.length; i++) {
-                        const n = p.gallery[i].replace("dl.iranocc.com", "iranocc.com")
-                        const im = (await this.uploadByUrl(n, me, RelatedToEnum.Estate))._id.toString()
-                        gallery.push(im)
+                        if (!!p.gallery[i]) {
+                            const n = p.gallery[i].replace("dl.iranocc.com", "iranocc.com")
+                            const im = (await this.uploadByUrl(n, me, RelatedToEnum.Estate))._id.toString()
+                            gallery.push(im)
+                        }
                     }
                 }
 
