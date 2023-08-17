@@ -36,7 +36,7 @@ export class BlogCommentPublicService {
     const populate: PopulatedType[] = [
       ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
     ]
-    const project = "name phone content pinned createdAt"
+    const project = "name content pinned createdAt"
     const virtualFields = {}
     const searchFields = ""
     if (!filter) filter = {}
