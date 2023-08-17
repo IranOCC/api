@@ -25,6 +25,7 @@ export { WebBlogCommentSortingDto }
 
 class WebBlogCommentFilteringDto {
     @ApiPropertyOptional({ name: "filter[replayTo]" })
+    @IsOptional()
     @IsMongoId()
     readonly replayTo?: string;
 }
