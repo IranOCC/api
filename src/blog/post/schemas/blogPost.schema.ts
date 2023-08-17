@@ -42,15 +42,6 @@ export class BlogPost extends Document {
   })
   categories: any[];
 
-  @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'BlogComment',
-    default: [],
-    select: false,
-  })
-  comments: any[];
-
-
 
 
 
@@ -118,6 +109,33 @@ export class BlogPost extends Document {
 
   @Prop({ default: null })
   confirmedAt: Date;
+
+
+
+
+  // ==> comment
+  @Prop({ default: true })
+  openNewComments: boolean;
+
+  @Prop({ default: true })
+  onlyUsersNewComments: boolean;
+
+  @Prop({ default: true })
+  showComments: boolean;
+
+  @Prop({ default: false })
+  showUnconfirmedComments: boolean;
+
+
+  // ==> rating
+  @Prop({ default: true })
+  openNewRatings: boolean;
+
+  @Prop({ default: true })
+  onlyUsersNewRatings: boolean;
+
+  @Prop({ default: true })
+  retractableRatings: boolean;
 }
 
 export const BlogPostSchema = SchemaFactory.createForClass(BlogPost);
