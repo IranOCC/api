@@ -1,9 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Document } from 'mongoose';
+import { BlogPost } from 'src/blog/post/schemas/blogPost.schema';
 import { User } from 'src/user/schemas/user.schema';
 
 @Schema({ timestamps: true })
 export class BlogComment extends Document {
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'BlogPost',
+  })
+  post: BlogPost | string;
+
   @Prop({ type: String })
   name: string;
 
@@ -23,7 +30,7 @@ export class BlogComment extends Document {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'BlogComment',
   })
-  responses: BlogComment[] | string[];
+  reply: BlogComment[] | string[];
 
 
   // ==> confirm
