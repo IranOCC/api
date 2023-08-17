@@ -22,6 +22,8 @@ import { BlogCategoryToolsService } from './category/tools/blogCategory.tools.se
 import { OfficeModule } from 'src/office/office.module';
 import { BlogPostPublicService } from './post/public/blogPost.public.service';
 import { BlogPostPublicController } from './post/public/blogPost.public.controller';
+import { BlogCommentPublicController } from './comment/public/blogComment.public.controller';
+import { BlogCommentPublicService } from './comment/public/blogComment.public.service';
 
 
 @Module({
@@ -41,9 +43,11 @@ import { BlogPostPublicController } from './post/public/blogPost.public.controll
 
     BlogCommentAdminController,
     BlogCommentToolsController,
+    BlogCommentPublicController,
 
     BlogCategoryAdminController,
     BlogCategoryToolsController,
+
   ],
   providers: [
     BlogPostAdminService,
@@ -52,6 +56,7 @@ import { BlogPostPublicController } from './post/public/blogPost.public.controll
 
     BlogCommentAdminService,
     BlogCommentToolsService,
+    BlogCommentPublicService,
 
     BlogCategoryAdminService,
     BlogCategoryToolsService,
