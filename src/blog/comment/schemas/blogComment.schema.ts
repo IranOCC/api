@@ -22,15 +22,19 @@ export class BlogComment extends Document {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'BlogComment',
+    default: null,
+  })
+  replyTo: BlogComment | string | null;
+
+
+
+  // ==> createdBy
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   })
-  author: User | string;
-
-  @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'BlogComment',
-  })
-  reply: BlogComment[] | string[];
+  createdBy: User | string;
 
 
   // ==> confirm

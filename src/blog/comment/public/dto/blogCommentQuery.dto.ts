@@ -1,10 +1,10 @@
-import { ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
 import { IsMongoId, IsOptional, IsString } from "class-validator";
 
 
 
-class WebBlogPostSortingDto {
+class WebBlogCommentSortingDto {
     @ApiPropertyOptional({ name: "sort[createdAt]", enum: ["Desc", "Asc"] })
     @Transform(({ value }) => {
         return ([1, true, 'True', 'Desc'].includes(value)) ? -1 : 1
@@ -13,7 +13,7 @@ class WebBlogPostSortingDto {
     readonly createdAt?: number;
 }
 
-export { WebBlogPostSortingDto }
+export { WebBlogCommentSortingDto }
 
 
 
@@ -23,9 +23,11 @@ export { WebBlogPostSortingDto }
 
 
 
-class WebBlogPostFilteringDto {
-
+class WebBlogCommentFilteringDto {
+    @ApiPropertyOptional({ name: "filter[replayTo]" })
+    @IsMongoId()
+    readonly replayTo?: string;
 }
 
 
-export { WebBlogPostFilteringDto }
+export { WebBlogCommentFilteringDto }

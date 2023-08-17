@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/auth/guard/jwt-auth.guard';
-import { WebBlogPostFilteringDto, WebBlogPostSortingDto } from './dto/blogPostQuery.dto';
+import { WebBlogCommentFilteringDto, WebBlogCommentSortingDto, } from './dto/blogCommentQuery.dto';
 import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { BlogCommentPublicService } from './blogComment.public.service';
 import { NewCommentDto } from './dto/newComment.dto';
@@ -36,11 +36,11 @@ export class BlogCommentPublicController {
     return this.blogCommentPublicService.create(post, data, user);
   }
 
-  @Get()
+  @Get(':id')
   @ApiOperation({ summary: "Get list of Model with filtering", description: "No Description" })
   @ApiResponse({ status: 200 })
-  findAll(@Query() paginate: PaginationDto) {
-    // return this.blogPostPublicService.findAll(paginate, filter, sort);
+  findAll(@Param() { id: post }: MongoIDQueryDto, @Query('filter') filter: WebBlogCommentFilteringDto, @Query('sort') sort: WebBlogCommentSortingDto, @Query() paginate: PaginationDto) {
+    return this.blogCommentPublicService.findAll(post, paginate, filter, sort);
   }
 
 

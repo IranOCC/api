@@ -18,8 +18,9 @@ export class NewCommentDto extends PhoneNumberDto {
     @IsNotEmpty()
     content: string;
 
-    @ApiProperty()
-    @IsNotEmpty()
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsMongoId()
     replyTo?: string;
 }
 
