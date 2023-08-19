@@ -4,7 +4,7 @@ import { PaginationDto } from "../dto/pagination.dto"
 
 
 // db path select isArray pipelines
-export type PopulatedType = [string, string, string?, boolean?, any[]?]
+export type PopulatedType = [string, string | [string, string, string], string?, boolean?, any[]?]
 
 const listAggregation =
     async (
@@ -29,19 +29,37 @@ const listAggregation =
             let project = {}
             select?.split(" ").map((p) => { project[p] = true })
             const $p = !!select?.length ? [{ $project: project }] : []
-            $pipelines.push({
-                $lookup: {
-                    from: db,
-                    as: path,
-                    localField: path,
-                    foreignField: "_id",
-                    pipeline: [...$pipes, ...$p]
-                }
-            })
+            if (typeof path === "string") {
+                $pipelines.push({
+                    $lookup: {
+                        from: db,
+                        as: path,
+                        localField: path,
+                        foreignField: "_id",
+                        pipeline: [...$pipes, ...$p]
+                    }
+                })
+
+                if (!isArray) $project[path] = { $first: `$${path}` }
+                else $project[path] = `$${path}`
+            }
+            else {
+                $pipelines.push({
+                    $lookup: {
+                        from: db,
+                        as: path[2],
+                        localField: path[0],
+                        foreignField: path[1],
+                        pipeline: [...$pipes, ...$p]
+                    }
+                })
+
+                if (!isArray) $project[path[2]] = { $first: `$${path[2]}` }
+                else $project[path[2]] = `$${path[2]}`
+            }
             console.log(path, db, isArray);
 
-            if (!isArray) $project[path] = { $first: `$${path}` }
-            else $project[path] = `$${path}`
+
         })
         select?.split(" ").map((path) => { $project[path] = `$${path}` })
 
