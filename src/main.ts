@@ -40,7 +40,6 @@ async function bootstrap() {
 
   // global middleware
   app.use(loggerMiddleware)
-  // app.use(userOfficeMiddleware)
 
 
   // exception & validation middleware
