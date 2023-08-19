@@ -35,6 +35,7 @@ export class BlogCommentPublicService {
   findAll(post: string, pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
       ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      // ["blogcomments", "_id", "_id", true, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
     ]
     const project = "name content pinned createdAt"
     const virtualFields = {}
