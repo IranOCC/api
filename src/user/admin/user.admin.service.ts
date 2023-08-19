@@ -37,10 +37,10 @@ export class UserServiceAdmin {
   async create(data: CreateUserDto, user: CurrentUser): Promise<any> {
     const { phone, email, ...props } = data
 
-    if (props.roles.includes(RoleEnum.SuperAdmin)) {
+    if (!user.roles.includes(RoleEnum.SuperAdmin) && props.roles.includes(RoleEnum.SuperAdmin)) {
       throw new ForbiddenException("You can not add user with SuperAdmin role", "ForbiddenCreateUserHighRole")
     }
-    if (props.roles.includes(RoleEnum.Admin)) {
+    if (!user.roles.includes(RoleEnum.SuperAdmin) && props.roles.includes(RoleEnum.Admin)) {
       throw new ForbiddenException("You can not add user with Admin role", "ForbiddenCreateUserHighRole")
     }
     const _user = new this.userModel(props)
@@ -58,10 +58,10 @@ export class UserServiceAdmin {
     const { phone, email, ...props } = data
     const _user = await this.userModel.findById(id)
 
-    if (_user.roles.includes(RoleEnum.SuperAdmin)) {
+    if (!user.roles.includes(RoleEnum.SuperAdmin) && _user.roles.includes(RoleEnum.SuperAdmin)) {
       throw new ForbiddenException("You can not edit SuperAdmin", "ForbiddenEditUserHighRole")
     }
-    if (_user.roles.includes(RoleEnum.Admin)) {
+    if (!user.roles.includes(RoleEnum.SuperAdmin) && _user.roles.includes(RoleEnum.Admin)) {
       throw new ForbiddenException("You can not edit Admin", "ForbiddenEditUserHighRole")
     }
 
