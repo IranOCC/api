@@ -41,7 +41,8 @@ export class BlogCommentPublicService {
     const virtualFields = {}
     const searchFields = ""
     if (!filter) filter = {}
-    if (!filter.replayTo) filter.replayTo = null
+    if (!filter.replyTo) filter.replyTo = null
+    else filter.replyTo = { $eq: new ObjectId(filter.replyTo) }
     filter.post = { $eq: new ObjectId(post) }
     return listAggregation(this.blogCommentModel, pagination, filter, sort, populate, project, virtualFields, searchFields, undefined, undefined, undefined)
   }

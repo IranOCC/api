@@ -24,10 +24,10 @@ export { WebBlogCommentSortingDto }
 
 
 class WebBlogCommentFilteringDto {
-    @ApiPropertyOptional({ name: "filter[replayTo]" })
+    @ApiPropertyOptional({ name: "filter[replyTo]" })
     @IsOptional()
     @IsMongoId()
-    readonly replayTo?: string;
+    readonly replyTo?: string;
 }
 
 
