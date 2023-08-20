@@ -30,17 +30,33 @@ const listAutoComplete =
             let project = {}
             select?.split(" ").map((p) => { project[p] = true })
             const $p = !!select?.length ? [{ $project: project }] : []
-            $pipelines.push({
-                $lookup: {
-                    from: db,
-                    as: path,
-                    localField: path,
-                    foreignField: "_id",
-                    pipeline: [...$pipes, ...$p]
-                }
-            })
-            // if (!isArray) $project[path] = { $first: `$${path}` }
-            // else $project[path] = `$${path}`
+            if (typeof path === "string") {
+                $pipelines.push({
+                    $lookup: {
+                        from: db,
+                        as: path as string,
+                        localField: path as string,
+                        foreignField: "_id",
+                        pipeline: [...$pipes, ...$p]
+                    }
+                })
+                // if (!isArray) $project[path] = { $first: `$${path}` }
+                // else $project[path] = `$${path}`
+            }
+            else {
+                $pipelines.push({
+                    $lookup: {
+                        from: db,
+                        as: path[2],
+                        localField: path[0],
+                        foreignField: path[1],
+                        pipeline: [...$pipes, ...$p]
+                    }
+                })
+                // if (!isArray) $project[path[2]] = { $first: `$${path[2]}` }
+                // else $project[path[2]] = `$${path[2]}`
+            }
+            console.log(path, db, isArray);
         })
 
         if (!Array.isArray(initial)) initial = [initial]

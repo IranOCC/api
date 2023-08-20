@@ -33,13 +33,12 @@ const listAggregation =
                 $pipelines.push({
                     $lookup: {
                         from: db,
-                        as: path,
-                        localField: path,
+                        as: path as string,
+                        localField: path as string,
                         foreignField: "_id",
                         pipeline: [...$pipes, ...$p]
                     }
                 })
-
                 if (!isArray) $project[path] = { $first: `$${path}` }
                 else $project[path] = `$${path}`
             }
@@ -53,13 +52,10 @@ const listAggregation =
                         pipeline: [...$pipes, ...$p]
                     }
                 })
-
                 if (!isArray) $project[path[2]] = { $first: `$${path[2]}` }
                 else $project[path[2]] = `$${path[2]}`
             }
             console.log(path, db, isArray);
-
-
         })
         select?.split(" ").map((path) => { $project[path] = `$${path}` })
 
