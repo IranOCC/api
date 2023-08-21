@@ -46,6 +46,13 @@ export class BlogCommentPublicService {
               { $project: { path: "$path", alt: "$alt", title: "$title" } }
             ]
           }
+        },
+        {
+          $project: {
+            _id: 0,
+            avatar: { $first: `$avatar` },
+            fullName: `$fullName`,
+          }
         }
       ]],
       ["blogcomments", ["_id", "replyTo", "responses"], "_id", true],
