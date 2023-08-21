@@ -34,7 +34,7 @@ export class BlogCommentPublicService {
   // List Comments
   findAll(post: string, pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
-      ["users", "createdBy", "firstName lastName fullName", false, [
+      ["users", "createdBy", "firstName lastName fullName avatar", false, [
         { $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } },
         {
           $lookup: {
