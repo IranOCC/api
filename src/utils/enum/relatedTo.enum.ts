@@ -2,7 +2,7 @@ export enum RelatedToEnum {
   Unspecific = 'unspecific',
   User = 'user',
   Office = 'office',
-  Estate = 'estate',
+  Property = 'property',
   Blog = 'blog',
   Page = 'page',
 }

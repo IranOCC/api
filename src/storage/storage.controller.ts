@@ -135,7 +135,7 @@ export class StorageController {
     @Body() { relatedToID, alt, title }: CreateStorageDto,
     @Request() { user }
   ) {
-    return this.storageService.create(image, user, RelatedToEnum.Estate, relatedToID, alt, title)
+    return this.storageService.create(image, user, RelatedToEnum.Property, relatedToID, alt, title)
   }
 
 
