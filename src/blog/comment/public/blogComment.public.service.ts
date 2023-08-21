@@ -34,7 +34,20 @@ export class BlogCommentPublicService {
   // List Comments
   findAll(post: string, pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
-      ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      ["users", "createdBy", "firstName lastName fullName", false, [
+        { $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } },
+        {
+          $lookup: {
+            from: "storages",
+            as: "avatar",
+            localField: "avatar",
+            foreignField: "_id",
+            pipeline: [
+              { $project: { path: "$path", alt: "$alt", title: "$title" } }
+            ]
+          }
+        }
+      ]],
       ["blogcomments", ["_id", "replyTo", "responses"], "_id", true],
     ]
     const project = "name content pinned createdAt"
