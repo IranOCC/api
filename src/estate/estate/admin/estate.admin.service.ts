@@ -43,7 +43,7 @@ export class EstateAdminService {
   }
 
   // Edit Estate
-  async update(id: string, data: UpdateEstateDto, user: CurrentUser) {
+  async update(id: string, data: UpdateEstateDto, user: CurrentUser | User) {
     const post = await this.estateModel.findById(id).populate("office", "_id management members")
     if (!post) throw new NotFoundException("Post not found", "PostNotFound")
 
@@ -68,7 +68,7 @@ export class EstateAdminService {
   }
 
   // confirm publish estate
-  async confirmPublish(id: string, user: CurrentUser) {
+  async confirmPublish(id: string, user: CurrentUser | User) {
     const estate = await (await this.estateModel.findById(id)).populate("office", "_id management members")
     if (!estate) throw new NotFoundException("Estate not found", "EstateNotFound")
     if (
@@ -87,7 +87,7 @@ export class EstateAdminService {
 
 
   // reject publish estate
-  async rejectPublish(id: string, user: CurrentUser) {
+  async rejectPublish(id: string, user: CurrentUser | User) {
     const estate = await (await this.estateModel.findById(id)).populate("office", "_id management members")
     if (!estate) throw new NotFoundException("Estate not found", "EstateNotFound")
     if (
@@ -134,7 +134,7 @@ export class EstateAdminService {
 
 
   // Remove Single Estate
-  async remove(id: string, user: CurrentUser) {
+  async remove(id: string, user: CurrentUser | User) {
     const estate = await this.estateModel.findById(id).populate("office", "_id management members")
     if (!estate) throw new NotFoundException("Estate not found", "EstateNotFound")
 
@@ -152,7 +152,7 @@ export class EstateAdminService {
   }
 
   // Remove Bulk Estate
-  async bulkRemove(id: string[], user: CurrentUser) {
+  async bulkRemove(id: string[], user: CurrentUser | User) {
     const estates = await this.estateModel.find({ _id: { $in: id } }).populate("office")
 
     for (let i = 0; i < estates.length; i++) {

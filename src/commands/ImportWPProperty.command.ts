@@ -70,7 +70,7 @@ export class ImportWPPropertyCommand {
             console.log("import from:", skip)
             console.log("import count:", _count)
 
-            const me: User = await this.userService.getUserById("64942e083da4c1fbea6bd7c3")
+            const me: User = await this.userService.getUserById("64e08fd8de9b0246b1f52dc5")
 
             for (let i = 0; i < _all_count; i++) {
                 const p = data[i];
@@ -463,13 +463,13 @@ export class ImportWPPropertyCommand {
 
 
 
-
+                if (image) {
+                    gallery = [image, ...gallery]
+                }
                 if (!image && !!p.gallery.length) {
                     image = gallery[0]
                 }
-                else if (image && !p.gallery.length) {
-                    gallery.push(image)
-                }
+
 
                 // => generate data
                 const _data: CreateEstateDto = {
@@ -484,7 +484,7 @@ export class ImportWPPropertyCommand {
                     "pinned": false,
                     "publishedAt": new Date(p.created + " UTC+00:00").toISOString(),
                     "office": "649c9097df135411a6c3b622",
-                    "owner": "64942e083da4c1fbea6bd7c3",
+                    "owner": "64e08fd8de9b0246b1f52dc5",
                     gallery,
                     category,
                     type,
@@ -501,10 +501,13 @@ export class ImportWPPropertyCommand {
                     area: (+p.area ? +p.area : +p.buildingArea) || undefined,
                     buildingArea: (+p.area ? +p.buildingArea : 0) || undefined,
                     constructionYear: +p.constructionYear || undefined,
-                    roomsCount: +p.roomsCount || undefined
+                    roomsCount: +p.roomsCount || undefined,
+
+                    description: `شناسه در وردپرس: ${p.id}\nبازبینی نشده`
                 }
                 try {
-                    await this.estateService.create(_data, me)
+                    const o = await this.estateService.create(_data, me)
+                    await this.estateService.confirmPublish(o._id, me)
                 } catch (error) {
                     console.log(error, p.id);
                 }
