@@ -62,7 +62,7 @@ export class ImportWPBlogCommand {
         console.log("import from:", skip)
         console.log("import count:", _count)
 
-        const me: User = await this.userService.getUserById("64942e083da4c1fbea6bd7c3")
+        const me: User = await this.userService.getUserById("64e08fd8de9b0246b1f52dc5")
 
         for (let i = skip; i < _count + skip; i++) {
             const p = data[i];
@@ -111,9 +111,14 @@ export class ImportWPBlogCommand {
                 "pinned": false,
                 "publishedAt": new Date(p.created + " UTC+00:00").toISOString(),
                 "office": "649c9097df135411a6c3b622",
-                "author": "64942e083da4c1fbea6bd7c3",
+                "author": "64e08fd8de9b0246b1f52dc5",
             }
-            await this.blogPostService.create(_data, me)
+            try {
+                const o = await this.blogPostService.create(_data, me)
+                await this.blogPostService.confirmPublish(o._id, me)
+            } catch (error) {
+                console.log(error, p.id);
+            }
             console.log("Imported", (i + 1), "/", _count + skip, "==>", p.id)
         }
     }

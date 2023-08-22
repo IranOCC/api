@@ -48,7 +48,7 @@ export class BlogPostAdminService {
 
 
   // Edit BlogPost
-  async update(id: string, data: UpdateBlogPostDto, user: CurrentUser) {
+  async update(id: string, data: UpdateBlogPostDto, user: CurrentUser | User) {
     const post = await this.blogPostModel.findById(id).populate("office", "_id management members")
     if (!post) throw new NotFoundException("Post not found", "PostNotFound")
 
@@ -75,7 +75,7 @@ export class BlogPostAdminService {
 
 
   // confirm publish post
-  async confirmPublish(id: string, user: CurrentUser) {
+  async confirmPublish(id: string, user: CurrentUser | User) {
     const post = await (await this.blogPostModel.findById(id)).populate("office", "_id management members")
     if (!post) throw new NotFoundException("Post not found", "PostNotFound")
     if (
@@ -94,7 +94,7 @@ export class BlogPostAdminService {
 
 
   // reject publish post
-  async rejectPublish(id: string, user: CurrentUser) {
+  async rejectPublish(id: string, user: CurrentUser | User) {
     const post = await (await this.blogPostModel.findById(id)).populate("office", "_id management members")
     if (!post) throw new NotFoundException("Post not found", "PostNotFound")
     if (
@@ -137,7 +137,7 @@ export class BlogPostAdminService {
   }
 
   // Remove Single BlogPost
-  async remove(id: string, user: CurrentUser) {
+  async remove(id: string, user: CurrentUser | User) {
     const post = await this.blogPostModel.findById(id).populate("office", "_id management members")
     if (!post) throw new NotFoundException("Post not found", "PostNotFound")
 
@@ -155,7 +155,7 @@ export class BlogPostAdminService {
   }
 
   // Remove Bulk BlogPost
-  async bulkRemove(id: string[], user: CurrentUser) {
+  async bulkRemove(id: string[], user: CurrentUser | User) {
     const posts = await this.blogPostModel.find({ _id: { $in: id } }).populate("office")
 
     for (let i = 0; i < posts.length; i++) {
