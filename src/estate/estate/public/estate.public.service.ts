@@ -44,16 +44,16 @@ export class EstatePublicService {
   // List Estate
   findAll(pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
-      ["users", "owner", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
-      ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      // ["users", "owner", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      // ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       // 
-      ["estatecategories", "category", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
-      ["estatetypes", "type", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
-      ["estatefeatures", "features", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
-      ["estatedocumenttypes", "documentType", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
+      // ["estatecategories", "category", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
+      // ["estatetypes", "type", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
+      // ["estatefeatures", "features", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
+      // ["estatedocumenttypes", "documentType", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
       // 
       ["storages", "image", "path alt title", false],
-      ["storages", "gallery", "path alt title", true],
+      // ["storages", "gallery", "path alt title", true],
     ]
     const project = "title slug excerpt area canBarter buildingArea roomsCount mastersCount constructionYear buildingArea floorsCount unitsCount floor withOldBuilding publishedAt createdAt code province city district"
     const virtualFields = {}
@@ -66,22 +66,22 @@ export class EstatePublicService {
 
     // convert
     if (filter.category) {
-      filter["category._id"] = { $eq: new ObjectId(filter.category) }
+      filter["category"] = { $eq: new ObjectId(filter.category) }
       delete filter.category
     }
     if (filter.type) {
       if (typeof filter.type === "string") filter.type = [filter.type]
-      filter["type._id"] = { $in: filter.type.map((v: string) => new ObjectId(v)) }
+      filter["type"] = { $in: filter.type.map((v: string) => new ObjectId(v)) }
       delete filter.type
     }
     if (filter.documentType) {
       if (typeof filter.documentType === "string") filter.documentType = [filter.documentType]
-      filter["documentType._id"] = { $in: filter.documentType.map((v: string) => new ObjectId(v)) }
+      filter["documentType"] = { $in: filter.documentType.map((v: string) => new ObjectId(v)) }
       delete filter.documentType
     }
     if (filter.features) {
       if (typeof filter.features === "string") filter.features = [filter.features]
-      filter["features._id"] = { $in: filter.features.map((v: string) => new ObjectId(v)) }
+      filter["features"] = { $in: filter.features.map((v: string) => new ObjectId(v)) }
       delete filter.features
     }
     // =>ok province
