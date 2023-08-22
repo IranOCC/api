@@ -27,6 +27,7 @@ export class IssueReportPublicController {
   constructor(private readonly issueReportPublicService: IssueReportPublicService) { }
 
 
+  @Post()
   @ApiOperation({ summary: "Add New issue report", description: "No Description" })
   @ApiResponse({ status: 200 })
   create(@Body() data: NewIssueReportDto, @Request() { user }) {

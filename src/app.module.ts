@@ -38,6 +38,7 @@ import { ImportWPBlogCommand } from './commands/ImportWPBlog.command';
 import { HttpModule } from '@nestjs/axios';
 import { ImportWPPropertyCommand } from './commands/ImportWPProperty.command';
 import { IssueReportModule } from './issue/issueReport.module';
+import { RatingModule } from './rating/rating.module';
 
 
 
@@ -77,8 +78,10 @@ import { IssueReportModule } from './issue/issueReport.module';
     PageModule,
     SettingModule,
     StaticModule,
-    CommandModule,
     IssueReportModule,
+    RatingModule,
+    // 
+    CommandModule,
     HttpModule
   ],
   controllers: [AppController],
