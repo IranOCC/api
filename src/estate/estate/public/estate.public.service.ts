@@ -66,7 +66,7 @@ export class EstatePublicService {
 
     // convert
     if (filter.category) {
-      filter["category"] = { $eq: new ObjectId(filter.category) }
+      filter["category._id"] = { $eq: new ObjectId(filter.category) }
       delete filter.category
     }
     if (filter.type) {
