@@ -20,7 +20,7 @@ export class RatingPublicService {
     return this.ratingModel.create({
       relatedTo: data.relatedTo,
       relatedToID: data.relatedToID,
-      content: data.content,
+      score: data.score,
       createdBy: user,
     })
   }

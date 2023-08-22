@@ -5,6 +5,7 @@ import { Estate } from 'src/estate/estate/schemas/estate.schema';
 import { Page } from 'src/page/schemas/page.schema';
 import { User } from 'src/user/schemas/user.schema';
 import { RelatedToEnum } from 'src/utils/enum/relatedTo.enum';
+import { number } from 'yargs';
 
 @Schema({ timestamps: true })
 export class Rating extends Document {
@@ -22,8 +23,8 @@ export class Rating extends Document {
   })
   relatedToID: string | null;
 
-  @Prop({ type: String, required: true })
-  content: string;
+  @Prop({ type: Number, required: true })
+  score: number;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,

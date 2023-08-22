@@ -1,5 +1,5 @@
 import { ApiProperty, } from "@nestjs/swagger";
-import { IsEnum, IsMongoId, IsNotEmpty } from "class-validator";
+import { IsEnum, IsMongoId, IsNotEmpty, IsNumber } from "class-validator";
 import { RelatedToEnum } from "src/utils/enum/relatedTo.enum";
 
 
@@ -13,7 +13,7 @@ export class NewRatingDto {
     relatedToID: string;
 
     @ApiProperty()
-    @IsNotEmpty()
-    content: string;
+    @IsNumber()
+    score: number;
 }
 
