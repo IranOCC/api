@@ -47,7 +47,7 @@ export class EstatePublicService {
       // ["users", "owner", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       // ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       // 
-      // ["estatecategories", "category", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
+      ["estatecategories", "category", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
       // ["estatetypes", "type", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
       // ["estatefeatures", "features", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
       // ["estatedocumenttypes", "documentType", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
