@@ -30,6 +30,7 @@ import { EstateTypeAdminController } from './type/admin/type.admin.controller';
 import { EstateTypeAdminService } from './type/admin/type.admin.service';
 import { EstateTypeToolsController } from './type/tools/type.tools.controller';
 import { EstateTypeToolsService } from './type/tools/type.tools.service';
+import { EstateFavorite, EstateFavoriteSchema } from './favorite/schemas/estateFavorite.schema';
 
 
 import { Estate, EstateSchema } from './estate/schemas/estate.schema';
@@ -37,9 +38,12 @@ import { EstateAdminController } from './estate/admin/estate.admin.controller';
 import { EstateAdminService } from './estate/admin/estate.admin.service';
 import { EstateToolsController } from './estate/tools/estate.tools.controller';
 import { EstateToolsService } from './estate/tools/estate.tools.service';
+import { EstateFavoritePublicController } from './favorite/public/estateFavorite.public.controller';
+import { EstateFavoritePublicService } from './favorite/public/estateFavorite.public.service';
 import { EstatePublicController } from './estate/public/estate.public.controller';
 import { EstatePublicService } from './estate/public/estate.public.service';
 import { OfficeModule } from 'src/office/office.module';
+
 
 
 
@@ -52,6 +56,7 @@ import { OfficeModule } from 'src/office/office.module';
     MongooseModule.forFeature([{ name: EstateFeature.name, schema: EstateFeatureSchema }]),
     MongooseModule.forFeature([{ name: EstateDocumentType.name, schema: EstateDocumentTypeSchema }]),
     MongooseModule.forFeature([{ name: EstateType.name, schema: EstateTypeSchema }]),
+    MongooseModule.forFeature([{ name: EstateFavorite.name, schema: EstateFavoriteSchema }]),
   ],
   controllers: [
     EstateTypeAdminController,
@@ -66,6 +71,8 @@ import { OfficeModule } from 'src/office/office.module';
 
     EstateDocumentTypeAdminController,
     EstateDocumentTypeToolsController,
+
+    EstateFavoritePublicController,
 
     EstateAdminController,
     EstateToolsController,
@@ -84,6 +91,8 @@ import { OfficeModule } from 'src/office/office.module';
 
     EstateDocumentTypeAdminService,
     EstateDocumentTypeToolsService,
+
+    EstateFavoritePublicService,
 
     EstateAdminService,
     EstateToolsService,
