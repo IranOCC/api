@@ -37,9 +37,12 @@ export class EstatePublicService {
       .populate({ path: "features", select: "title slug icon", populate: { path: "icon", select: "content" } })
       .populate("image", "path alt title")
       .populate("gallery", "path alt title")
-      .populate("owner", "firstName lastName fullName")
-      .populate("createdBy", "firstName lastName fullName")
-      .populate("office", "name verified")
+      // .populate("owner", "firstName lastName fullName")
+      // .populate("createdBy", "firstName lastName fullName")
+      .populate({ path: "createdBy", select: "firstName lastName fullName", populate: { path: "avatar", select: "alt title path" } })
+      // .populate("office", "name verified")
+      .populate({ path: "office", select: "name verified", populate: { path: "logo", select: "alt title path" } })
+
       .select("-status -visibility -id -isConfirmed -confirmedAt -confirmedBy -createdAt -updatedAt -__v")
       .lean();
 
