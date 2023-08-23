@@ -37,7 +37,7 @@ export class EstateFavoritePublicController {
   @ApiOperation({ summary: "Remove from favorite", description: "No Description" })
   @ApiResponse({ status: 200 })
   remove(@Param() { id }: MongoIDQueryDto, @Request() { user }) {
-    return this.estateFavoritePublicService.add(id, user);
+    return this.estateFavoritePublicService.remove(id, user);
   }
 
 
