@@ -39,14 +39,14 @@ export class EstatePublicService {
       .populate("gallery", "path alt title")
       // .populate("owner", "firstName lastName fullName")
       // .populate("createdBy", "firstName lastName fullName")
-      .populate({ path: "createdBy", select: "firstName lastName fullName", populate: { path: "avatar", select: "alt title path" } })
+      .populate({ path: "createdBy", select: "firstName lastName fullName", populate: [{ path: "avatar", select: "alt title path" }, { path: "phone", select: "value" }] })
       // .populate("office", "name verified")
       .populate({ path: "office", select: "name verified", populate: { path: "logo", select: "alt title path" } })
 
       .select("-status -visibility -id -isConfirmed -confirmedAt -confirmedBy -createdAt -updatedAt -__v")
       .lean();
 
-    const isFavorite = await this.estateFavoriteModel.findOne({ user: user?._id, estate: estate._id })
+    const isFavorite = user?._id ? await this.estateFavoriteModel.findOne({ user: new ObjectId(user?._id), estate: new ObjectId(estate._id) }) : false
 
     return { ...estate, isFavorite }
   }
