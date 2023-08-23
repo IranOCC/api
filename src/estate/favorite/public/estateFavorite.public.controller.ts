@@ -19,7 +19,7 @@ import { MongoIDQueryDto } from 'src/utils/dto/mongoIDQuery.dto';
 
 
 
-@Controller('estateFavorite')
+@Controller('estate/favorite')
 @ApiTags("EstateFavorite")
 @ApiBearerAuth()
 export class EstateFavoritePublicController {
