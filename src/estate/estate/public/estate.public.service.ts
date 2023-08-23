@@ -41,7 +41,7 @@ export class EstatePublicService {
       .populate("createdBy", "firstName lastName fullName")
       .populate("office", "name verified")
       .select("-status -visibility -id -isConfirmed -confirmedAt -confirmedBy -createdAt -updatedAt -__v")
-      .exec();
+      .lean();
 
     const isFavorite = await this.estateFavoriteModel.findOne({ user: user?._id, estate: estate._id })
 
