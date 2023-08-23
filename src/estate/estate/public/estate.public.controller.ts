@@ -37,7 +37,7 @@ export class EstatePublicController {
   @Get(':id_or_slug')
   @ApiOperation({ summary: "Get single Model by id or slug", description: "No Description" })
   @ApiResponse({ status: 200 })
-  findOneBySlugOrID(@Param('id_or_slug') id_or_slug: string) {
-    return this.estatePublicService.findOneBySlugOrID(id_or_slug);
+  findOneBySlugOrID(@Param('id_or_slug') id_or_slug: string, @Request() { user }) {
+    return this.estatePublicService.findOneBySlugOrID(id_or_slug, user);
   }
 }
