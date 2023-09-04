@@ -16,7 +16,6 @@ import { google } from "googleapis"
 @Injectable()
 export class DashboardService {
   constructor(
-    private ga4Service: Ga4Service,
   ) { }
 
 
