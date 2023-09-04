@@ -42,7 +42,7 @@ export class DashboardService {
 
     console.log('Report result:');
     console.log(response);
-    const onlineUsers = response?.rows?.[0]?.metricValues?.[0]?.value
+    const onlineUsers = response?.rows?.[0]?.metricValues?.[0]?.value || 0
     return {
       onlineUsers
     }
