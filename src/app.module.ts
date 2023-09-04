@@ -39,6 +39,7 @@ import { HttpModule } from '@nestjs/axios';
 import { ImportWPPropertyCommand } from './commands/ImportWPProperty.command';
 import { IssueReportModule } from './issue/issueReport.module';
 import { RatingModule } from './rating/rating.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 
 
@@ -80,6 +81,7 @@ import { RatingModule } from './rating/rating.module';
     StaticModule,
     IssueReportModule,
     RatingModule,
+    DashboardModule,
     // 
     CommandModule,
     HttpModule
