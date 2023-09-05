@@ -22,29 +22,44 @@ export class DashboardService {
   async sessionReport() {
     const analyticsDataClient = new BetaAnalyticsDataClient();
 
-    const [response] = await analyticsDataClient.runRealtimeReport({
+    let result = {}
+
+    const [onlineResponse] = await analyticsDataClient.runRealtimeReport({
       property: `properties/${405205490}`,
-      // dateRanges: [
-      //   {
-      //     startDate: '2020-03-31',
-      //     endDate: 'today',
-      //   },
-      // ],
-      // dimensions: [
-      //   {
-      //     name: 'age',
-      //   },
-      // ],
-      // dimensions: [{ name: 'city', },],
+      metrics: [{ name: 'activeUsers', },],
+    });
+    const online = parseInt(onlineResponse?.rows?.[0]?.metricValues?.[0]?.value || "0")
+    result = { online }
+
+
+    const [todayResponse] = await analyticsDataClient.runReport({
+      property: `properties/${405205490}`,
+      dateRanges: [
+        {
+          startDate: 'yesterday',
+          endDate: 'today',
+        },
+      ],
+      dimensions: [
+        {
+          name: 'firstUserSource',
+        },
+      ],
       metrics: [{ name: 'activeUsers', },],
     });
 
-    console.log('Report result:');
-    console.log(response);
-    const onlineUsers = response?.rows?.[0]?.metricValues?.[0]?.value || 0
-    return {
-      onlineUsers
-    }
+
+    todayResponse?.rows?.map(({ dimensionValues, metricValues }) => {
+      dimensionValues.map(({ value }, idx) => {
+        result[value === "(direct)" ? "direct" : value || "others"] = parseInt(metricValues[idx].value || "0")
+      })
+    })
+
+
+
+    console.log(todayResponse);
+
+    return result
   }
 
 }
