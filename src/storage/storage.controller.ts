@@ -139,6 +139,30 @@ export class StorageController {
   }
 
 
+  @Post("property")
+  @Roles(RoleEnum.User)
+  @ApiOperation({ summary: "Upload property images", description: "No Description" })
+  @ApiResponse({ status: 201 })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UploadSingleImageDto })
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadPropertyGallery(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10000000 }),
+          new FileTypeValidator({ fileType: /image\/jpeg|image\/jpg|image\/png$/ }),
+        ],
+      }),
+    )
+    image: Express.Multer.File,
+    @Body() { relatedToID, alt, title }: CreateStorageDto,
+    @Request() { user }
+  ) {
+    return this.storageService.create(image, user, RelatedToEnum.Property, relatedToID, alt, title)
+  }
+
+
 
 
 
