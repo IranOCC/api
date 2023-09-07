@@ -26,7 +26,7 @@ export class EstatePublicService {
     return this.estateModel.create({
       // 
       ...data,
-      slug: slugify(vv, {
+      slug: slugify(data.title, {
       replacement: "_",
       remove: undefined,
       lower: false,
