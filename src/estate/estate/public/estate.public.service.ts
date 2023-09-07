@@ -10,7 +10,7 @@ import { PopulatedType, listAggregation } from 'src/utils/helper/listAggregation
 import { User } from 'src/user/schemas/user.schema';
 import { EstateFavorite, EstateFavoriteDocument } from 'src/estate/favorite/schemas/estateFavorite.schema';
 import { CreatePropertyDto } from './dto/createProperty.dto';
-
+import slugify from 'slugify';
 
 
 
@@ -26,6 +26,14 @@ export class EstatePublicService {
     return this.estateModel.create({
       // 
       ...data,
+      slug: slugify(vv, {
+      replacement: "_",
+      remove: undefined,
+      lower: false,
+      strict: false,
+      locale: "fa",
+      trim: true,
+      }),
       status: EstateStatusEnum.Draft,
       visibility: EstateVisibilityEnum.Public,
 
