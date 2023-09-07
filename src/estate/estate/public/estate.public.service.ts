@@ -9,6 +9,7 @@ import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { PopulatedType, listAggregation } from 'src/utils/helper/listAggregation.helper';
 import { User } from 'src/user/schemas/user.schema';
 import { EstateFavorite, EstateFavoriteDocument } from 'src/estate/favorite/schemas/estateFavorite.schema';
+import { CreatePropertyDto } from './dto/createProperty.dto';
 
 
 
@@ -19,6 +20,22 @@ export class EstatePublicService {
     @InjectModel(Estate.name) private estateModel: Model<EstateDocument>,
     @InjectModel(EstateFavorite.name) private estateFavoriteModel: Model<EstateFavoriteDocument>,
   ) { }
+
+  // Create Property
+  async create(data: CreatePropertyDto, user: User) {
+    return this.estateModel.create({
+      // 
+      ...data,
+      status: EstateStatusEnum.Draft,
+      visibility: EstateVisibilityEnum.Public,
+
+      owner: user._id,
+      createdBy: user._id,
+      office: "64f8cbf151ca333bab196cf1",
+
+
+    });
+  }
 
 
   // Get BlogPost
