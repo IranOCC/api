@@ -84,7 +84,8 @@ export class EstatePublicService {
         "users", "createdBy", "firstName lastName fullName", false,
         [
           { $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } },
-          { $lookup: { from: "storages", localField: "avatar", foreignField: "_id", as: "avatar" } }
+          { $lookup: { from: "storages", localField: "avatar", foreignField: "_id", as: "avatar" } },
+          { $lookup: { from: "phonenumbers", localField: "phone", foreignField: "_id", as: "phone" } }
         ]
       ],
       ["offices", "office", "name verified", false],
@@ -164,7 +165,7 @@ export class EstatePublicService {
     }
     const searchFields = "title slug excerpt content code province city district quarter alley address"
     if (!filter) filter = {}
-    filter["createdBy"].equals(user._id)
+    // filter["createdBy"] = user._id
     // filter["visibility"] = EstateVisibilityEnum.Public
     // filter["isConfirmed"] = true
     // filter["publishedAt"] = { $lte: new Date() }
