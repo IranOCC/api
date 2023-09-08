@@ -81,7 +81,7 @@ export class EstatePublicService {
   findAll(pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
       [
-        "users", "createdBy", "firstName lastName fullName", false,
+        "users", "createdBy", "firstName lastName fullName avatar phone", false,
         [
           { $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } },
           { $lookup: { from: "storages", localField: "avatar", foreignField: "_id", as: "avatar" } },
