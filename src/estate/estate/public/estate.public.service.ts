@@ -168,7 +168,9 @@ export class EstatePublicService {
       // ["storages", "gallery", "path alt title", true],
     ]
     const project = "title slug excerpt area canBarter buildingArea roomsCount mastersCount constructionYear buildingArea floorsCount unitsCount floor withOldBuilding publishedAt createdAt code province city district"
-    const virtualFields = {}
+    const virtualFields = {
+
+    }
     const searchFields = "title slug excerpt content code province city district quarter alley address"
     if (!filter) filter = {}
     filter["createdBy"] = user._id

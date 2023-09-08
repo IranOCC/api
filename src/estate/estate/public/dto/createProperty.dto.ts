@@ -74,10 +74,10 @@ export class CreatePropertyDto {
     @IsPositive()
     area?: number;
 
-    // @ApiProperty()
-    // @Transform(({ value }) => (parseInt(value) || 0))
-    // @IsPositive()
-    // price?: number;
+    @ApiProperty()
+    @Transform(({ value }) => (parseInt(value) || 0))
+    @IsPositive()
+    price?: number;
 
     @ApiProperty()
     @Transform(({ value }) => (parseInt(value) || 0))
