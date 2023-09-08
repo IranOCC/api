@@ -173,7 +173,7 @@ export class EstatePublicService {
     }
     const searchFields = "title slug excerpt content code province city district quarter alley address"
     if (!filter) filter = {}
-    filter["createdBy"] = user._id
+    filter["createdBy"].equals(user._id)
     // filter["visibility"] = EstateVisibilityEnum.Public
     // filter["isConfirmed"] = true
     // filter["publishedAt"] = { $lte: new Date() }
