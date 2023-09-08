@@ -121,9 +121,21 @@ export class Estate extends Document {
   confirmedAt: Date;
 
 
+  // ==> reject
+  @Prop({ default: false })
+  isRejected: boolean;
 
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  })
+  rejectedBy: any;
 
+  @Prop({ default: null })
+  rejectedAt: Date;
 
+  @Prop({ default: null, type: String })
+  rejectedReason: string;
 
 
 

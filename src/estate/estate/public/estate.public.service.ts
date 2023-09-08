@@ -159,13 +159,13 @@ export class EstatePublicService {
       ["estatecategories", "category", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
       ["storages", "image", "path alt title", false],
     ]
-    const project = "title slug excerpt area canBarter buildingArea roomsCount mastersCount constructionYear buildingArea floorsCount unitsCount floor withOldBuilding publishedAt createdAt code province city district"
+    const project = "title slug excerpt area isConfirmed confirmedAt isRejected rejectedAt rejectedReason canBarter buildingArea roomsCount mastersCount constructionYear buildingArea floorsCount unitsCount floor withOldBuilding publishedAt createdAt code province city district"
     const virtualFields = {
-
+      // all: { $count: "" }
     }
     const searchFields = "title slug excerpt content code province city district quarter alley address"
     if (!filter) filter = {}
-    // filter["createdBy"] = user._id
+    filter["createdBy"] = new ObjectId(user._id)
     // filter["visibility"] = EstateVisibilityEnum.Public
     // filter["isConfirmed"] = true
     // filter["publishedAt"] = { $lte: new Date() }
