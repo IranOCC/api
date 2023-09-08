@@ -27,12 +27,12 @@ export class EstatePublicService {
       // 
       ...data,
       slug: slugify(data.title, {
-      replacement: "_",
-      remove: undefined,
-      lower: false,
-      strict: false,
-      locale: "fa",
-      trim: true,
+        replacement: "_",
+        remove: undefined,
+        lower: false,
+        strict: false,
+        locale: "fa",
+        trim: true,
       }),
       status: EstateStatusEnum.Draft,
       visibility: EstateVisibilityEnum.Public,
@@ -80,10 +80,16 @@ export class EstatePublicService {
   // List Estate
   findAll(pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
-      // ["users", "owner", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
-      // ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      [
+        "users", "createdBy", "firstName lastName fullName", false,
+        [
+          { $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } },
+          { $lookup: { from: "storages", localField: "avatar", foreignField: "_id", as: "avatar" } }
+        ]
+      ],
+      ["offices", "office", "name verified", false],
       // 
-      ["estatecategories", "category", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
+      // ["estatecategories", "category", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
       // ["estatetypes", "type", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
       // ["estatefeatures", "features", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
       // ["estatedocumenttypes", "documentType", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
@@ -147,7 +153,36 @@ export class EstatePublicService {
     return listAggregation(this.estateModel, pagination, filter, sort, populate, project, virtualFields, searchFields, undefined, undefined, undefined)
   }
 
+  // myEstates
+  myEstates(pagination: PaginationDto, filter: any, sort: any, user: User) {
+    const populate: PopulatedType[] = [
+      // ["users", "owner", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      // ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      // 
+      // ["estatecategories", "category", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
+      // ["estatetypes", "type", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
+      // ["estatefeatures", "features", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
+      // ["estatedocumenttypes", "documentType", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
+      // 
+      ["storages", "image", "path alt title", false],
+      // ["storages", "gallery", "path alt title", true],
+    ]
+    const project = "title slug excerpt area canBarter buildingArea roomsCount mastersCount constructionYear buildingArea floorsCount unitsCount floor withOldBuilding publishedAt createdAt code province city district"
+    const virtualFields = {}
+    const searchFields = "title slug excerpt content code province city district quarter alley address"
+    if (!filter) filter = {}
+    filter["createdBy"] = user._id
+    // filter["visibility"] = EstateVisibilityEnum.Public
+    // filter["isConfirmed"] = true
+    // filter["publishedAt"] = { $lte: new Date() }
 
+    // convert
+    // if (filter.category) {
+    //   filter["category._id"] = { $eq: new ObjectId(filter.category) }
+    //   delete filter.category
+    // }
+    return listAggregation(this.estateModel, pagination, filter, sort, populate, project, virtualFields, searchFields, undefined, undefined, undefined)
+  }
 }
 
 

@@ -37,6 +37,15 @@ export class EstatePublicController {
     return this.estatePublicService.create(data, user);
   }
 
+  @Roles(RoleEnum.User)
+  @Get("myEstates")
+  @ApiOperation({ summary: "Get list of my estates", description: "No Description" })
+  @ApiResponse({ status: 200 })
+  myEstates(@Query('filter') filter: WebEstateFilteringDto, @Query('sort') sort: WebEstateSortingDto, @Query() paginate: PaginationDto, @Request() { user }) {
+    return this.estatePublicService.myEstates(paginate, filter, sort, user);
+  }
+
+
   @Public()
   @Get()
   @ApiOperation({ summary: "Get list of Model with filtering", description: "No Description" })
