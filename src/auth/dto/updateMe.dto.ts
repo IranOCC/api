@@ -22,31 +22,22 @@ export class UpdateMe {
     @IsMongoId()
     avatar: string;
 
-    @ApiPropertyOptional()
-    @IsOptional()
-    @Type(() => EmailDto)
-    @ValidateNested()
-    email: EmailDto;
+    // @ApiPropertyOptional()
+    // @IsOptional()
+    // @Type(() => EmailDto)
+    // @ValidateNested()
+    // email: EmailDto;
 
-    @ApiProperty()
-    @Type(() => PhoneDto)
-    @ValidateNested()
-    phone: PhoneDto;
-
-    @ApiPropertyOptional()
-    @IsOptional()
-    province: string;
+    // @ApiProperty()
+    // @Type(() => PhoneDto)
+    // @ValidateNested()
+    // phone: PhoneDto;
 
     @ApiPropertyOptional()
     @IsOptional()
-    city: string;
+    nationalCode: string;
 
     @ApiPropertyOptional()
     @IsOptional()
-    address: string;
-
-    @ApiPropertyOptional()
-    @IsOptional()
-    @IsLatLong()
-    location: string;
+    birthday: string;
 }

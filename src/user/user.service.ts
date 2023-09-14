@@ -155,7 +155,7 @@ export class UserService {
     async getUserPayload(id: string) {
         const user = await this.userModel
             .findById(id)
-            .select("_id roles firstName lastName fullName verified active phone email avatar accountToken province city address location")
+            .select("_id roles firstName lastName fullName verified active phone email avatar accountToken province city address location birthday nationalCode")
             .exec()
 
         if (!user) throw new UnauthorizedException("User not found", "UserNotFound")
@@ -171,15 +171,12 @@ export class UserService {
 
     // updateMe
     async updateMe(id: string, data: UpdateMe): Promise<any> {
-        const { phone, email, ...props } = data
+        // const { ...props } = data
         const _user = await this.userModel.findById(id)
-
-        if (phone) await this.setPhone(_user, phone)
-        if (email) await this.setEmail(_user, email)
 
         // save
         await _user.save()
-        return this.userModel.updateOne({ _id: id }, props).exec();
+        return this.userModel.updateOne({ _id: id }, data).exec();
     }
 
 

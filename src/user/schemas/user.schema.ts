@@ -82,6 +82,17 @@ export class User extends Document {
 
   @Prop({
     type: String,
+  })
+  nationalCode?: string;
+
+  @Prop({
+    type: Date,
+  })
+  birthday?: Date;
+
+
+  @Prop({
+    type: String,
     select: false,
   })
   province: string;

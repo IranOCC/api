@@ -5,6 +5,7 @@ import { PaginationDto } from 'src/utils/dto/pagination.dto';
 import { listAggregation, PopulatedType } from 'src/utils/helper/listAggregation.helper';
 import { Storage, StorageDocument } from '../schemas/storage.schema';
 import { UpdateStorageDto } from '../dto/updateStorage.dto';
+import { S3ManagerService } from '../s3-manager/s3-manager.service';
 
 
 
@@ -14,6 +15,7 @@ import { UpdateStorageDto } from '../dto/updateStorage.dto';
 export class StorageAdminService {
   constructor(
     @InjectModel(Storage.name) private storageModel: Model<StorageDocument>,
+    private s3managerService: S3ManagerService,
   ) { }
 
 
@@ -53,6 +55,7 @@ export class StorageAdminService {
   async remove(id: string) {
     await this.storageModel.deleteOne({ _id: id })
     // TODO: remove file from storage
+    this.s3managerService
     // TODO: remove from its dependencies
   }
 

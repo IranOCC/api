@@ -22,4 +22,9 @@ export class S3ManagerService {
             Body: file.buffer,
         }).promise();
     }
+
+
+    async remove(key: string) {
+        // await this.s3.deleteObjects().promise();
+    }
 }
