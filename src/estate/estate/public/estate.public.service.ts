@@ -85,7 +85,8 @@ export class EstatePublicService {
         [
           { $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } },
           { $lookup: { from: "storages", localField: "avatar", foreignField: "_id", as: "avatar" } },
-          { $lookup: { from: "phonenumbers", localField: "phone", foreignField: "_id", as: "phone" } }
+          { $lookup: { from: "phonenumbers", localField: "phone", foreignField: "_id", as: "phone" } },
+          { $project: { "avatar": { $first: `$avatar` }, "phone": { $first: `$phone` }, "fullName": `$fullName`, "firstName": `$firstName`, "lastName": `$lastName`, } }
         ]
       ],
       ["offices", "office", "name verified", false],
