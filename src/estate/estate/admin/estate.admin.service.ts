@@ -83,6 +83,7 @@ export class EstateAdminService {
       estate.isRejected = false
       estate.rejectedAt = null
       estate.rejectedBy = null
+      estate.rejectedReason = null
       // 
       return await estate.save()
     }
@@ -123,10 +124,11 @@ export class EstateAdminService {
       ["users", "owner", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["users", "confirmedBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      ["users", "rejectedBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["offices", "office", "name", false],
       ["estatecategories", "category", "title"],
     ]
-    const project = "title slug status visibility isConfirmed confirmedAt publishedAt createdAt code"
+    const project = "title slug status visibility isConfirmed confirmedAt isRejected rejectedAt rejectedReason publishedAt createdAt code"
     const virtualFields = {}
     const searchFields = "title slug excerpt content code province city district quarter alley address description"
     return listAggregation(this.estateModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
@@ -138,6 +140,7 @@ export class EstateAdminService {
       .populate("gallery", 'path title alt')
       .populate("image", 'path title alt')
       .populate("confirmedBy", "fistName lastName fullName")
+      .populate("rejectedBy", "fistName lastName fullName")
       .populate("createdBy", "fistName lastName fullName")
       .exec();
   }
