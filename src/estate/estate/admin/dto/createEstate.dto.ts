@@ -207,7 +207,6 @@ export class CreateEstateDto {
 
     @ApiPropertyOptional()
     @IsOptional()
-    // @IsBoolean()
     withOldBuilding?: boolean;
 
     @ApiPropertyOptional()
@@ -252,5 +251,12 @@ export class CreateEstateDto {
 
 
 
+    @ApiPropertyOptional()
+    @IsOptional()
+    dailyRent?: boolean;
 
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    annualRent?: boolean;
 }

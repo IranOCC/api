@@ -247,6 +247,12 @@ export class Estate extends Document {
 
   @Prop({ type: Boolean, default: null })
   withOldBuilding: boolean;
+
+  @Prop({ type: Boolean, })
+  dailyRent: boolean;
+
+  @Prop({ type: Boolean, })
+  annualRent: boolean;
 }
 
 export const EstateSchema = SchemaFactory.createForClass(Estate);
