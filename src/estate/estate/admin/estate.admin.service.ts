@@ -79,6 +79,11 @@ export class EstateAdminService {
       estate.isConfirmed = true
       estate.confirmedAt = new Date()
       estate.confirmedBy = user._id
+      // 
+      estate.isRejected = false
+      estate.rejectedAt = null
+      estate.rejectedBy = null
+      // 
       return await estate.save()
     }
 
@@ -87,7 +92,7 @@ export class EstateAdminService {
 
 
   // reject publish estate
-  async rejectPublish(id: string, user: CurrentUser | User) {
+  async rejectPublish(id: string, reason: string, user: CurrentUser | User) {
     const estate = await (await this.estateModel.findById(id)).populate("office", "_id management members")
     if (!estate) throw new NotFoundException("Estate not found", "EstateNotFound")
     if (
@@ -98,6 +103,12 @@ export class EstateAdminService {
       estate.isConfirmed = false
       estate.confirmedAt = null
       estate.confirmedBy = null
+      // 
+      estate.isRejected = true
+      estate.rejectedAt = new Date()
+      estate.rejectedBy = user._id
+      estate.rejectedReason = reason
+      // 
       return await estate.save()
     }
 

@@ -55,8 +55,8 @@ export class EstateAdminController {
   @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin)
   @ApiOperation({ summary: "Reject estate", description: "No Description" })
   @ApiResponse({ status: 201 })
-  reject(@Param() { id }: MongoIDQueryDto, @Request() { user }, @Request() { offices }) {
-    return this.estateAdminService.rejectPublish(id, { ...user, offices });
+  reject(@Param() { id }: MongoIDQueryDto, @Query('reason') reason: string, @Request() { user }, @Request() { offices }) {
+    return this.estateAdminService.rejectPublish(id, reason, { ...user, offices });
   }
 
 
