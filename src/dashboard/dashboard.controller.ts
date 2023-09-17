@@ -20,6 +20,12 @@ export class DashboardController {
   }
 
 
+  @Get('estates')
+  estatesReport() {
+    return this.dashboardService.estatesReport();
+  }
+
+
 
 
 }

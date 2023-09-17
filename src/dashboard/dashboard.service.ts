@@ -8,6 +8,7 @@ import { listAutoComplete } from 'src/utils/helper/autoComplete.helper';
 import { Ga4Service } from '@aurelle/nestjs-ga4';
 import { BetaAnalyticsDataClient } from "@google-analytics/data"
 import { google } from "googleapis"
+import { Estate, EstateDocument } from 'src/estate/estate/schemas/estate.schema';
 
 
 
@@ -16,6 +17,7 @@ import { google } from "googleapis"
 @Injectable()
 export class DashboardService {
   constructor(
+    @InjectModel(Estate.name) private estateModel: Model<EstateDocument>,
   ) { }
 
 
@@ -62,4 +64,52 @@ export class DashboardService {
     return result
   }
 
+
+
+
+  async estatesReport() {
+    return this.estateModel.aggregate([
+      {
+        $project: {
+          _id: "$_id",
+          createdAt: "$createdAt",
+          isConfirmed: "$isConfirmed",
+          isRejected: {
+            $cond: {
+              "if": { "$eq": ["$isRejected", true] },
+              "then": true,
+              "else": false
+            },
+          },
+        },
+      },
+      {
+        $sort: { createdAt: -1 }
+      },
+      {
+        $group: {
+          _id: { day: { $dayOfMonth: "$createdAt" }, month: { $month: "$createdAt" }, year: { $year: "$createdAt" } },
+          total: { $sum: 1 },
+          rejected: {
+            $sum: {
+              "$cond": {
+                "if": { "$eq": ["$isRejected", true] },
+                "then": 1,
+                "else": 0
+              },
+            },
+          },
+          confirmed: {
+            $sum: {
+              "$cond": {
+                "if": { "$eq": ["$isConfirmed", true] },
+                "then": 1,
+                "else": 0
+              },
+            },
+          },
+        },
+      },
+    ])
+  }
 }

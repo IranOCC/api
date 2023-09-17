@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { DashboardController } from './dashboard.controller';
-import { Ga4Module } from '@aurelle/nestjs-ga4'
-import { ConfigService } from '@nestjs/config';
-import { Ga4ModuleConfig } from '@aurelle/nestjs-ga4/dist/ga4/interfaces';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Estate, EstateSchema } from 'src/estate/estate/schemas/estate.schema';
 
 @Module({
   imports: [
+    MongooseModule.forFeature([{ name: Estate.name, schema: EstateSchema }]),
   ],
   controllers: [DashboardController],
   providers: [DashboardService],
