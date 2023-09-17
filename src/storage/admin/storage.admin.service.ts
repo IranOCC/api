@@ -7,6 +7,8 @@ import { Storage, StorageDocument } from '../schemas/storage.schema';
 import { UpdateStorageDto } from '../dto/updateStorage.dto';
 import { S3ManagerService } from '../s3-manager/s3-manager.service';
 import { User } from 'src/user/schemas/user.schema';
+import { ObjectId } from 'mongodb';
+import { RoleEnum } from 'src/user/enum/role.enum';
 
 
 
@@ -45,6 +47,11 @@ export class StorageAdminService {
     const project = "title alt filesize mimetype dimensions path"
     const virtualFields = {}
     const searchFields = "title alt path"
+
+    if (!filter) filter = {}
+    filter["uploadedBy"] = new ObjectId(user._id)
+
+
     return listAggregation(this.storageModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
   }
 
