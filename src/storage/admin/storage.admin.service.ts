@@ -6,6 +6,7 @@ import { listAggregation, PopulatedType } from 'src/utils/helper/listAggregation
 import { Storage, StorageDocument } from '../schemas/storage.schema';
 import { UpdateStorageDto } from '../dto/updateStorage.dto';
 import { S3ManagerService } from '../s3-manager/s3-manager.service';
+import { User } from 'src/user/schemas/user.schema';
 
 
 
@@ -37,15 +38,13 @@ export class StorageAdminService {
 
 
   // List Storage
-  findAll(pagination: PaginationDto, filter: any, sort: any) {
-    const populate: PopulatedType[] = []
+  findAll(pagination: PaginationDto, filter: any, sort: any, user: User) {
+    const populate: PopulatedType[] = [
+      ["users", "uploadedBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+    ]
     const project = "title alt filesize mimetype dimensions path"
-    const virtualFields = {
-      // fullName: { $concat: ["$firstName", " ", "$lastName"] }
-    }
+    const virtualFields = {}
     const searchFields = "title alt path"
-    console.log(filter);
-
     return listAggregation(this.storageModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
   }
 

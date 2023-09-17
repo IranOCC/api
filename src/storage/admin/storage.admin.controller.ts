@@ -47,8 +47,8 @@ export class StorageAdminController {
   @Roles(RoleEnum.SuperAdmin, RoleEnum.Admin, RoleEnum.Agent, RoleEnum.Author)
   @ApiOperation({ summary: "Get list of Model", description: "No Description" })
   @ApiResponse({ status: 200, type: ListResponseDto })
-  findAll(@Query('filter') filter: StorageFilteringDto, @Query('sort') sort: StorageSortingDto, @Query() paginate: PaginationDto) {
-    return this.storageAdminService.findAll(paginate, filter, sort);
+  findAll(@Query('filter') filter: StorageFilteringDto, @Query('sort') sort: StorageSortingDto, @Query() paginate: PaginationDto, @Request() { user }) {
+    return this.storageAdminService.findAll(paginate, filter, sort, user);
   }
 
 
