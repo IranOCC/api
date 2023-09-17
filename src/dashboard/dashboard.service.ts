@@ -113,7 +113,7 @@ export class DashboardService {
         },
       },
       {
-        $sort: { "_id.op": -1 }
+        $sort: { "_id.op": 1 }
       },
     ])
   }
