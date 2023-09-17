@@ -255,7 +255,7 @@ export class EstateToolsService {
         return {
           allowSubmit: true,
           allowSelectCategory: false,
-          allowConfirm: user.roles.includes(RoleEnum.SuperAdmin) || user.roles.includes(RoleEnum.Admin) && ((doc.office.management as User)._id.equals(user._id)),
+          allowConfirm: user.roles.includes(RoleEnum.SuperAdmin) || (user.roles.includes(RoleEnum.Admin) && ((doc.office.management as User)._id.equals(user._id))),
           title: { disabled: false },
           slug: { disabled: false },
           excerpt: { disabled: false },
