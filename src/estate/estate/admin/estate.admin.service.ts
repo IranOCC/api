@@ -52,15 +52,15 @@ export class EstateAdminService {
 
     // is SuperAdmin
     if (user.roles.includes(RoleEnum.SuperAdmin)) {
-      return this.estateModel.updateOne({ _id: id }, { ...data, isConfirmed: false, confirmedAt: null, confirmedBy: null });
+      return this.estateModel.updateOne({ _id: id }, { ...data, isConfirmed: false, confirmedAt: null, confirmedBy: null, isRejected: false, rejectedAt: null, rejectedBy: null, rejectedReason: null });
     }
     // is Admin & management of office
     if (user.roles.includes(RoleEnum.Admin) && ((_office.management as User)._id.equals(user._id))) {
-      return this.estateModel.updateOne({ _id: id }, { ...data, isConfirmed: false, confirmedAt: null, confirmedBy: null });
+      return this.estateModel.updateOne({ _id: id }, { ...data, isConfirmed: false, confirmedAt: null, confirmedBy: null, isRejected: false, rejectedAt: null, rejectedBy: null, rejectedReason: null });
     }
     // is Agent & member of office
     if (user.roles.includes(RoleEnum.Agent) && post.createdBy.equals(user._id) && (_office.members.includes(user._id))) {
-      return this.estateModel.updateOne({ _id: id }, { ...data, isConfirmed: false, confirmedAt: null, confirmedBy: null });
+      return this.estateModel.updateOne({ _id: id }, { ...data, isConfirmed: false, confirmedAt: null, confirmedBy: null, isRejected: false, rejectedAt: null, rejectedBy: null, rejectedReason: null });
     }
 
     // throw
