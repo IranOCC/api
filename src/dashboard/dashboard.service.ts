@@ -67,7 +67,7 @@ export class DashboardService {
 
 
 
-  async estatesReport() {
+  async estatesReport(period: "daily" | "weekly" | "monthly" = "daily") {
     return this.estateModel.aggregate([
       {
         $project: {
@@ -84,11 +84,12 @@ export class DashboardService {
         },
       },
       {
-        $sort: { createdAt: -1 }
-      },
-      {
         $group: {
-          _id: { day: { $dayOfMonth: "$createdAt" }, month: { $month: "$createdAt" }, year: { $year: "$createdAt" } },
+          _id: period === "daily" ? { op: { $dayOfYear: "$createdAt" }, year: { $year: "$createdAt" } }
+            : period === "weekly" ? { op: { $week: "$createdAt" }, year: { $year: "$createdAt" } }
+              : period === "monthly" ? { op: { $month: "$createdAt" }, year: { $year: "$createdAt" } }
+                : null
+          ,
           name: { $first: "$createdAt" },
           total: { $sum: 1 },
           rejected: {
@@ -110,6 +111,9 @@ export class DashboardService {
             },
           },
         },
+      },
+      {
+        $sort: { "_id.op": -1 }
       },
     ])
   }

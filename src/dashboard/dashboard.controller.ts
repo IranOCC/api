@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DashboardService } from './dashboard.service';
 import { Public } from 'src/auth/guard/jwt-auth.guard';
@@ -21,8 +21,8 @@ export class DashboardController {
 
 
   @Get('estates')
-  estatesReport() {
-    return this.dashboardService.estatesReport();
+  estatesReport(@Query('period') period: "daily" | "weekly" | "monthly") {
+    return this.dashboardService.estatesReport(period);
   }
 
 
