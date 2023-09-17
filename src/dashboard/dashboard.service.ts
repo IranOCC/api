@@ -89,6 +89,7 @@ export class DashboardService {
       {
         $group: {
           _id: { day: { $dayOfMonth: "$createdAt" }, month: { $month: "$createdAt" }, year: { $year: "$createdAt" } },
+          name: { $first: "$createdAt" },
           total: { $sum: 1 },
           rejected: {
             $sum: {
