@@ -17,11 +17,11 @@ export class Office extends Document {
 
 
 
-  @Prop({ default: 0, type: Number })
-  estatesCount: number;
+  // @Prop({ default: 0, type: Number })
+  // estatesCount: number;
 
-  @Prop({ default: 0, type: Number })
-  postsCount: number;
+  // @Prop({ default: 0, type: Number })
+  // postsCount: number;
 
 
 

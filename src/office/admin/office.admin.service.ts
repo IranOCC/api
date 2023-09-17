@@ -67,10 +67,66 @@ export class OfficeServiceAdmin {
       ["users", "management", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["phonenumbers", "phone", "value verified"],
       ["emailaddresses", "email", "value verified"],
+      [
+        "estates",
+        ["_id", "office", "estates"],
+        "confirmed pending rejected",
+        false,
+        [
+          {
+            "$project": {
+              "_id": "$_id",
+              "isConfirmed": "$isConfirmed",
+              "isRejected": {
+                "$cond": {
+                  "if": { "$eq": ["$isRejected", true] },
+                  "then": true,
+                  "else": false
+                },
+              },
+            }
+          },
+          {
+            "$project": {
+              "_id": "$_id",
+              "status": {
+                $cond: [
+                  { $eq: ["$isRejected", true] },
+                  "rejected",
+                  {
+                    $cond: [
+                      { $eq: ["$isConfirmed", true] },
+                      "confirmed",
+                      "pending"
+                    ]
+                  }
+                ]
+              }
+            },
+          },
+          {
+            $group: {
+              _id: "$status",
+              count: { $sum: 1 }
+            }
+          },
+          {
+            $group: {
+              _id: null,
+              object: {
+                $push: { k: "$_id", v: "$count" }
+              }
+            }
+          },
+          {
+            $replaceRoot: { newRoot: { $arrayToObject: "$object" } }
+          }
+        ]
+      ],
     ]
-    const project = "name description estatesCount postsCount membersCount verified active"
+    const project = "name description membersCount verified active"
     const virtualFields = {
-      membersCount: { $size: "$members" }
+      membersCount: { $size: "$members" },
     }
     const searchFields = "name description"
     return listAggregation(this.officeModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
