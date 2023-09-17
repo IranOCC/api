@@ -48,7 +48,6 @@ export class StorageAdminController {
   @ApiOperation({ summary: "Get list of Model", description: "No Description" })
   @ApiResponse({ status: 200, type: ListResponseDto })
   findAll(@Query('filter') filter: StorageFilteringDto, @Query('sort') sort: StorageSortingDto, @Query() paginate: PaginationDto, @Request() { user }) {
-    console.log(user, "===========user============");
     return this.storageAdminService.findAll(paginate, filter, sort, user);
   }
 
