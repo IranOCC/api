@@ -49,8 +49,7 @@ export class StorageAdminService {
     const searchFields = "title alt path"
 
     if (!filter) filter = {}
-    filter["uploadedBy"] = new ObjectId(user._id)
-
+    if (!user.roles.includes(RoleEnum.SuperAdmin)) filter["uploadedBy._id"] = new ObjectId(user._id)
 
     return listAggregation(this.storageModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
   }
