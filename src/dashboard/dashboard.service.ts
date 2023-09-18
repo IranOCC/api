@@ -134,13 +134,15 @@ export class DashboardService {
           "name": 1
         }
       },
-
-      // {
-      //   $skip: 6900
-      // },
-      // {
-      //   $limit: 200
-      // }
+      {
+        $project: {
+          _id: 0,
+          name: "$name",
+          total: "$total",
+          rejected: "$rejected",
+          confirmed: "$confirmed",
+        }
+      },
     ])
   }
 }
