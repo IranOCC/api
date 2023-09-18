@@ -38,7 +38,7 @@ export class DashboardController {
   }
 
   @Get('officePosts')
-  officeEstatesReport(@Query('type') type: "count" | "time", @Query('period') period?: "daily" | "weekly" | "monthly", @Query('mode') mode?: "barchart" | "piechart" | "table") {
+  officePostsReport(@Query('type') type: "count" | "time", @Query('period') period?: "daily" | "weekly" | "monthly", @Query('mode') mode?: "barchart" | "piechart" | "table") {
     return this.dashboardService.officePostsReport(type, period, mode);
   }
 
