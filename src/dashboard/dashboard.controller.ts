@@ -25,6 +25,11 @@ export class DashboardController {
     return this.dashboardService.estatesReport(period);
   }
 
+  @Get('posts')
+  postsReport(@Query('period') period: "daily" | "weekly" | "monthly") {
+    // return this.dashboardService.postsReport(period);
+  }
+
 
 
 

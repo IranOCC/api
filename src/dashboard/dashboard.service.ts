@@ -82,13 +82,7 @@ export class DashboardService {
       {
         $project: {
           _id: "$_id",
-          // time: {
-          //   $dateToString: {
-          //     date: "$createdAt",
-          //     format: "%Y-%m-%d"
-          //   }
-          // },
-          createdAt: "$createdAt",
+          time: "$publishedAt",
           isConfirmed: "$isConfirmed",
           isRejected: {
             $cond: {
@@ -100,18 +94,20 @@ export class DashboardService {
         },
       },
       {
-        $sort: {
-          "createdAt": 1
-        }
-      },
-      {
         $group: {
-          _id: period === "daily" ? { op: { $dayOfYear: "$createdAt" }, year: { $year: "$createdAt" } }
-            : period === "weekly" ? { op: { $week: "$createdAt" }, year: { $year: "$createdAt" } }
-              : period === "monthly" ? { op: { $month: "$createdAt" }, year: { $year: "$createdAt" } }
+          _id: period === "daily" ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
+            : period === "weekly" ? { op: { $week: "$time" }, year: { $year: "$time" } }
+              : period === "monthly" ? { op: { $month: "$time" }, year: { $year: "$time" } }
                 : null
           ,
-          name: { $first: "$createdAt" },
+          name: {
+            $first: {
+              $dateToString: {
+                date: "$time",
+                format: "%Y-%m-%d"
+              },
+            }
+          },
           total: { $sum: 1 },
           rejected: {
             $sum: {
@@ -134,11 +130,16 @@ export class DashboardService {
         },
       },
       {
-        $skip: 6900
+        $sort: {
+          "name": 1
+        }
       },
-      {
-        $limit: 200
-      }
+      // {
+      //   $skip: 6900
+      // },
+      // {
+      //   $limit: 200
+      // }
     ])
   }
 }
