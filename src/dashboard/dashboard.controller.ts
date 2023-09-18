@@ -32,5 +32,8 @@ export class DashboardController {
 
 
 
-
+  @Get('officeEstates')
+  officeEstatesReport(@Query('type') type: "count" | "time", @Query('period') period?: "daily" | "weekly" | "monthly", @Query('mode') mode?: "barchart" | "piechart" | "table") {
+    return this.dashboardService.officeEstatesReport(type, period, mode);
+  }
 }

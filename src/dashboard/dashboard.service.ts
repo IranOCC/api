@@ -10,6 +10,8 @@ import { BetaAnalyticsDataClient } from "@google-analytics/data"
 import { google } from "googleapis"
 import { Estate, EstateDocument } from 'src/estate/estate/schemas/estate.schema';
 import { BlogPost, BlogPostDocument } from 'src/blog/post/schemas/blogPost.schema';
+import { User, UserDocument } from 'src/user/schemas/user.schema';
+import { Office, OfficeDocument } from 'src/office/schemas/office.schema';
 
 
 
@@ -20,6 +22,8 @@ export class DashboardService {
   constructor(
     @InjectModel(Estate.name) private estateModel: Model<EstateDocument>,
     @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPostDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Office.name) private officeModel: Model<OfficeDocument>,
   ) { }
 
 
@@ -69,8 +73,77 @@ export class DashboardService {
 
 
 
-  async estatesReport(period: "daily" | "weekly" | "monthly" = "monthly") {
+  async estatesReport(period: "daily" | "weekly" | "monthly") {
     return this.estateModel.aggregate([
+      {
+        $project: {
+          _id: "$_id",
+          time: "$publishedAt",
+          isConfirmed: "$isConfirmed",
+          isRejected: {
+            $cond: {
+              "if": { "$eq": ["$isRejected", true] },
+              "then": true,
+              "else": false
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: period === "daily" ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
+            : period === "weekly" ? { op: { $week: "$time" }, year: { $year: "$time" } }
+              : period === "monthly" ? { op: { $month: "$time" }, year: { $year: "$time" } }
+                : null
+          ,
+          name: {
+            $first: {
+              $dateToString: {
+                date: "$time",
+                format: "%Y-%m-%d"
+              },
+            }
+          },
+          total: { $sum: 1 },
+          rejected: {
+            $sum: {
+              "$cond": {
+                "if": { "$eq": ["$isRejected", true] },
+                "then": 1,
+                "else": 0
+              },
+            },
+          },
+          confirmed: {
+            $sum: {
+              "$cond": {
+                "if": { "$eq": ["$isConfirmed", true] },
+                "then": 1,
+                "else": 0
+              },
+            },
+          },
+        },
+      },
+      {
+        $sort: {
+          "name": 1
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          name: "$name",
+          total: "$total",
+          rejected: "$rejected",
+          confirmed: "$confirmed",
+        }
+      },
+    ])
+  }
+
+  async postsReport(period: "daily" | "weekly" | "monthly") {
+    return this.blogPostModel.aggregate([
       {
         $project: {
           _id: "$_id",
@@ -140,72 +213,85 @@ export class DashboardService {
 
 
 
-  async postsReport(period: "daily" | "weekly" | "monthly" = "monthly") {
-    return this.blogPostModel.aggregate([
+
+
+  async officeEstatesReport(type: "count" | "time", period?: "daily" | "weekly" | "monthly", mode?: "barchart" | "piechart" | "table") {
+    return this.officeModel.aggregate([
       {
         $project: {
           _id: "$_id",
-          time: "$publishedAt",
-          isConfirmed: "$isConfirmed",
-          isRejected: {
-            $cond: {
-              "if": { "$eq": ["$isRejected", true] },
-              "then": true,
-              "else": false
-            },
-          },
-        },
-      },
-      {
-        $group: {
-          _id: period === "daily" ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
-            : period === "weekly" ? { op: { $week: "$time" }, year: { $year: "$time" } }
-              : period === "monthly" ? { op: { $month: "$time" }, year: { $year: "$time" } }
-                : null
-          ,
-          name: {
-            $first: {
-              $dateToString: {
-                date: "$time",
-                format: "%Y-%m-%d"
-              },
-            }
-          },
-          total: { $sum: 1 },
-          rejected: {
-            $sum: {
-              "$cond": {
-                "if": { "$eq": ["$isRejected", true] },
-                "then": 1,
-                "else": 0
-              },
-            },
-          },
-          confirmed: {
-            $sum: {
-              "$cond": {
-                "if": { "$eq": ["$isConfirmed", true] },
-                "then": 1,
-                "else": 0
-              },
-            },
-          },
-        },
-      },
-      {
-        $sort: {
-          "name": 1
+          name: "$name",
         }
+      },
+      {
+        $lookup: {
+          from: "estates",
+          localField: "_id",
+          foreignField: "office",
+          as: "estates",
+          pipeline: [
+            {
+              "$project": {
+                "_id": "$_id",
+                "isConfirmed": "$isConfirmed",
+                "isRejected": {
+                  "$cond": {
+                    "if": { "$eq": ["$isRejected", true] },
+                    "then": true,
+                    "else": false
+                  },
+                },
+              }
+            },
+            {
+              "$group": {
+                "_id": null,
+                total: { $sum: 1 },
+                rejected: {
+                  $sum: {
+                    "$cond": {
+                      "if": { "$eq": ["$isRejected", true] },
+                      "then": 1,
+                      "else": 0
+                    },
+                  },
+                },
+                confirmed: {
+                  $sum: {
+                    "$cond": {
+                      "if": { "$eq": ["$isConfirmed", true] },
+                      "then": 1,
+                      "else": 0
+                    },
+                  },
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                total: "$total",
+                rejected: "$rejected",
+                confirmed: "$confirmed",
+              }
+            },
+          ]
+        }
+      },
+      {
+        $unwind: {
+          path: "$estates",
+        },
       },
       {
         $project: {
           _id: 0,
           name: "$name",
-          total: "$total",
-          rejected: "$rejected",
-          confirmed: "$confirmed",
+          total: "$estates.total",
+          rejected: "$estates.rejected",
+          confirmed: "$estates.confirmed",
         }
-      },
+      }
     ])
   }
 }
