@@ -68,10 +68,26 @@ export class DashboardService {
 
 
   async estatesReport(period: "daily" | "weekly" | "monthly" = "daily") {
+    const abbas = () => {
+      return "date"
+      // console.log(date, "%%%");
+
+      // return new Date(date)
+      // return moment(date).locale("fa").format("DD MMM YYYY HH:mm:ss")
+    }
+
+
+
     return this.estateModel.aggregate([
       {
         $project: {
           _id: "$_id",
+          // time: {
+          //   $dateToString: {
+          //     date: "$createdAt",
+          //     format: "%Y-%m-%d"
+          //   }
+          // },
           createdAt: "$createdAt",
           isConfirmed: "$isConfirmed",
           isRejected: {
@@ -82,6 +98,11 @@ export class DashboardService {
             },
           },
         },
+      },
+      {
+        $sort: {
+          "createdAt": 1
+        }
       },
       {
         $group: {
@@ -113,8 +134,13 @@ export class DashboardService {
         },
       },
       {
-        $sort: { "_id.op": 1 }
+        $skip: 6900
       },
+      {
+        $limit: 200
+      }
     ])
   }
 }
+
+
