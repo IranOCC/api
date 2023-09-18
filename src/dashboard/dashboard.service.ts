@@ -228,7 +228,7 @@ export class DashboardService {
           from: "estates",
           localField: "_id",
           foreignField: "office",
-          as: "estates",
+          as: "datalist",
           pipeline: [
             {
               "$project": {
@@ -280,20 +280,101 @@ export class DashboardService {
       },
       {
         $unwind: {
-          path: "$estates",
+          path: "$datalist",
         },
       },
       {
         $project: {
           _id: 0,
           name: "$name",
-          total: "$estates.total",
-          rejected: "$estates.rejected",
-          confirmed: "$estates.confirmed",
+          total: "$datalist.total",
+          rejected: "$datalist.rejected",
+          confirmed: "$datalist.confirmed",
         }
       }
     ])
   }
+
+
+    async officePostsReport(type: "count" | "time", period?: "daily" | "weekly" | "monthly", mode?: "barchart" | "piechart" | "table") {
+    return this.officeModel.aggregate([
+      {
+        $project: {
+          _id: "$_id",
+          name: "$name",
+        }
+      },
+      {
+        $lookup: {
+          from: "blogposts",
+          localField: "_id",
+          foreignField: "office",
+          as: "datalist",
+          pipeline: [
+            {
+              "$project": {
+                "_id": "$_id",
+                "isConfirmed": "$isConfirmed",
+                "isRejected": {
+                  "$cond": {
+                    "if": { "$eq": ["$isRejected", true] },
+                    "then": true,
+                    "else": false
+                  },
+                },
+              }
+            },
+            {
+              "$group": {
+                "_id": null,
+                total: { $sum: 1 },
+                rejected: {
+                  $sum: {
+                    "$cond": {
+                      "if": { "$eq": ["$isRejected", true] },
+                      "then": 1,
+                      "else": 0
+                    },
+                  },
+                },
+                confirmed: {
+                  $sum: {
+                    "$cond": {
+                      "if": { "$eq": ["$isConfirmed", true] },
+                      "then": 1,
+                      "else": 0
+                    },
+                  },
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                total: "$total",
+                rejected: "$rejected",
+                confirmed: "$confirmed",
+              }
+            },
+          ]
+        }
+      },
+      {
+        $unwind: {
+          path: "$datalist",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          name: "$name",
+          total: "$datalist.total",
+          rejected: "$datalist.rejected",
+          confirmed: "$datalist.confirmed",
+        }
+      }
+    ])
+    }
 }
 
 
