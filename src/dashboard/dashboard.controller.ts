@@ -32,15 +32,26 @@ export class DashboardController {
 
 
 
-  @Get('officeEstates')
-  officeEstatesReport(@Query('type') type: "count" | "time", @Query('period') period?: "daily" | "weekly" | "monthly", @Query('mode') mode?: "barchart" | "piechart" | "table") {
-    return this.dashboardService.officeEstatesReport(type, period, mode);
+  @Get('officeEstatesCountSeries')
+  officeEstatesCountSeriesReport(@Query('mode') mode?: "barchart" | "piechart" | "table") {
+    return this.dashboardService.officeEstatesCountSeriesReport(mode);
   }
 
-  @Get('officePosts')
-  officePostsReport(@Query('type') type: "count" | "time", @Query('period') period?: "daily" | "weekly" | "monthly", @Query('mode') mode?: "barchart" | "piechart" | "table") {
-    return this.dashboardService.officePostsReport(type, period, mode);
+  @Get('officeEstatesTimeSeries')
+  officeEstatesTimeSeriesReport(@Query('period') period?: "daily" | "weekly" | "monthly") {
+    return this.dashboardService.officeEstatesTimeSeriesReport(period);
   }
 
-  
+
+
+  @Get('officePostsCountSeries')
+  officePostsCountSeriesReport(@Query('mode') mode?: "barchart" | "piechart" | "table") {
+    return this.dashboardService.officePostsCountSeriesReport(mode);
+  }
+
+  @Get('officePostsTimeSeries')
+  officePostsTimeSeriesReport(@Query('period') period?: "daily" | "weekly" | "monthly") {
+    return this.dashboardService.officePostsTimeSeriesReport(period);
+  }
+
 }

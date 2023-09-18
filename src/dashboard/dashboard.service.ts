@@ -215,7 +215,7 @@ export class DashboardService {
 
 
 
-  async officeEstatesReport(type: "count" | "time", period?: "daily" | "weekly" | "monthly", mode?: "barchart" | "piechart" | "table") {
+  async officeEstatesCountSeriesReport(mode?: "barchart" | "piechart" | "table") {
     return this.officeModel.aggregate([
       {
         $project: {
@@ -296,7 +296,74 @@ export class DashboardService {
   }
 
 
-    async officePostsReport(type: "count" | "time", period?: "daily" | "weekly" | "monthly", mode?: "barchart" | "piechart" | "table") {
+  async officeEstatesTimeSeriesReport(period?: "daily" | "weekly" | "monthly") {
+    return this.officeModel.aggregate([
+      {
+        $project: {
+          _id: "$_id",
+          name: "$name",
+        }
+      },
+      {
+        $lookup: {
+          from: "estates",
+          localField: "_id",
+          foreignField: "office",
+          as: "datalist",
+          pipeline: [
+            {
+              $project: {
+                _id: "$_id",
+                time: "$publishedAt",
+              },
+            },
+            {
+              $group: {
+                _id: period === "daily" ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
+                  : period === "weekly" ? { op: { $week: "$time" }, year: { $year: "$time" } }
+                    : period === "monthly" ? { op: { $month: "$time" }, year: { $year: "$time" } }
+                      : null
+                ,
+                name: {
+                  $first: {
+                    $dateToString: {
+                      date: "$time",
+                      format: "%Y-%m-%d"
+                    },
+                  }
+                },
+                total: { $sum: 1 },
+              },
+            },
+            {
+              $sort: {
+                "name": 1
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                name: "$name",
+                total: "$total",
+                rejected: "$rejected",
+                confirmed: "$confirmed",
+              }
+            },
+          ],
+        },
+      },
+    ])
+
+  }
+
+
+
+
+
+
+
+
+  async officePostsCountSeriesReport(mode?: "barchart" | "piechart" | "table") {
     return this.officeModel.aggregate([
       {
         $project: {
@@ -374,7 +441,68 @@ export class DashboardService {
         }
       }
     ])
-    }
+  }
+
+
+  async officePostsTimeSeriesReport(period?: "daily" | "weekly" | "monthly") {
+    return this.officeModel.aggregate([
+      {
+        $project: {
+          _id: "$_id",
+          name: "$name",
+        }
+      },
+      {
+        $lookup: {
+          from: "blogposts",
+          localField: "_id",
+          foreignField: "office",
+          as: "datalist",
+          pipeline: [
+            {
+              $project: {
+                _id: "$_id",
+                time: "$publishedAt",
+              },
+            },
+            {
+              $group: {
+                _id: period === "daily" ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
+                  : period === "weekly" ? { op: { $week: "$time" }, year: { $year: "$time" } }
+                    : period === "monthly" ? { op: { $month: "$time" }, year: { $year: "$time" } }
+                      : null
+                ,
+                name: {
+                  $first: {
+                    $dateToString: {
+                      date: "$time",
+                      format: "%Y-%m-%d"
+                    },
+                  }
+                },
+                total: { $sum: 1 },
+              },
+            },
+            {
+              $sort: {
+                "name": 1
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                name: "$name",
+                total: "$total",
+                rejected: "$rejected",
+                confirmed: "$confirmed",
+              }
+            },
+          ],
+        },
+      },
+    ])
+  }
+
 }
 
 
