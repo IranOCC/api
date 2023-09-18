@@ -203,7 +203,7 @@ export class EstateToolsService {
 
         owner: {
           disabled: false,
-          default: null,
+          default: "64e08fd8de9b0246b1f52dc5",
         },
         office: {
           disabled: false,
