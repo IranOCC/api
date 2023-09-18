@@ -345,13 +345,55 @@ export class DashboardService {
                 _id: 0,
                 name: "$name",
                 total: "$total",
-                rejected: "$rejected",
-                confirmed: "$confirmed",
               }
             },
           ],
         },
       },
+      {
+        $unwind: {
+          path: "$datalist",
+        },
+      },
+      {
+        $facet: {
+          items: [
+            {
+              $group: {
+                _id: "$_id",
+                name: { $first: "$name" },
+              }
+            }
+          ],
+          data: [
+            {
+              $group: {
+                _id: "$datalist.name",
+                object: {
+                  $push: {
+                    k: {
+                      $toString: "$_id"
+                    },
+                    v: "$datalist.total"
+                  }
+                },
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                name: "$_id",
+                c: { $arrayToObject: "$object" }
+              }
+            },
+            {
+              $sort: {
+                "name": 1
+              }
+            },
+          ],
+        }
+      }
     ])
 
   }
@@ -500,6 +542,25 @@ export class DashboardService {
           ],
         },
       },
+      {
+        $unwind: {
+          path: "$datalist",
+        },
+      },
+      // {
+      //   $group: {
+      //     _id: null,
+      //     items: {
+      //       $push: {
+      //         _id: ""
+      //       },
+      //     },
+
+      //     // data: {
+      //     //   $push
+      //     // }
+      //   }
+      // }
     ])
   }
 
