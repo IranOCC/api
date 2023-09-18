@@ -27,7 +27,7 @@ export class DashboardController {
 
   @Get('posts')
   postsReport(@Query('period') period: "daily" | "weekly" | "monthly") {
-    // return this.dashboardService.postsReport(period);
+    return this.dashboardService.postsReport(period);
   }
 
 

@@ -9,6 +9,7 @@ import { Ga4Service } from '@aurelle/nestjs-ga4';
 import { BetaAnalyticsDataClient } from "@google-analytics/data"
 import { google } from "googleapis"
 import { Estate, EstateDocument } from 'src/estate/estate/schemas/estate.schema';
+import { BlogPost, BlogPostDocument } from 'src/blog/post/schemas/blogPost.schema';
 
 
 
@@ -18,6 +19,7 @@ import { Estate, EstateDocument } from 'src/estate/estate/schemas/estate.schema'
 export class DashboardService {
   constructor(
     @InjectModel(Estate.name) private estateModel: Model<EstateDocument>,
+    @InjectModel(BlogPost.name) private blogPostModel: Model<BlogPostDocument>,
   ) { }
 
 
@@ -67,18 +69,79 @@ export class DashboardService {
 
 
 
-  async estatesReport(period: "daily" | "weekly" | "monthly" = "daily") {
-    const abbas = () => {
-      return "date"
-      // console.log(date, "%%%");
-
-      // return new Date(date)
-      // return moment(date).locale("fa").format("DD MMM YYYY HH:mm:ss")
-    }
-
-
-
+  async estatesReport(period: "daily" | "weekly" | "monthly" = "monthly") {
     return this.estateModel.aggregate([
+      {
+        $project: {
+          _id: "$_id",
+          time: "$publishedAt",
+          isConfirmed: "$isConfirmed",
+          isRejected: {
+            $cond: {
+              "if": { "$eq": ["$isRejected", true] },
+              "then": true,
+              "else": false
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: period === "daily" ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
+            : period === "weekly" ? { op: { $week: "$time" }, year: { $year: "$time" } }
+              : period === "monthly" ? { op: { $month: "$time" }, year: { $year: "$time" } }
+                : null
+          ,
+          name: {
+            $first: {
+              $dateToString: {
+                date: "$time",
+                format: "%Y-%m-%d"
+              },
+            }
+          },
+          total: { $sum: 1 },
+          rejected: {
+            $sum: {
+              "$cond": {
+                "if": { "$eq": ["$isRejected", true] },
+                "then": 1,
+                "else": 0
+              },
+            },
+          },
+          confirmed: {
+            $sum: {
+              "$cond": {
+                "if": { "$eq": ["$isConfirmed", true] },
+                "then": 1,
+                "else": 0
+              },
+            },
+          },
+        },
+      },
+      {
+        $sort: {
+          "name": 1
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          name: "$name",
+          total: "$total",
+          rejected: "$rejected",
+          confirmed: "$confirmed",
+        }
+      },
+    ])
+  }
+
+
+
+  async postsReport(period: "daily" | "weekly" | "monthly" = "monthly") {
+    return this.blogPostModel.aggregate([
       {
         $project: {
           _id: "$_id",
