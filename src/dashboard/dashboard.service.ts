@@ -399,7 +399,7 @@ export class DashboardService {
           ],
         }
       },
-    ])?.[0]
+    ]).then(e => e[0])
   }
 
 
@@ -587,7 +587,7 @@ export class DashboardService {
           ],
         }
       },
-    ])?.[0]
+    ]).then(e => e[0])
   }
 
 
@@ -781,7 +781,7 @@ export class DashboardService {
           ],
         }
       },
-    ])?.[0]
+    ]).then(e => e[0])
   }
 
 
@@ -969,7 +969,7 @@ export class DashboardService {
           ],
         }
       },
-    ])?.[0]
+    ]).then(e => e[0])
   }
 
 
