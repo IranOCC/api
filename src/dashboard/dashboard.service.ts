@@ -341,11 +341,6 @@ export class DashboardService {
               },
             },
             {
-              $sort: {
-                "name": 1
-              }
-            },
-            {
               $project: {
                 _id: 0,
                 name: "$name",
@@ -389,6 +384,11 @@ export class DashboardService {
                 _id: 0,
                 name: "$_id",
                 c: { $arrayToObject: "$object" }
+              }
+            },
+            {
+              $sort: {
+                "name": 1
               }
             },
             {
@@ -529,11 +529,6 @@ export class DashboardService {
               },
             },
             {
-              $sort: {
-                "name": 1
-              }
-            },
-            {
               $project: {
                 _id: 0,
                 name: "$name",
@@ -577,6 +572,11 @@ export class DashboardService {
                 _id: 0,
                 name: "$_id",
                 c: { $arrayToObject: "$object" }
+              }
+            },
+            {
+              $sort: {
+                "name": 1
               }
             },
             {
