@@ -392,20 +392,21 @@ export class DashboardService {
     }
 
 
-    // let result = {}
+    else if (report === "realtime") {
+      const [response] = await analyticsDataClient.runRealtimeReport({
+        property: `properties/${405205490}`,
+        metrics: [
+          { name: 'activeUsers' },
+        ],
+        dimensions: [
+          { name: 'source' }
+        ]
+      });
+      const online = parseInt(response?.rows?.[0]?.metricValues?.[0]?.value || "0")
+      return response
+    }
 
-
-
-    // const [onlineResponse] = await analyticsDataClient.runRealtimeReport({
-    //   property: `properties/${405205490}`,
-    //   metrics: [{ name: 'activeUsers', },],
-    // });
-    // const online = parseInt(onlineResponse?.rows?.[0]?.metricValues?.[0]?.value || "0")
-    // result = { online }
-
-    // return result
-
-    return "hiii"
+    return null
   }
 
 
