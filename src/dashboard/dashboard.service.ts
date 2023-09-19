@@ -164,7 +164,7 @@ export class DashboardService {
         ],
         dimensions: [
           {
-            name: 'brand',
+            name: 'mobileDeviceBranding',
           },
         ],
       });
@@ -194,7 +194,7 @@ export class DashboardService {
         ],
         dimensions: [
           {
-            name: 'device',
+            name: 'mobileDeviceMarketingName',
           },
         ],
       });
@@ -224,7 +224,7 @@ export class DashboardService {
         ],
         dimensions: [
           {
-            name: 'mobileModel',
+            name: 'mobileDeviceModel',
           },
         ],
       });
@@ -254,7 +254,7 @@ export class DashboardService {
         ],
         dimensions: [
           {
-            name: 'operationSystem',
+            name: 'operatingSystem',
           },
         ],
       });
