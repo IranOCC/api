@@ -164,7 +164,7 @@ export class DashboardService {
         ],
         dimensions: [
           {
-            name: 'deviceBrand',
+            name: 'brand',
           },
         ],
       });
