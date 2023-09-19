@@ -12,7 +12,7 @@ import { Estate, EstateDocument } from 'src/estate/estate/schemas/estate.schema'
 import { BlogPost, BlogPostDocument } from 'src/blog/post/schemas/blogPost.schema';
 import { User, UserDocument } from 'src/user/schemas/user.schema';
 import { Office, OfficeDocument } from 'src/office/schemas/office.schema';
-
+import * as moment from "jalali-moment"
 
 
 
@@ -27,47 +27,62 @@ export class DashboardService {
   ) { }
 
 
-  async sessionReport() {
+  async visitorsReport(report: string) {
+    report = report as "visitor"
     const analyticsDataClient = new BetaAnalyticsDataClient();
 
-    let result = {}
+    if (report === "visitor") {
+      const [todayResponse] = await analyticsDataClient.runReport({
+        property: `properties/${405205490}`,
+        dateRanges: [
+          {
+            startDate: 'yesterday',
+            endDate: 'today',
+          },
+        ],
+        metrics: [
+          { name: 'activeUsers', },
+        ],
+        dimensions: [
+          {
+            name: 'dateHour',
+          },
+        ],
+      });
 
-    const [onlineResponse] = await analyticsDataClient.runRealtimeReport({
-      property: `properties/${405205490}`,
-      metrics: [{ name: 'activeUsers', },],
-    });
-    const online = parseInt(onlineResponse?.rows?.[0]?.metricValues?.[0]?.value || "0")
-    result = { online }
-
-
-    const [todayResponse] = await analyticsDataClient.runReport({
-      property: `properties/${405205490}`,
-      dateRanges: [
-        {
-          startDate: 'yesterday',
-          endDate: 'today',
-        },
-      ],
-      dimensions: [
-        {
-          name: 'firstUserSource',
-        },
-      ],
-      metrics: [{ name: 'activeUsers', },],
-    });
-
-
-    todayResponse?.rows?.map(({ dimensionValues, metricValues }) => {
-      dimensionValues.map(({ value }, idx) => {
-        result[value === "(direct)" ? "direct" : value || "others"] = parseInt(metricValues[idx].value || "0")
+      let result = []
+      todayResponse?.rows?.map(({ dimensionValues, metricValues }) => {
+        dimensionValues.map(({ value }, idx) => {
+          result.push({ name: moment(value, "YYYYMMDDHH").locale("fa").format("YYYY/MM/DD HH:mm"), count: metricValues[0].value })
+        })
       })
-    })
+      result = result.sort((a, b) => a.name > b.name ? 1 : -1)
+
+      return result
+    }
 
 
 
-    console.log(todayResponse);
 
-    return result
+
+    // let result = {}
+
+
+
+    // const [onlineResponse] = await analyticsDataClient.runRealtimeReport({
+    //   property: `properties/${405205490}`,
+    //   metrics: [{ name: 'activeUsers', },],
+    // });
+    // const online = parseInt(onlineResponse?.rows?.[0]?.metricValues?.[0]?.value || "0")
+    // result = { online }
+
+
+
+
+
+
+
+    // return result
   }
 
 

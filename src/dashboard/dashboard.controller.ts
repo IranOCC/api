@@ -14,9 +14,9 @@ export class DashboardController {
 
 
   // ==================================================================================================> province autoComplete
-  @Get('session')
-  sessionReport() {
-    return this.dashboardService.sessionReport();
+  @Get('visitors')
+  visitorsReport(@Query('report') report: string) {
+    return this.dashboardService.visitorsReport(report);
   }
 
 
