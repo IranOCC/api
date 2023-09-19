@@ -16,17 +16,16 @@ export class SettingServiceAdmin {
     // #
   }
 
-  async getWebInitialData(): Promise<any> {
-    return await this.get(SettingsKeys.Initial);
-  }
-
   // ==> initial
-  async get(key: SettingsKeys): Promise<Settings> {
-    return ((await this.settingsModel.findOne({ key }))?.value) || {};
+  async getInitial(): Promise<Settings> {
+    return ((await this.settingsModel.findOne({ key: SettingsKeys.Initial }))?.value) || {};
   }
-  async set(key: SettingsKeys, data: InitialSettingDto): Promise<any> {
-    const old = await this.get(SettingsKeys.Initial);
-    return await this.settingsModel.updateOne({ key }, { value: { ...old, ...data } }, { upsert: true });
+  async setInitial(data: InitialSettingDto): Promise<any> {
+    return await this.settingsModel.updateOne(
+      { key: SettingsKeys.Initial },
+      { value: { ...data } },
+      { upsert: true }
+    );
   }
 
 
