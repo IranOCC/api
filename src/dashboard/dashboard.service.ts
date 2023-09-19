@@ -120,6 +120,246 @@ export class DashboardService {
       return result
     }
 
+    else if (report === "language") {
+      const [response] = await analyticsDataClient.runReport({
+        property: `properties/${405205490}`,
+        dateRanges: [
+          {
+            startDate: 'yesterday',
+            endDate: 'today',
+          },
+        ],
+        metrics: [
+          { name: 'activeUsers', },
+        ],
+        dimensions: [
+          {
+            name: 'language',
+          },
+        ],
+      });
+
+      let result = []
+      response?.rows?.map(({ dimensionValues, metricValues }) => {
+        dimensionValues.map(({ value }, idx) => {
+          result.push({ name: value, count: metricValues[0].value })
+        })
+      })
+      result = result.sort((a, b) => a.count > b.count ? -1 : 1)
+
+      return result
+    }
+
+    else if (report === "brand") {
+      const [response] = await analyticsDataClient.runReport({
+        property: `properties/${405205490}`,
+        dateRanges: [
+          {
+            startDate: 'yesterday',
+            endDate: 'today',
+          },
+        ],
+        metrics: [
+          { name: 'activeUsers', },
+        ],
+        dimensions: [
+          {
+            name: 'deviceBrand',
+          },
+        ],
+      });
+
+      let result = []
+      response?.rows?.map(({ dimensionValues, metricValues }) => {
+        dimensionValues.map(({ value }, idx) => {
+          result.push({ name: value, count: metricValues[0].value })
+        })
+      })
+      result = result.sort((a, b) => a.count > b.count ? -1 : 1)
+
+      return result
+    }
+
+    else if (report === "model") {
+      const [response] = await analyticsDataClient.runReport({
+        property: `properties/${405205490}`,
+        dateRanges: [
+          {
+            startDate: 'yesterday',
+            endDate: 'today',
+          },
+        ],
+        metrics: [
+          { name: 'activeUsers', },
+        ],
+        dimensions: [
+          {
+            name: 'device',
+          },
+        ],
+      });
+
+      let result = []
+      response?.rows?.map(({ dimensionValues, metricValues }) => {
+        dimensionValues.map(({ value }, idx) => {
+          result.push({ name: value, count: metricValues[0].value })
+        })
+      })
+      result = result.sort((a, b) => a.count > b.count ? -1 : 1)
+
+      return result
+    }
+
+    else if (report === "mobileModel") {
+      const [response] = await analyticsDataClient.runReport({
+        property: `properties/${405205490}`,
+        dateRanges: [
+          {
+            startDate: 'yesterday',
+            endDate: 'today',
+          },
+        ],
+        metrics: [
+          { name: 'activeUsers', },
+        ],
+        dimensions: [
+          {
+            name: 'mobileModel',
+          },
+        ],
+      });
+
+      let result = []
+      response?.rows?.map(({ dimensionValues, metricValues }) => {
+        dimensionValues.map(({ value }, idx) => {
+          result.push({ name: value, count: metricValues[0].value })
+        })
+      })
+      result = result.sort((a, b) => a.count > b.count ? -1 : 1)
+
+      return result
+    }
+
+    else if (report === "os") {
+      const [response] = await analyticsDataClient.runReport({
+        property: `properties/${405205490}`,
+        dateRanges: [
+          {
+            startDate: 'yesterday',
+            endDate: 'today',
+          },
+        ],
+        metrics: [
+          { name: 'activeUsers', },
+        ],
+        dimensions: [
+          {
+            name: 'operationSystem',
+          },
+        ],
+      });
+
+      let result = []
+      response?.rows?.map(({ dimensionValues, metricValues }) => {
+        dimensionValues.map(({ value }, idx) => {
+          result.push({ name: value, count: metricValues[0].value })
+        })
+      })
+      result = result.sort((a, b) => a.count > b.count ? -1 : 1)
+
+      return result
+    }
+
+    else if (report === "resolution") {
+      const [response] = await analyticsDataClient.runReport({
+        property: `properties/${405205490}`,
+        dateRanges: [
+          {
+            startDate: 'yesterday',
+            endDate: 'today',
+          },
+        ],
+        metrics: [
+          { name: 'activeUsers', },
+        ],
+        dimensions: [
+          {
+            name: 'screenResolution',
+          },
+        ],
+      });
+
+      let result = []
+      response?.rows?.map(({ dimensionValues, metricValues }) => {
+        dimensionValues.map(({ value }, idx) => {
+          result.push({ name: value, count: metricValues[0].value })
+        })
+      })
+      result = result.sort((a, b) => a.count > b.count ? -1 : 1)
+
+      return result
+    }
+
+    else if (report === "country") {
+      const [response] = await analyticsDataClient.runReport({
+        property: `properties/${405205490}`,
+        dateRanges: [
+          {
+            startDate: 'yesterday',
+            endDate: 'today',
+          },
+        ],
+        metrics: [
+          { name: 'activeUsers', },
+        ],
+        dimensions: [
+          {
+            name: 'country',
+          },
+        ],
+      });
+
+      let result = []
+      response?.rows?.map(({ dimensionValues, metricValues }) => {
+        dimensionValues.map(({ value }, idx) => {
+          result.push({ name: value, count: metricValues[0].value })
+        })
+      })
+      result = result.sort((a, b) => a.count > b.count ? -1 : 1)
+
+      return result
+    }
+
+    else if (report === "city") {
+      const [response] = await analyticsDataClient.runReport({
+        property: `properties/${405205490}`,
+        dateRanges: [
+          {
+            startDate: 'yesterday',
+            endDate: 'today',
+          },
+        ],
+        metrics: [
+          { name: 'activeUsers', },
+        ],
+        dimensions: [
+          {
+            name: 'city',
+          },
+        ],
+      });
+
+      let result = []
+      response?.rows?.map(({ dimensionValues, metricValues }) => {
+        dimensionValues.map(({ value }, idx) => {
+          result.push({ name: value, count: metricValues[0].value })
+        })
+      })
+      result = result.sort((a, b) => a.count > b.count ? -1 : 1)
+
+      return result
+    }
+
 
 
 
