@@ -377,7 +377,7 @@ export class DashboardService {
                     v: "$datalist.total"
                   }
                 },
-              }
+              },
             },
             {
               $project: {
@@ -387,10 +387,26 @@ export class DashboardService {
               }
             },
             {
-              $sort: {
-                "name": 1
+              $replaceWith: {
+                $mergeObjects: [{ name: "$name" }, "$c"]
               }
-            },
+            }
+            // {
+            //   $project: {
+            //     b: {
+            //       name: "$name",
+
+            //     }
+            //     name: "$_id",
+            //     c: { $arrayToObject: "$object" }
+            //   }
+            // },
+            // {
+            //   $sort: {
+            //     "name": 1
+            //   }
+            // },
+
           ],
         }
       }
