@@ -42,8 +42,6 @@ export class DashboardController {
     return this.dashboardService.officeEstatesTimeSeriesReport(period);
   }
 
-
-
   @Get('officePostsCountSeries')
   officePostsCountSeriesReport(@Query('mode') mode?: "barchart" | "piechart" | "table") {
     return this.dashboardService.officePostsCountSeriesReport(mode);
@@ -52,6 +50,29 @@ export class DashboardController {
   @Get('officePostsTimeSeries')
   officePostsTimeSeriesReport(@Query('period') period?: "daily" | "weekly" | "monthly") {
     return this.dashboardService.officePostsTimeSeriesReport(period);
+  }
+
+
+
+
+  @Get('userEstatesCountSeries')
+  userEstatesCountSeriesReport(@Query('mode') mode?: "barchart" | "piechart" | "table") {
+    return this.dashboardService.userEstatesCountSeriesReport(mode);
+  }
+
+  @Get('userEstatesTimeSeries')
+  userEstatesTimeSeriesReport(@Query('period') period?: "daily" | "weekly" | "monthly") {
+    return this.dashboardService.userEstatesTimeSeriesReport(period);
+  }
+
+  @Get('userPostsCountSeries')
+  userPostsCountSeriesReport(@Query('mode') mode?: "barchart" | "piechart" | "table") {
+    return this.dashboardService.userPostsCountSeriesReport(mode);
+  }
+
+  @Get('userPostsTimeSeries')
+  userPostsTimeSeriesReport(@Query('period') period?: "daily" | "weekly" | "monthly") {
+    return this.dashboardService.userPostsTimeSeriesReport(period);
   }
 
 }

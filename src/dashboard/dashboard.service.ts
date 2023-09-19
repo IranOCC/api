@@ -398,12 +398,6 @@ export class DashboardService {
   }
 
 
-
-
-
-
-
-
   async officePostsCountSeriesReport(mode?: "barchart" | "piechart" | "table") {
     return this.officeModel.aggregate([
       {
@@ -585,5 +579,382 @@ export class DashboardService {
       },
     ])?.[0]
   }
+
+
+
+
+
+
+
+
+  async userEstatesCountSeriesReport(mode?: "barchart" | "piechart" | "table") {
+    return this.userModel.aggregate([
+      {
+        $project: {
+          _id: "$_id",
+          name: { $concat: ["$firstName", " ", "$lastName"] },
+        }
+      },
+      {
+        $lookup: {
+          from: "estates",
+          localField: "_id",
+          foreignField: "createdBy",
+          as: "datalist",
+          pipeline: [
+            {
+              "$project": {
+                "_id": "$_id",
+                "isConfirmed": "$isConfirmed",
+                "isRejected": {
+                  "$cond": {
+                    "if": { "$eq": ["$isRejected", true] },
+                    "then": true,
+                    "else": false
+                  },
+                },
+              }
+            },
+            {
+              "$group": {
+                "_id": null,
+                total: { $sum: 1 },
+                rejected: {
+                  $sum: {
+                    "$cond": {
+                      "if": { "$eq": ["$isRejected", true] },
+                      "then": 1,
+                      "else": 0
+                    },
+                  },
+                },
+                confirmed: {
+                  $sum: {
+                    "$cond": {
+                      "if": { "$eq": ["$isConfirmed", true] },
+                      "then": 1,
+                      "else": 0
+                    },
+                  },
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                total: "$total",
+                rejected: "$rejected",
+                confirmed: "$confirmed",
+              }
+            },
+          ]
+        }
+      },
+      {
+        $unwind: {
+          path: "$datalist",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          name: "$name",
+          total: "$datalist.total",
+          rejected: "$datalist.rejected",
+          confirmed: "$datalist.confirmed",
+        }
+      },
+    ])
+  }
+
+
+  async userEstatesTimeSeriesReport(period?: "daily" | "weekly" | "monthly") {
+    return this.userModel.aggregate([
+      {
+        $project: {
+          _id: "$_id",
+          name: { $concat: ["$firstName", " ", "$lastName"] },
+        }
+      },
+      {
+        $lookup: {
+          from: "estates",
+          localField: "_id",
+          foreignField: "createdBy",
+          as: "datalist",
+          pipeline: [
+            {
+              $project: {
+                _id: "$_id",
+                time: "$publishedAt",
+              },
+            },
+            {
+              $group: {
+                _id: period === "daily" ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
+                  : period === "weekly" ? { op: { $week: "$time" }, year: { $year: "$time" } }
+                    : period === "monthly" ? { op: { $month: "$time" }, year: { $year: "$time" } }
+                      : null
+                ,
+                name: {
+                  $first: {
+                    $dateToString: {
+                      date: "$time",
+                      format: "%Y-%m-%d"
+                    },
+                  }
+                },
+                total: { $sum: 1 },
+              },
+            },
+            {
+              $sort: {
+                "name": 1
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                name: "$name",
+                total: "$total",
+              }
+            },
+          ],
+        },
+      },
+      {
+        $unwind: {
+          path: "$datalist",
+        },
+      },
+      {
+        $facet: {
+          items: [
+            {
+              $group: {
+                _id: "$_id",
+                name: { $first: "$name" },
+              }
+            }
+          ],
+          data: [
+            {
+              $group: {
+                _id: "$datalist.name",
+                object: {
+                  $push: {
+                    k: {
+                      $toString: "$_id"
+                    },
+                    v: "$datalist.total"
+                  }
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                name: "$_id",
+                c: { $arrayToObject: "$object" }
+              }
+            },
+            {
+              $replaceWith: {
+                $mergeObjects: [{ name: "$name" }, "$c"]
+              }
+            },
+          ],
+        }
+      },
+    ])?.[0]
+  }
+
+
+  async userPostsCountSeriesReport(mode?: "barchart" | "piechart" | "table") {
+    return this.userModel.aggregate([
+      {
+        $project: {
+          _id: "$_id",
+          name: { $concat: ["$firstName", " ", "$lastName"] },
+        }
+      },
+      {
+        $lookup: {
+          from: "blogposts",
+          localField: "_id",
+          foreignField: "createdBy",
+          as: "datalist",
+          pipeline: [
+            {
+              "$project": {
+                "_id": "$_id",
+                "isConfirmed": "$isConfirmed",
+                "isRejected": {
+                  "$cond": {
+                    "if": { "$eq": ["$isRejected", true] },
+                    "then": true,
+                    "else": false
+                  },
+                },
+              }
+            },
+            {
+              "$group": {
+                "_id": null,
+                total: { $sum: 1 },
+                rejected: {
+                  $sum: {
+                    "$cond": {
+                      "if": { "$eq": ["$isRejected", true] },
+                      "then": 1,
+                      "else": 0
+                    },
+                  },
+                },
+                confirmed: {
+                  $sum: {
+                    "$cond": {
+                      "if": { "$eq": ["$isConfirmed", true] },
+                      "then": 1,
+                      "else": 0
+                    },
+                  },
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                total: "$total",
+                rejected: "$rejected",
+                confirmed: "$confirmed",
+              }
+            },
+          ]
+        }
+      },
+      {
+        $unwind: {
+          path: "$datalist",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          name: "$name",
+          total: "$datalist.total",
+          rejected: "$datalist.rejected",
+          confirmed: "$datalist.confirmed",
+        }
+      }
+    ])
+  }
+
+
+  async userPostsTimeSeriesReport(period?: "daily" | "weekly" | "monthly") {
+    return this.userModel.aggregate([
+      {
+        $project: {
+          _id: "$_id",
+          name: { $concat: ["$firstName", " ", "$lastName"] },
+        }
+      },
+      {
+        $lookup: {
+          from: "blogposts",
+          localField: "_id",
+          foreignField: "createdBy",
+          as: "datalist",
+          pipeline: [
+            {
+              $project: {
+                _id: "$_id",
+                time: "$publishedAt",
+              },
+            },
+            {
+              $group: {
+                _id: period === "daily" ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
+                  : period === "weekly" ? { op: { $week: "$time" }, year: { $year: "$time" } }
+                    : period === "monthly" ? { op: { $month: "$time" }, year: { $year: "$time" } }
+                      : null
+                ,
+                name: {
+                  $first: {
+                    $dateToString: {
+                      date: "$time",
+                      format: "%Y-%m-%d"
+                    },
+                  }
+                },
+                total: { $sum: 1 },
+              },
+            },
+            {
+              $sort: {
+                "name": 1
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                name: "$name",
+                total: "$total",
+              }
+            },
+          ],
+        },
+      },
+      {
+        $unwind: {
+          path: "$datalist",
+        },
+      },
+      {
+        $facet: {
+          items: [
+            {
+              $group: {
+                _id: "$_id",
+                name: { $first: "$name" },
+              }
+            }
+          ],
+          data: [
+            {
+              $group: {
+                _id: "$datalist.name",
+                object: {
+                  $push: {
+                    k: {
+                      $toString: "$_id"
+                    },
+                    v: "$datalist.total"
+                  }
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                name: "$_id",
+                c: { $arrayToObject: "$object" }
+              }
+            },
+            {
+              $replaceWith: {
+                $mergeObjects: [{ name: "$name" }, "$c"]
+              }
+            },
+          ],
+        }
+      },
+    ])?.[0]
+  }
+
+
+
+
+
 }
 
