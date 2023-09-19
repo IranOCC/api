@@ -390,23 +390,7 @@ export class DashboardService {
               $replaceWith: {
                 $mergeObjects: [{ name: "$name" }, "$c"]
               }
-            }
-            // {
-            //   $project: {
-            //     b: {
-            //       name: "$name",
-
-            //     }
-            //     name: "$_id",
-            //     c: { $arrayToObject: "$object" }
-            //   }
-            // },
-            // {
-            //   $sort: {
-            //     "name": 1
-            //   }
-            // },
-
+            },
           ],
         }
       }
