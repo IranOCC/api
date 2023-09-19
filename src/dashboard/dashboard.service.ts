@@ -28,11 +28,10 @@ export class DashboardService {
 
 
   async visitorsReport(report: string) {
-    report = report as "visitor"
     const analyticsDataClient = new BetaAnalyticsDataClient();
 
     if (report === "visitor") {
-      const [todayResponse] = await analyticsDataClient.runReport({
+      const [response] = await analyticsDataClient.runReport({
         property: `properties/${405205490}`,
         dateRanges: [
           {
@@ -51,12 +50,42 @@ export class DashboardService {
       });
 
       let result = []
-      todayResponse?.rows?.map(({ dimensionValues, metricValues }) => {
+      response?.rows?.map(({ dimensionValues, metricValues }) => {
         dimensionValues.map(({ value }, idx) => {
           result.push({ name: moment(value, "YYYYMMDDHH").locale("fa").format("YYYY/MM/DD HH:mm"), count: metricValues[0].value })
         })
       })
       result = result.sort((a, b) => a.name > b.name ? 1 : -1)
+
+      return result
+    }
+
+    else if (report === "browser") {
+      const [response] = await analyticsDataClient.runReport({
+        property: `properties/${405205490}`,
+        dateRanges: [
+          {
+            startDate: 'yesterday',
+            endDate: 'today',
+          },
+        ],
+        metrics: [
+          { name: 'activeUsers', },
+        ],
+        dimensions: [
+          {
+            name: 'browser',
+          },
+        ],
+      });
+
+      let result = []
+      response?.rows?.map(({ dimensionValues, metricValues }) => {
+        dimensionValues.map(({ value }, idx) => {
+          result.push({ name: value, count: metricValues[0].value })
+        })
+      })
+      result = result.sort((a, b) => a.count > b.count ? -1 : 1)
 
       return result
     }
@@ -76,13 +105,9 @@ export class DashboardService {
     // const online = parseInt(onlineResponse?.rows?.[0]?.metricValues?.[0]?.value || "0")
     // result = { online }
 
-
-
-
-
-
-
     // return result
+
+    return "hiii"
   }
 
 
