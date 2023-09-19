@@ -82,7 +82,7 @@ export class DashboardService {
       let result = []
       response?.rows?.map(({ dimensionValues, metricValues }) => {
         dimensionValues.map(({ value }, idx) => {
-          result.push({ name: value, count: metricValues[0].value })
+          result.push({ name: value, count: parseInt(metricValues[0].value) })
         })
       })
       result = result.sort((a, b) => a.count > b.count ? -1 : 1)
@@ -112,7 +112,7 @@ export class DashboardService {
       let result = []
       response?.rows?.map(({ dimensionValues, metricValues }) => {
         dimensionValues.map(({ value }, idx) => {
-          result.push({ name: value, count: metricValues[0].value })
+          result.push({ name: value, count: parseInt(metricValues[0].value) })
         })
       })
       result = result.sort((a, b) => a.count > b.count ? -1 : 1)
@@ -142,7 +142,7 @@ export class DashboardService {
       let result = []
       response?.rows?.map(({ dimensionValues, metricValues }) => {
         dimensionValues.map(({ value }, idx) => {
-          result.push({ name: value, count: metricValues[0].value })
+          result.push({ name: value, count: parseInt(metricValues[0].value) })
         })
       })
       result = result.sort((a, b) => a.count > b.count ? -1 : 1)
@@ -172,7 +172,7 @@ export class DashboardService {
       let result = []
       response?.rows?.map(({ dimensionValues, metricValues }) => {
         dimensionValues.map(({ value }, idx) => {
-          result.push({ name: value, count: metricValues[0].value })
+          result.push({ name: value, count: parseInt(metricValues[0].value) })
         })
       })
       result = result.sort((a, b) => a.count > b.count ? -1 : 1)
@@ -202,7 +202,7 @@ export class DashboardService {
       let result = []
       response?.rows?.map(({ dimensionValues, metricValues }) => {
         dimensionValues.map(({ value }, idx) => {
-          result.push({ name: value, count: metricValues[0].value })
+          result.push({ name: value, count: parseInt(metricValues[0].value) })
         })
       })
       result = result.sort((a, b) => a.count > b.count ? -1 : 1)
@@ -232,7 +232,7 @@ export class DashboardService {
       let result = []
       response?.rows?.map(({ dimensionValues, metricValues }) => {
         dimensionValues.map(({ value }, idx) => {
-          result.push({ name: value, count: metricValues[0].value })
+          result.push({ name: value, count: parseInt(metricValues[0].value) })
         })
       })
       result = result.sort((a, b) => a.count > b.count ? -1 : 1)
@@ -262,7 +262,7 @@ export class DashboardService {
       let result = []
       response?.rows?.map(({ dimensionValues, metricValues }) => {
         dimensionValues.map(({ value }, idx) => {
-          result.push({ name: value, count: metricValues[0].value })
+          result.push({ name: value, count: parseInt(metricValues[0].value) })
         })
       })
       result = result.sort((a, b) => a.count > b.count ? -1 : 1)
@@ -292,7 +292,7 @@ export class DashboardService {
       let result = []
       response?.rows?.map(({ dimensionValues, metricValues }) => {
         dimensionValues.map(({ value }, idx) => {
-          result.push({ name: value, count: metricValues[0].value })
+          result.push({ name: value, count: parseInt(metricValues[0].value) })
         })
       })
       result = result.sort((a, b) => a.count > b.count ? -1 : 1)
@@ -322,7 +322,7 @@ export class DashboardService {
       let result = []
       response?.rows?.map(({ dimensionValues, metricValues }) => {
         dimensionValues.map(({ value }, idx) => {
-          result.push({ name: value, count: metricValues[0].value })
+          result.push({ name: value, count: parseInt(metricValues[0].value) })
         })
       })
       result = result.sort((a, b) => a.count > b.count ? -1 : 1)
@@ -352,7 +352,7 @@ export class DashboardService {
       let result = []
       response?.rows?.map(({ dimensionValues, metricValues }) => {
         dimensionValues.map(({ value }, idx) => {
-          result.push({ name: value, count: metricValues[0].value })
+          result.push({ name: value, count: parseInt(metricValues[0].value) })
         })
       })
       result = result.sort((a, b) => a.count > b.count ? -1 : 1)
