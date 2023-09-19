@@ -292,6 +292,11 @@ export class DashboardService {
           confirmed: "$datalist.confirmed",
         }
       },
+      {
+        $sort: {
+          "total": -1
+        }
+      },
     ])
   }
 
@@ -474,7 +479,12 @@ export class DashboardService {
           rejected: "$datalist.rejected",
           confirmed: "$datalist.confirmed",
         }
-      }
+      },
+      {
+        $sort: {
+          "total": -1
+        }
+      },
     ])
   }
 
@@ -664,6 +674,11 @@ export class DashboardService {
           confirmed: "$datalist.confirmed",
         }
       },
+      {
+        $sort: {
+          "total": -1
+        }
+      },
     ])
   }
 
@@ -846,7 +861,12 @@ export class DashboardService {
           rejected: "$datalist.rejected",
           confirmed: "$datalist.confirmed",
         }
-      }
+      },
+      {
+        $sort: {
+          "total": -1
+        }
+      },
     ])
   }
 
