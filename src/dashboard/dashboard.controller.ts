@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { DashboardService } from './dashboard.service';
 import { Public } from 'src/auth/guard/jwt-auth.guard';
@@ -14,8 +14,8 @@ export class DashboardController {
 
 
   // ==================================================================================================> province autoComplete
-  @Get('visitors')
-  visitorsReport(@Query('report') report: string) {
+  @Get('visitors/:report')
+  visitorsReport(@Param('report') report: string) {
     return this.dashboardService.visitorsReport(report);
   }
 
