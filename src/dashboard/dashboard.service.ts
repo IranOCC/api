@@ -17,6 +17,7 @@ import { RangeDateEnum } from './enum/RangeDate.enum';
 import { VisitorsReportEnum } from './enum/VisitorsReport.enum';
 import { PeriodTypeEnum } from './enum/PeriodType.enum';
 import { ChartModeEnum } from './enum/ChartMode.enum';
+import { ObjectId } from 'mongodb';
 
 
 
@@ -30,6 +31,179 @@ export class DashboardService {
     @InjectModel(Office.name) private officeModel: Model<OfficeDocument>,
   ) { }
 
+
+  async myStatistics(user: User) {
+
+
+    const final = [
+      {
+        "$group": {
+          _id: null,
+          total: { $sum: 1 },
+          rejected: {
+            $sum: {
+              $cond: {
+                "if": { "$eq": ["$isRejected", true] },
+                "then": 1,
+                "else": 0
+              },
+            },
+          },
+          confirmed: {
+            $sum: {
+              $cond: {
+                "if": { "$eq": ["$isConfirmed", true] },
+                "then": 1,
+                "else": 0
+              },
+            },
+          },
+        },
+      },
+      {
+        $addFields: {
+          pending: {
+            $subtract: [{ $subtract: ["$total", "$rejected"] }, "$confirmed"]
+          }
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          total: "$total",
+          rejected: "$rejected",
+          confirmed: "$confirmed",
+          pending: "$pending"
+        },
+      },
+    ]
+
+    return this.estateModel.aggregate([
+      {
+        $match: {
+          createdBy: new ObjectId(user._id),
+        }
+      },
+      {
+        $project: {
+          "_id": "$_id",
+          "createdAt": "$createdAt",
+          "isConfirmed": "$isConfirmed",
+          "isRejected": {
+            "$cond": {
+              "if": { "$eq": ["$isRejected", true] },
+              "then": true,
+              "else": false
+            },
+          },
+        },
+      },
+      {
+        $facet: {
+          "today": [
+            {
+              $match: {
+                createdAt: {
+                  $gte: moment().startOf("jDay").toDate(),
+                  $lt: moment().endOf("jDay").toDate(),
+                }
+              }
+            },
+            ...final
+          ],
+          "yesterday": [
+            {
+              $match: {
+                createdAt: {
+                  $gte: moment().subtract(1, "jDay").startOf("jDay").toDate(),
+                  $lt: moment().subtract(1, "jDay").endOf("jDay").toDate(),
+                }
+              }
+            },
+            ...final
+          ],
+          "thisMonth": [
+            {
+              $match: {
+                createdAt: {
+                  $gte: moment().startOf("jMonth").toDate(),
+                  $lt: moment().endOf("jMonth").toDate(),
+                }
+              }
+            },
+            ...final
+          ],
+          "lastMonth": [
+            {
+              $match: {
+                createdAt: {
+                  $gte: moment().subtract(1, "jMonth").startOf("jMonth").toDate(),
+                  $lt: moment().subtract(1, "jMonth").endOf("jMonth").toDate(),
+                }
+              }
+            },
+            ...final
+          ],
+          "all": [
+            ...final
+          ],
+        }
+      },
+      {
+        $project: {
+          today: {
+            $cond: {
+              if: { $eq: [{ $size: "$today" }, 0] },
+              then: {
+                "total": 0,
+                "rejected": 0,
+                "confirmed": 0,
+                "pending": 0,
+              },
+              else: { $first: "$today" }
+            }
+          },
+          yesterday: {
+            $cond: {
+              if: { $eq: [{ $size: "$yesterday" }, 0] },
+              then: {
+                "total": 0,
+                "rejected": 0,
+                "confirmed": 0,
+                "pending": 0,
+              },
+              else: { $first: "$yesterday" }
+            }
+          },
+          thisMonth: {
+            $cond: {
+              if: { $eq: [{ $size: "$thisMonth" }, 0] },
+              then: {
+                "total": 0,
+                "rejected": 0,
+                "confirmed": 0,
+                "pending": 0,
+              },
+              else: { $first: "$thisMonth" }
+            }
+          },
+          lastMonth: {
+            $cond: {
+              if: { $eq: [{ $size: "$lastMonth" }, 0] },
+              then: {
+                "total": 0,
+                "rejected": 0,
+                "confirmed": 0,
+                "pending": 0,
+              },
+              else: { $first: "$lastMonth" }
+            }
+          },
+        },
+      },
+
+    ]).then(e => e[0])
+  }
 
   async visitorsReport(report: VisitorsReportEnum, range: RangeDateEnum) {
     const analyticsDataClient = new BetaAnalyticsDataClient();
