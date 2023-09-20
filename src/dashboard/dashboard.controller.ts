@@ -26,6 +26,13 @@ export class DashboardController {
   }
 
   // ==================================================================================================> province autoComplete
+  @Get('firstSight')
+  @Roles(RoleEnum.SuperAdmin)
+  firstSight() {
+    return this.dashboardService.firstSight();
+  }
+
+  // ==================================================================================================> province autoComplete
   @Get('visitors/:report')
   @Roles(RoleEnum.SuperAdmin)
   @ApiParam({ name: "report", enum: VisitorsReportEnum })

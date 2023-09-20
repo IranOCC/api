@@ -33,8 +33,6 @@ export class DashboardService {
 
 
   async myStatistics(user: User) {
-
-
     const final = [
       {
         "$group": {
@@ -214,6 +212,66 @@ export class DashboardService {
         },
       },
 
+    ]).then(e => e[0])
+  }
+
+
+  async firstSight() {
+    return this.estateModel.aggregate([
+      {
+        $project: {
+          "_id": "$_id",
+          "createdAt": "$createdAt",
+          "isConfirmed": "$isConfirmed",
+          "isRejected": {
+            "$cond": {
+              "if": { "$eq": ["$isRejected", true] },
+              "then": true,
+              "else": false
+            },
+          },
+        },
+      },
+      {
+        "$group": {
+          _id: null,
+          total: { $sum: 1 },
+          rejected: {
+            $sum: {
+              $cond: {
+                "if": { "$eq": ["$isRejected", true] },
+                "then": 1,
+                "else": 0
+              },
+            },
+          },
+          confirmed: {
+            $sum: {
+              $cond: {
+                "if": { "$eq": ["$isConfirmed", true] },
+                "then": 1,
+                "else": 0
+              },
+            },
+          },
+        },
+      },
+      {
+        $addFields: {
+          pending: {
+            $subtract: [{ $subtract: ["$total", "$rejected"] }, "$confirmed"]
+          }
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          total: "$total",
+          rejected: "$rejected",
+          confirmed: "$confirmed",
+          pending: "$pending"
+        },
+      },
     ]).then(e => e[0])
   }
 
