@@ -18,6 +18,7 @@ import { VisitorsReportEnum } from './enum/VisitorsReport.enum';
 import { PeriodTypeEnum } from './enum/PeriodType.enum';
 import { ChartModeEnum } from './enum/ChartMode.enum';
 import { ObjectId } from 'mongodb';
+import { TimeFrameEnum } from './enum/TimeFrame.enum';
 
 
 
@@ -275,11 +276,12 @@ export class DashboardService {
     ]).then(e => e[0])
   }
 
-  async visitorsReport(report: VisitorsReportEnum, range: RangeDateEnum) {
+  async visitorsReport(report: VisitorsReportEnum, range: RangeDateEnum, timeFrame: TimeFrameEnum) {
     const analyticsDataClient = new BetaAnalyticsDataClient();
 
     let startDate = 'today'
     let endDate = 'today'
+    let _timeFrame = 'dateHour'
     switch (range) {
       case RangeDateEnum.yesterday:
         startDate = 'yesterday'
@@ -317,6 +319,25 @@ export class DashboardService {
         break;
     }
 
+    switch (timeFrame) {
+      case TimeFrameEnum.hourly:
+        _timeFrame = 'dateHour'
+        break;
+      case TimeFrameEnum.daily:
+        _timeFrame = 'date'
+        break;
+      case TimeFrameEnum.weekly:
+        _timeFrame = 'week'
+        break;
+      case TimeFrameEnum.monthly:
+        _timeFrame = 'month'
+        break;
+      case TimeFrameEnum.yearly:
+        _timeFrame = 'year'
+        break;
+
+    }
+
     if (report === VisitorsReportEnum.visitor) {
       const [response] = await analyticsDataClient.runReport({
         property: `properties/${405205490}`,
@@ -331,7 +352,7 @@ export class DashboardService {
         ],
         dimensions: [
           {
-            name: 'dateHour',
+            name: _timeFrame,
           },
         ],
       });
@@ -339,7 +360,36 @@ export class DashboardService {
       let result = []
       response?.rows?.map(({ dimensionValues, metricValues }) => {
         dimensionValues.map(({ value }, idx) => {
-          result.push({ name: moment(value, "YYYYMMDDHH").locale("fa").format("YYYY/MM/DD HH:mm"), count: metricValues[0].value })
+          if (timeFrame === TimeFrameEnum.hourly) {
+            result.push({
+              name: moment(value, "YYYYMMDDHH").locale("fa").format("YYYY/MM/DD HH:mm"),
+              count: metricValues[0].value
+            })
+          }
+          if (timeFrame === TimeFrameEnum.daily) {
+            result.push({
+              name: moment(value, "YYYYMMDD").locale("fa").format("YYYY/MM/DD HH:mm"),
+              count: metricValues[0].value
+            })
+          }
+          if (timeFrame === TimeFrameEnum.weekly) {
+            result.push({
+              name: moment().week(parseInt(value)).locale("fa").format("YYYY/MM/DD HH:mm"),
+              count: metricValues[0].value
+            })
+          }
+          if (timeFrame === TimeFrameEnum.monthly) {
+            result.push({
+              name: moment().month(parseInt(value)).locale("fa").format("YYYY/MM/DD HH:mm"),
+              count: metricValues[0].value
+            })
+          }
+          if (timeFrame === TimeFrameEnum.yearly) {
+            result.push({
+              name: moment().year(parseInt(value)).locale("fa").format("YYYY/MM/DD HH:mm"),
+              count: metricValues[0].value
+            })
+          }
         })
       })
       result = result.sort((a, b) => a.name > b.name ? 1 : -1)

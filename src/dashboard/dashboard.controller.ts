@@ -8,6 +8,7 @@ import { PeriodTypeEnum } from './enum/PeriodType.enum';
 import { ChartModeEnum } from './enum/ChartMode.enum';
 import { Roles } from 'src/auth/guard/roles.decorator';
 import { RoleEnum } from 'src/user/enum/role.enum';
+import { TimeFrameEnum } from './enum/TimeFrame.enum';
 
 
 
@@ -36,9 +37,10 @@ export class DashboardController {
   @Get('visitors/:report')
   @Roles(RoleEnum.SuperAdmin)
   @ApiParam({ name: "report", enum: VisitorsReportEnum })
+  @ApiQuery({ name: "timeFrame", enum: TimeFrameEnum })
   @ApiQuery({ name: "range", enum: RangeDateEnum })
-  visitorsReport(@Param('report') report: VisitorsReportEnum, @Query('range') range: RangeDateEnum) {
-    return this.dashboardService.visitorsReport(report, range);
+  visitorsReport(@Param('report') report: VisitorsReportEnum, @Query('range') range: RangeDateEnum, @Query('timeFrame') timeFrame: TimeFrameEnum) {
+    return this.dashboardService.visitorsReport(report, range, timeFrame);
   }
 
 
