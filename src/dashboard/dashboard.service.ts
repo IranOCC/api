@@ -151,6 +151,18 @@ export class DashboardService {
       },
       {
         $project: {
+          all: {
+            $cond: {
+              if: { $eq: [{ $size: "$all" }, 0] },
+              then: {
+                "total": 0,
+                "rejected": 0,
+                "confirmed": 0,
+                "pending": 0,
+              },
+              else: { $first: "$all" }
+            }
+          },
           today: {
             $cond: {
               if: { $eq: [{ $size: "$today" }, 0] },
