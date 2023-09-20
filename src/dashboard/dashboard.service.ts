@@ -51,12 +51,12 @@ export class DashboardService {
         endDate = 'today'
         break;
       case RangeDateEnum.thisWeek:
-        startDate = 'yesterday'
-        endDate = 'today'
+        startDate = moment().startOf("week").subtract(1, "jDay").locale("en").format("YYYY-MM-DD")
+        endDate = moment().endOf("week").subtract(1, "jDay").locale("en").format("YYYY-MM-DD")
         break;
       case RangeDateEnum.lastWeek:
-        startDate = 'yesterday'
-        endDate = 'today'
+        startDate = moment().subtract(1, "week").startOf("week").subtract(1, "jDay").locale("en").format("YYYY-MM-DD")
+        endDate = moment().subtract(1, "week").endOf("week").subtract(1, "jDay").locale("en").format("YYYY-MM-DD")
         break;
       // ===> month
       case RangeDateEnum['30daysAgo']:
@@ -64,12 +64,12 @@ export class DashboardService {
         endDate = 'today'
         break;
       case RangeDateEnum.thisMonth:
-        startDate = 'yesterday'
-        endDate = 'today'
+        startDate = moment().startOf("jMonth").locale("en").format("YYYY-MM-DD")
+        endDate = moment().endOf("jMonth").locale("en").format("YYYY-MM-DD")
         break;
       case RangeDateEnum.lastMonth:
-        startDate = 'yesterday'
-        endDate = 'today'
+        startDate = moment().subtract(1, "jMonth").startOf("jMonth").locale("en").format("YYYY-MM-DD")
+        endDate = moment().subtract(1, "jMonth").endOf("jMonth").locale("en").format("YYYY-MM-DD")
         break;
     }
 
