@@ -13,6 +13,10 @@ import { BlogPost, BlogPostDocument } from 'src/blog/post/schemas/blogPost.schem
 import { User, UserDocument } from 'src/user/schemas/user.schema';
 import { Office, OfficeDocument } from 'src/office/schemas/office.schema';
 import * as moment from "jalali-moment"
+import { RangeDateEnum } from './enum/RangeDate.enum';
+import { VisitorsReportEnum } from './enum/VisitorsReport.enum';
+import { PeriodTypeEnum } from './enum/PeriodType.enum';
+import { ChartModeEnum } from './enum/ChartMode.enum';
 
 
 
@@ -27,16 +31,55 @@ export class DashboardService {
   ) { }
 
 
-  async visitorsReport(report: string) {
+  async visitorsReport(report: VisitorsReportEnum, range: RangeDateEnum) {
     const analyticsDataClient = new BetaAnalyticsDataClient();
 
-    if (report === "visitor") {
+    let startDate = 'today'
+    let endDate = 'today'
+    switch (range) {
+      case RangeDateEnum.yesterday:
+        startDate = 'yesterday'
+        endDate = 'today'
+        break;
+      case RangeDateEnum.today:
+        startDate = 'today'
+        endDate = 'today'
+        break;
+      // ===> week
+      case RangeDateEnum['7daysAgo']:
+        startDate = '7daysAgo'
+        endDate = 'today'
+        break;
+      case RangeDateEnum.thisWeek:
+        startDate = 'yesterday'
+        endDate = 'today'
+        break;
+      case RangeDateEnum.lastWeek:
+        startDate = 'yesterday'
+        endDate = 'today'
+        break;
+      // ===> month
+      case RangeDateEnum['30daysAgo']:
+        startDate = '30daysAgo'
+        endDate = 'today'
+        break;
+      case RangeDateEnum.thisMonth:
+        startDate = 'yesterday'
+        endDate = 'today'
+        break;
+      case RangeDateEnum.lastMonth:
+        startDate = 'yesterday'
+        endDate = 'today'
+        break;
+    }
+
+    if (report === VisitorsReportEnum.visitor) {
       const [response] = await analyticsDataClient.runReport({
         property: `properties/${405205490}`,
         dateRanges: [
           {
-            startDate: 'yesterday',
-            endDate: 'today',
+            startDate,
+            endDate,
           },
         ],
         metrics: [
@@ -56,17 +99,16 @@ export class DashboardService {
         })
       })
       result = result.sort((a, b) => a.name > b.name ? 1 : -1)
-
       return result
     }
 
-    else if (report === "browser") {
+    else if (report === VisitorsReportEnum.browser) {
       const [response] = await analyticsDataClient.runReport({
         property: `properties/${405205490}`,
         dateRanges: [
           {
-            startDate: 'yesterday',
-            endDate: 'today',
+            startDate,
+            endDate,
           },
         ],
         metrics: [
@@ -90,13 +132,13 @@ export class DashboardService {
       return result
     }
 
-    else if (report === "platform") {
+    else if (report === VisitorsReportEnum.platform) {
       const [response] = await analyticsDataClient.runReport({
         property: `properties/${405205490}`,
         dateRanges: [
           {
-            startDate: 'yesterday',
-            endDate: 'today',
+            startDate,
+            endDate,
           },
         ],
         metrics: [
@@ -120,13 +162,13 @@ export class DashboardService {
       return result
     }
 
-    else if (report === "language") {
+    else if (report === VisitorsReportEnum.language) {
       const [response] = await analyticsDataClient.runReport({
         property: `properties/${405205490}`,
         dateRanges: [
           {
-            startDate: 'yesterday',
-            endDate: 'today',
+            startDate,
+            endDate,
           },
         ],
         metrics: [
@@ -150,13 +192,13 @@ export class DashboardService {
       return result
     }
 
-    else if (report === "brand") {
+    else if (report === VisitorsReportEnum.brand) {
       const [response] = await analyticsDataClient.runReport({
         property: `properties/${405205490}`,
         dateRanges: [
           {
-            startDate: 'yesterday',
-            endDate: 'today',
+            startDate,
+            endDate,
           },
         ],
         metrics: [
@@ -180,13 +222,13 @@ export class DashboardService {
       return result
     }
 
-    else if (report === "model") {
+    else if (report === VisitorsReportEnum.model) {
       const [response] = await analyticsDataClient.runReport({
         property: `properties/${405205490}`,
         dateRanges: [
           {
-            startDate: 'yesterday',
-            endDate: 'today',
+            startDate,
+            endDate,
           },
         ],
         metrics: [
@@ -210,13 +252,13 @@ export class DashboardService {
       return result
     }
 
-    else if (report === "mobileModel") {
+    else if (report === VisitorsReportEnum.mobileModel) {
       const [response] = await analyticsDataClient.runReport({
         property: `properties/${405205490}`,
         dateRanges: [
           {
-            startDate: 'yesterday',
-            endDate: 'today',
+            startDate,
+            endDate,
           },
         ],
         metrics: [
@@ -240,13 +282,13 @@ export class DashboardService {
       return result
     }
 
-    else if (report === "os") {
+    else if (report === VisitorsReportEnum.os) {
       const [response] = await analyticsDataClient.runReport({
         property: `properties/${405205490}`,
         dateRanges: [
           {
-            startDate: 'yesterday',
-            endDate: 'today',
+            startDate,
+            endDate,
           },
         ],
         metrics: [
@@ -270,13 +312,13 @@ export class DashboardService {
       return result
     }
 
-    else if (report === "resolution") {
+    else if (report === VisitorsReportEnum.resolution) {
       const [response] = await analyticsDataClient.runReport({
         property: `properties/${405205490}`,
         dateRanges: [
           {
-            startDate: 'yesterday',
-            endDate: 'today',
+            startDate,
+            endDate,
           },
         ],
         metrics: [
@@ -300,13 +342,13 @@ export class DashboardService {
       return result
     }
 
-    else if (report === "country") {
+    else if (report === VisitorsReportEnum.country) {
       const [response] = await analyticsDataClient.runReport({
         property: `properties/${405205490}`,
         dateRanges: [
           {
-            startDate: 'yesterday',
-            endDate: 'today',
+            startDate,
+            endDate,
           },
         ],
         metrics: [
@@ -330,13 +372,13 @@ export class DashboardService {
       return result
     }
 
-    else if (report === "city") {
+    else if (report === VisitorsReportEnum.city) {
       const [response] = await analyticsDataClient.runReport({
         property: `properties/${405205490}`,
         dateRanges: [
           {
-            startDate: 'yesterday',
-            endDate: 'today',
+            startDate,
+            endDate,
           },
         ],
         metrics: [
@@ -360,14 +402,13 @@ export class DashboardService {
       return result
     }
 
-
-    else if (report === "source") {
+    else if (report === VisitorsReportEnum.source) {
       const [response] = await analyticsDataClient.runReport({
         property: `properties/${405205490}`,
         dateRanges: [
           {
-            startDate: 'yesterday',
-            endDate: 'today',
+            startDate,
+            endDate,
           },
         ],
         metrics: [
@@ -391,28 +432,13 @@ export class DashboardService {
       return result
     }
 
-
-    else if (report === "realtime") {
-      const [response] = await analyticsDataClient.runRealtimeReport({
-        property: `properties/${405205490}`,
-        metrics: [
-          { name: 'activeUsers' },
-        ],
-        dimensions: [
-          { name: 'source' }
-        ]
-      });
-      const online = parseInt(response?.rows?.[0]?.metricValues?.[0]?.value || "0")
-      return response
-    }
-
-    return null
+    return report
   }
 
 
 
 
-  async estatesReport(period: "daily" | "weekly" | "monthly") {
+  async estatesReport(period: PeriodTypeEnum) {
     return this.estateModel.aggregate([
       {
         $project: {
@@ -430,9 +456,9 @@ export class DashboardService {
       },
       {
         $group: {
-          _id: period === "daily" ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
-            : period === "weekly" ? { op: { $week: "$time" }, year: { $year: "$time" } }
-              : period === "monthly" ? { op: { $month: "$time" }, year: { $year: "$time" } }
+          _id: period === PeriodTypeEnum.daily ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
+            : period === PeriodTypeEnum.weekly ? { op: { $week: "$time" }, year: { $year: "$time" } }
+              : period === PeriodTypeEnum.monthly ? { op: { $month: "$time" }, year: { $year: "$time" } }
                 : null
           ,
           name: {
@@ -481,7 +507,7 @@ export class DashboardService {
     ])
   }
 
-  async postsReport(period: "daily" | "weekly" | "monthly") {
+  async postsReport(period: PeriodTypeEnum) {
     return this.blogPostModel.aggregate([
       {
         $project: {
@@ -499,9 +525,9 @@ export class DashboardService {
       },
       {
         $group: {
-          _id: period === "daily" ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
-            : period === "weekly" ? { op: { $week: "$time" }, year: { $year: "$time" } }
-              : period === "monthly" ? { op: { $month: "$time" }, year: { $year: "$time" } }
+          _id: period === PeriodTypeEnum.daily ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
+            : period === PeriodTypeEnum.weekly ? { op: { $week: "$time" }, year: { $year: "$time" } }
+              : period === PeriodTypeEnum.monthly ? { op: { $month: "$time" }, year: { $year: "$time" } }
                 : null
           ,
           name: {
@@ -554,7 +580,7 @@ export class DashboardService {
 
 
 
-  async officeEstatesCountSeriesReport(mode?: "barchart" | "piechart" | "table") {
+  async officeEstatesCountSeriesReport(mode: ChartModeEnum) {
     return this.officeModel.aggregate([
       {
         $project: {
@@ -640,7 +666,7 @@ export class DashboardService {
   }
 
 
-  async officeEstatesTimeSeriesReport(period?: "daily" | "weekly" | "monthly") {
+  async officeEstatesTimeSeriesReport(period: PeriodTypeEnum) {
     return this.officeModel.aggregate([
       {
         $project: {
@@ -663,9 +689,9 @@ export class DashboardService {
             },
             {
               $group: {
-                _id: period === "daily" ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
-                  : period === "weekly" ? { op: { $week: "$time" }, year: { $year: "$time" } }
-                    : period === "monthly" ? { op: { $month: "$time" }, year: { $year: "$time" } }
+                _id: period === PeriodTypeEnum.daily ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
+                  : period === PeriodTypeEnum.weekly ? { op: { $week: "$time" }, year: { $year: "$time" } }
+                    : period === PeriodTypeEnum.monthly ? { op: { $month: "$time" }, year: { $year: "$time" } }
                       : null
                 ,
                 name: {
@@ -742,7 +768,7 @@ export class DashboardService {
   }
 
 
-  async officePostsCountSeriesReport(mode?: "barchart" | "piechart" | "table") {
+  async officePostsCountSeriesReport(mode: ChartModeEnum) {
     return this.officeModel.aggregate([
       {
         $project: {
@@ -828,7 +854,7 @@ export class DashboardService {
   }
 
 
-  async officePostsTimeSeriesReport(period?: "daily" | "weekly" | "monthly") {
+  async officePostsTimeSeriesReport(period: PeriodTypeEnum) {
     return this.officeModel.aggregate([
       {
         $project: {
@@ -851,9 +877,9 @@ export class DashboardService {
             },
             {
               $group: {
-                _id: period === "daily" ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
-                  : period === "weekly" ? { op: { $week: "$time" }, year: { $year: "$time" } }
-                    : period === "monthly" ? { op: { $month: "$time" }, year: { $year: "$time" } }
+                _id: period === PeriodTypeEnum.daily ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
+                  : period === PeriodTypeEnum.weekly ? { op: { $week: "$time" }, year: { $year: "$time" } }
+                    : period === PeriodTypeEnum.monthly ? { op: { $month: "$time" }, year: { $year: "$time" } }
                       : null
                 ,
                 name: {
@@ -936,7 +962,7 @@ export class DashboardService {
 
 
 
-  async userEstatesCountSeriesReport(mode?: "barchart" | "piechart" | "table") {
+  async userEstatesCountSeriesReport(mode: ChartModeEnum) {
     return this.userModel.aggregate([
       {
         $project: {
@@ -1022,7 +1048,7 @@ export class DashboardService {
   }
 
 
-  async userEstatesTimeSeriesReport(period?: "daily" | "weekly" | "monthly") {
+  async userEstatesTimeSeriesReport(period: PeriodTypeEnum) {
     return this.userModel.aggregate([
       {
         $project: {
@@ -1045,9 +1071,9 @@ export class DashboardService {
             },
             {
               $group: {
-                _id: period === "daily" ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
-                  : period === "weekly" ? { op: { $week: "$time" }, year: { $year: "$time" } }
-                    : period === "monthly" ? { op: { $month: "$time" }, year: { $year: "$time" } }
+                _id: period === PeriodTypeEnum.daily ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
+                  : period === PeriodTypeEnum.weekly ? { op: { $week: "$time" }, year: { $year: "$time" } }
+                    : period === PeriodTypeEnum.monthly ? { op: { $month: "$time" }, year: { $year: "$time" } }
                       : null
                 ,
                 name: {
@@ -1124,7 +1150,7 @@ export class DashboardService {
   }
 
 
-  async userPostsCountSeriesReport(mode?: "barchart" | "piechart" | "table") {
+  async userPostsCountSeriesReport(mode: ChartModeEnum) {
     return this.userModel.aggregate([
       {
         $project: {
@@ -1210,7 +1236,7 @@ export class DashboardService {
   }
 
 
-  async userPostsTimeSeriesReport(period?: "daily" | "weekly" | "monthly") {
+  async userPostsTimeSeriesReport(period: PeriodTypeEnum) {
     return this.userModel.aggregate([
       {
         $project: {
@@ -1233,9 +1259,9 @@ export class DashboardService {
             },
             {
               $group: {
-                _id: period === "daily" ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
-                  : period === "weekly" ? { op: { $week: "$time" }, year: { $year: "$time" } }
-                    : period === "monthly" ? { op: { $month: "$time" }, year: { $year: "$time" } }
+                _id: period === PeriodTypeEnum.daily ? { op: { $dayOfYear: "$time" }, year: { $year: "$time" } }
+                  : period === PeriodTypeEnum.weekly ? { op: { $week: "$time" }, year: { $year: "$time" } }
+                    : period === PeriodTypeEnum.monthly ? { op: { $month: "$time" }, year: { $year: "$time" } }
                       : null
                 ,
                 name: {

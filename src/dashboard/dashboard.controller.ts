@@ -1,7 +1,11 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { DashboardService } from './dashboard.service';
 import { Public } from 'src/auth/guard/jwt-auth.guard';
+import { RangeDateEnum } from './enum/RangeDate.enum';
+import { VisitorsReportEnum } from './enum/VisitorsReport.enum';
+import { PeriodTypeEnum } from './enum/PeriodType.enum';
+import { ChartModeEnum } from './enum/ChartMode.enum';
 
 
 
@@ -12,43 +16,50 @@ import { Public } from 'src/auth/guard/jwt-auth.guard';
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) { }
 
-
   // ==================================================================================================> province autoComplete
   @Get('visitors/:report')
-  visitorsReport(@Param('report') report: string) {
-    return this.dashboardService.visitorsReport(report);
+  @ApiParam({ name: "report", enum: VisitorsReportEnum })
+  @ApiQuery({ name: "range", enum: RangeDateEnum })
+  visitorsReport(@Param('report') report: VisitorsReportEnum, @Query('range') range: RangeDateEnum) {
+    return this.dashboardService.visitorsReport(report, range);
   }
 
 
   @Get('estates')
-  estatesReport(@Query('period') period: "daily" | "weekly" | "monthly") {
+  @ApiQuery({ name: "period", enum: PeriodTypeEnum })
+  estatesReport(@Query('period') period: PeriodTypeEnum) {
     return this.dashboardService.estatesReport(period);
   }
 
   @Get('posts')
-  postsReport(@Query('period') period: "daily" | "weekly" | "monthly") {
+  @ApiQuery({ name: "period", enum: PeriodTypeEnum })
+  postsReport(@Query('period') period: PeriodTypeEnum) {
     return this.dashboardService.postsReport(period);
   }
 
 
 
   @Get('officeEstatesCountSeries')
-  officeEstatesCountSeriesReport(@Query('mode') mode?: "barchart" | "piechart" | "table") {
+  @ApiQuery({ name: "mode", enum: ChartModeEnum })
+  officeEstatesCountSeriesReport(@Query('mode') mode: ChartModeEnum) {
     return this.dashboardService.officeEstatesCountSeriesReport(mode);
   }
 
   @Get('officeEstatesTimeSeries')
-  officeEstatesTimeSeriesReport(@Query('period') period?: "daily" | "weekly" | "monthly") {
+  @ApiQuery({ name: "period", enum: PeriodTypeEnum })
+  officeEstatesTimeSeriesReport(@Query('period') period?: PeriodTypeEnum) {
     return this.dashboardService.officeEstatesTimeSeriesReport(period);
   }
 
   @Get('officePostsCountSeries')
-  officePostsCountSeriesReport(@Query('mode') mode?: "barchart" | "piechart" | "table") {
+  @ApiQuery({ name: "mode", enum: ChartModeEnum })
+  officePostsCountSeriesReport(@Query('mode') mode: ChartModeEnum) {
     return this.dashboardService.officePostsCountSeriesReport(mode);
   }
 
   @Get('officePostsTimeSeries')
-  officePostsTimeSeriesReport(@Query('period') period?: "daily" | "weekly" | "monthly") {
+  @ApiQuery({ name: "period", enum: PeriodTypeEnum })
+  officePostsTimeSeriesReport(@Query('period') period?: PeriodTypeEnum) {
     return this.dashboardService.officePostsTimeSeriesReport(period);
   }
 
@@ -56,22 +67,26 @@ export class DashboardController {
 
 
   @Get('userEstatesCountSeries')
-  userEstatesCountSeriesReport(@Query('mode') mode?: "barchart" | "piechart" | "table") {
+  @ApiQuery({ name: "mode", enum: ChartModeEnum })
+  userEstatesCountSeriesReport(@Query('mode') mode: ChartModeEnum) {
     return this.dashboardService.userEstatesCountSeriesReport(mode);
   }
 
   @Get('userEstatesTimeSeries')
-  userEstatesTimeSeriesReport(@Query('period') period?: "daily" | "weekly" | "monthly") {
+  @ApiQuery({ name: "period", enum: PeriodTypeEnum })
+  userEstatesTimeSeriesReport(@Query('period') period: PeriodTypeEnum) {
     return this.dashboardService.userEstatesTimeSeriesReport(period);
   }
 
   @Get('userPostsCountSeries')
-  userPostsCountSeriesReport(@Query('mode') mode?: "barchart" | "piechart" | "table") {
+  @ApiQuery({ name: "mode", enum: ChartModeEnum })
+  userPostsCountSeriesReport(@Query('mode') mode: ChartModeEnum) {
     return this.dashboardService.userPostsCountSeriesReport(mode);
   }
 
   @Get('userPostsTimeSeries')
-  userPostsTimeSeriesReport(@Query('period') period?: "daily" | "weekly" | "monthly") {
+  @ApiQuery({ name: "period", enum: PeriodTypeEnum })
+  userPostsTimeSeriesReport(@Query('period') period: PeriodTypeEnum) {
     return this.dashboardService.userPostsTimeSeriesReport(period);
   }
 
