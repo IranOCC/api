@@ -16,7 +16,11 @@ export { EstateSortingDto }
 
 
 
-
+enum CRPFiltering {
+    confirmed = "confirmed",
+    rejected = "rejected",
+    pending = "pending",
+}
 
 
 
@@ -38,9 +42,9 @@ class EstateFilteringDto {
     @IsMongoId({ each: true })
     readonly office?: string[];
 
-    @ApiPropertyOptional({ name: "filter[crp]", enum: { pending: "pending", confirmed: "confirmed", rejected: "rejected" } })
+    @ApiPropertyOptional({ name: "filter[crp]", enum: CRPFiltering, isArray: true })
     @IsOptional()
-    @IsEnum({ each: true, enum: { pending: "pending", confirmed: "confirmed", rejected: "rejected" } })
+    @IsEnum(CRPFiltering, { each: true, })
     readonly crp?: string[];
 }
 
