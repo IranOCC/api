@@ -9,6 +9,7 @@ import { UpdateEstateDto } from './dto/updateEstate.dto';
 import { CurrentUser, User } from 'src/user/schemas/user.schema';
 import { RoleEnum } from 'src/user/enum/role.enum';
 import { OfficeService } from 'src/office/office.service';
+import { ObjectId } from 'mongodb';
 
 
 
@@ -131,6 +132,40 @@ export class EstateAdminService {
     const project = "title slug status visibility isConfirmed confirmedAt isRejected rejectedAt rejectedReason publishedAt createdAt code"
     const virtualFields = {}
     const searchFields = "title slug excerpt content code province city district quarter alley address description"
+
+
+    if (filter.category) {
+      if (typeof filter.category === "string") filter.category = [filter.category]
+      filter["category"] = { $in: filter.category.map((v: string) => new ObjectId(v)) }
+      delete filter.category
+    }
+    if (filter.createdBy) {
+      if (typeof filter.createdBy === "string") filter.createdBy = [filter.createdBy]
+      filter["createdBy"] = { $in: filter.createdBy.map((v: string) => new ObjectId(v)) }
+      delete filter.createdBy
+    }
+    if (filter.office) {
+      if (typeof filter.office === "string") filter.office = [filter.office]
+      filter["office"] = { $in: filter.office.map((v: string) => new ObjectId(v)) }
+      delete filter.office
+    }
+    if (filter.crp) {
+      if (typeof filter.crp === "string") filter.crp = [filter.crp]
+      if (filter.crp.includes("confirmed")) {
+        filter["isConfirmed"] = { $eq: true }
+      }
+      if (filter.crp.includes("rejected")) {
+        filter["isRejected"] = { $eq: true }
+      }
+      if (filter.crp.includes("pending")) {
+        filter["isConfirmed"] = { $eq: false }
+        filter["isRejected"] = { $eq: false }
+      }
+      // filter["office"] = { $in: filter.office.map((v: string) => new ObjectId(v)) }
+
+      delete filter.crp
+    }
+
     return listAggregation(this.estateModel, pagination, filter, sort, populate, project, virtualFields, searchFields)
   }
 
