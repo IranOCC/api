@@ -151,6 +151,18 @@ export class EstateAdminService {
     }
     if (filter.crp) {
       if (typeof filter.crp === "string") filter.crp = [filter.crp]
+      if (filter.crp.includes("confirmed") && filter.crp.includes("rejected") && filter.crp.includes("pending")) {
+
+      }
+      if (filter.crp.includes("confirmed") && filter.crp.includes("rejected")) {
+        filter["$or"] = { ["isConfirmed"]: { $eq: true }, ["isRejected"]: { $eq: true } }
+      }
+      if (filter.crp.includes("confirmed") && filter.crp.includes("pending")) {
+        filter["isRejected"] = { $eq: false }
+      }
+      if (filter.crp.includes("rejected") && filter.crp.includes("pending")) {
+        filter["isConfirmed"] = { $eq: false }
+      }
       if (filter.crp.includes("confirmed")) {
         filter["isConfirmed"] = { $eq: true }
       }
@@ -161,8 +173,6 @@ export class EstateAdminService {
         filter["isConfirmed"] = { $eq: false }
         filter["isRejected"] = { $eq: false }
       }
-      // filter["office"] = { $in: filter.office.map((v: string) => new ObjectId(v)) }
-
       delete filter.crp
     }
 
