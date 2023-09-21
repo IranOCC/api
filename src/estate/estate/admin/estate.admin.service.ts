@@ -137,12 +137,13 @@ export class EstateAdminService {
     if (filter.category) {
       if (typeof filter.category === "string") filter.category = [filter.category]
       filter["category"] = { $in: filter.category.map((v: string) => new ObjectId(v)) }
-      delete filter.category
+      // delete filter.category
     }
     if (filter.createdBy) {
+      console.log(filter.createdBy);
       if (typeof filter.createdBy === "string") filter.createdBy = [filter.createdBy]
       filter["createdBy"] = { $in: filter.createdBy.map((v: string) => new ObjectId(v)) }
-      delete filter.createdBy
+      // delete filter.createdBy
     }
     if (filter.office) {
       if (typeof filter.office === "string") filter.office = [filter.office]

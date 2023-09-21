@@ -112,17 +112,17 @@ export class EstatePublicService {
     if (filter.type) {
       if (typeof filter.type === "string") filter.type = [filter.type]
       filter["type"] = { $in: filter.type.map((v: string) => new ObjectId(v)) }
-      delete filter.type
+      // delete filter.type
     }
     if (filter.documentType) {
       if (typeof filter.documentType === "string") filter.documentType = [filter.documentType]
       filter["documentType"] = { $in: filter.documentType.map((v: string) => new ObjectId(v)) }
-      delete filter.documentType
+      // delete filter.documentType
     }
     if (filter.features) {
       if (typeof filter.features === "string") filter.features = [filter.features]
       filter["features"] = { $in: filter.features.map((v: string) => new ObjectId(v)) }
-      delete filter.features
+      // delete filter.features
     }
     // =>ok province
     // =>ok city
@@ -147,6 +147,12 @@ export class EstatePublicService {
     if (filter.barter !== undefined && filter.barter !== null) {
       filter["canBarter"] = filter.barter ? true : false
       delete filter.barter
+    }
+    if (filter.dailyRent !== undefined && filter.dailyRent !== null) {
+      filter["dailyRent"] = filter.dailyRent ? true : false
+    }
+    if (filter.annualRent !== undefined && filter.annualRent !== null) {
+      filter["annualRent"] = filter.annualRent ? true : false
     }
     return listAggregation(this.estateModel, pagination, filter, sort, populate, project, virtualFields, searchFields, undefined, undefined, undefined)
   }
