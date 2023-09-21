@@ -155,22 +155,22 @@ export class EstateAdminService {
       if (filter.crp.includes("confirmed") && filter.crp.includes("rejected") && filter.crp.includes("pending")) {
 
       }
-      if (filter.crp.includes("confirmed") && filter.crp.includes("rejected")) {
+      else if (filter.crp.includes("confirmed") && filter.crp.includes("rejected")) {
         filter["$or"] = { ["isConfirmed"]: { $eq: true }, ["isRejected"]: { $eq: true } }
       }
-      if (filter.crp.includes("confirmed") && filter.crp.includes("pending")) {
+      else if (filter.crp.includes("confirmed") && filter.crp.includes("pending")) {
         filter["isRejected"] = { $eq: false }
       }
-      if (filter.crp.includes("rejected") && filter.crp.includes("pending")) {
+      else if (filter.crp.includes("rejected") && filter.crp.includes("pending")) {
         filter["isConfirmed"] = { $eq: false }
       }
-      if (filter.crp.includes("confirmed")) {
+      else if (filter.crp.includes("confirmed")) {
         filter["isConfirmed"] = { $eq: true }
       }
-      if (filter.crp.includes("rejected")) {
+      else if (filter.crp.includes("rejected")) {
         filter["isRejected"] = { $eq: true }
       }
-      if (filter.crp.includes("pending")) {
+      else if (filter.crp.includes("pending")) {
         filter["isConfirmed"] = { $eq: false }
         filter["isRejected"] = { $eq: false }
       }
