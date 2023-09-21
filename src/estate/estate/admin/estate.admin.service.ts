@@ -136,18 +136,18 @@ export class EstateAdminService {
 
     if (filter.category) {
       if (typeof filter.category === "string") filter.category = [filter.category]
-      filter["category"] = { $in: filter.category.map((v: string) => new ObjectId(v)) }
+      filter["category._id"] = { $in: filter.category.map((v: string) => new ObjectId(v)) }
       // delete filter.category
     }
     if (filter.createdBy) {
       console.log(filter.createdBy);
       if (typeof filter.createdBy === "string") filter.createdBy = [filter.createdBy]
-      filter["createdBy"] = { $in: filter.createdBy.map((v: string) => new ObjectId(v)) }
+      filter["createdBy._id"] = { $in: filter.createdBy.map((v: string) => new ObjectId(v)) }
       // delete filter.createdBy
     }
     if (filter.office) {
       if (typeof filter.office === "string") filter.office = [filter.office]
-      filter["office"] = { $in: filter.office.map((v: string) => new ObjectId(v)) }
+      filter["office._id"] = { $in: filter.office.map((v: string) => new ObjectId(v)) }
       delete filter.office
     }
     if (filter.crp) {
