@@ -89,21 +89,24 @@ export class Estate extends Document {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: true,
+    index: true
   })
   owner: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Office',
-    required: true
+    required: true,
+    index: true
   })
   office: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: true,
+    index: true
   })
   createdBy: any;
 
@@ -114,6 +117,7 @@ export class Estate extends Document {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    index: true
   })
   confirmedBy: any;
 
@@ -128,6 +132,7 @@ export class Estate extends Document {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    index: true
   })
   rejectedBy: any;
 
@@ -204,21 +209,24 @@ export class Estate extends Document {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'EstateType',
-    default: null
+    default: null,
+    index: true
   })
   type: any;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'EstateDocumentType',
-    default: null
+    default: null,
+    index: true
   })
   documentType: any;
 
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'EstateFeature',
-    default: []
+    default: [],
+    index: true
   })
   features: any[];
 

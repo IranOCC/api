@@ -24,41 +24,6 @@ const listAggregation =
         let $pipelines: mongoose.PipelineStage[] = []
         let $project = {}
 
-        // populate
-        populate.map(([db, path, select, isArray, $pipes = []]) => {
-            let project = {}
-            select?.split(" ").map((p) => { project[p] = true })
-            const $p = !!select?.length ? [{ $project: project }] : []
-            if (typeof path === "string") {
-                $pipelines.push({
-                    $lookup: {
-                        from: db,
-                        as: path as string,
-                        localField: path as string,
-                        foreignField: "_id",
-                        pipeline: [...$pipes, ...$p]
-                    }
-                })
-                if (!isArray) $project[path] = { $first: `$${path}` }
-                else $project[path] = `$${path}`
-            }
-            else {
-                $pipelines.push({
-                    $lookup: {
-                        from: db,
-                        as: path[2],
-                        localField: path[0],
-                        foreignField: path[1],
-                        pipeline: [...$pipes, ...$p]
-                    }
-                })
-                if (!isArray) $project[path[2]] = { $first: `$${path[2]}` }
-                else $project[path[2]] = `$${path[2]}`
-            }
-            console.log(path, db, isArray);
-        })
-        select?.split(" ").map((path) => { $project[path] = `$${path}` })
-
 
 
         // virtualFields
@@ -99,13 +64,52 @@ const listAggregation =
         if (!!sort && !!Object.keys(sort)?.length) $pipelines.push({ $sort: sort })
         else $pipelines.push({ $sort: { createdAt: -1 } })
 
+
+
+
+        // populate
+        populate.map(([db, path, select, isArray, $pipes = []]) => {
+            let project = {}
+            select?.split(" ").map((p) => { project[p] = true })
+            const $p = !!select?.length ? [{ $project: project }] : []
+            if (typeof path === "string") {
+                $pipelines.push({
+                    $lookup: {
+                        from: db,
+                        as: path as string,
+                        localField: path as string,
+                        foreignField: "_id",
+                        pipeline: [...$pipes, ...$p]
+                    }
+                })
+                if (!isArray) $project[path] = { $first: `$${path}` }
+                else $project[path] = `$${path}`
+            }
+            else {
+                $pipelines.push({
+                    $lookup: {
+                        from: db,
+                        as: path[2],
+                        localField: path[0],
+                        foreignField: path[1],
+                        pipeline: [...$pipes, ...$p]
+                    }
+                })
+                if (!isArray) $project[path[2]] = { $first: `$${path[2]}` }
+                else $project[path[2]] = `$${path[2]}`
+            }
+            console.log(path, db, isArray);
+        })
+        select?.split(" ").map((path) => { $project[path] = `$${path}` })
+
         // project
-        $pipelines.push({ $project })
+        if (!!Object.keys($project)?.length) $pipelines.push({ $project })
 
 
 
-        // change root
-        if (newRoot) {
+        // search & filtering when new root
+        $and = []
+        if (!!newRoot) {
             $pipelines.push({
                 $unwind: "$" + newRoot
             })
@@ -115,12 +119,6 @@ const listAggregation =
                     "newRoot": "$" + newRoot
                 }
             })
-        }
-
-
-        // search & filtering when new root
-        $and = []
-        if (!!newRoot) {
             if (!!filter && !!Object.keys(filter).length) $and.push(filter)
             if (!!searchFields && !!search) {
                 $and.push({
@@ -154,9 +152,6 @@ const listAggregation =
                 items: { $slice: ["$items", (current - 1) * size, size] },
             }
         })
-
-
-        console.log($pipelines);
 
 
         return (await model.aggregate($pipelines))[0] || {}
