@@ -79,6 +79,10 @@ export class Estate extends Document {
   publishedAt: Date;
 
 
+  @Prop({ default: false })
+  special: boolean;
+
+
 
 
 
@@ -195,6 +199,9 @@ export class Estate extends Document {
 
   @Prop({ type: Boolean, default: false })
   canBarter: boolean;
+
+  @Prop({ type: Boolean, default: false })
+  canSwap: boolean;
 
 
 
