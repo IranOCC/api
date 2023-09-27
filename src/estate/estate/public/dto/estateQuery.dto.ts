@@ -81,6 +81,36 @@ class WebEstateFilteringDto {
     })
     @IsOptional()
     readonly barter?: boolean;
+
+    @ApiPropertyOptional({ name: "filter[swap]", enum: ["True", "False"] })
+    @Transform(({ value }) => {
+        return ([1, true, 'True'].includes(value)) ? true : false
+    })
+    @IsOptional()
+    readonly swap?: boolean;
+
+    @ApiPropertyOptional({ name: "filter[special]", enum: ["True", "False"] })
+    @Transform(({ value }) => {
+        return ([1, true, 'True'].includes(value)) ? true : false
+    })
+    @IsOptional()
+    readonly special?: boolean;
+
+
+
+    @ApiPropertyOptional({ name: "filter[dailyRent]", enum: ["True", "False"] })
+    @Transform(({ value }) => {
+        return ([1, true, 'True'].includes(value)) ? true : false
+    })
+    @IsOptional()
+    readonly dailyRent?: boolean;
+
+    @ApiPropertyOptional({ name: "filter[annualRent]", enum: ["True", "False"] })
+    @Transform(({ value }) => {
+        return ([1, true, 'True'].includes(value)) ? true : false
+    })
+    @IsOptional()
+    readonly annualRent?: boolean;
 }
 
 

@@ -148,6 +148,14 @@ export class EstatePublicService {
       filter["canBarter"] = filter.barter ? true : false
       delete filter.barter
     }
+    if (filter.swap !== undefined && filter.swap !== null) {
+      filter["swap"] = filter.swap ? true : false
+    }
+
+    if (filter.special !== undefined && filter.special !== null) {
+      filter["special"] = filter.special ? true : false
+    }
+
     if (filter.dailyRent !== undefined && filter.dailyRent !== null) {
       filter["dailyRent"] = filter.dailyRent ? true : false
     }
