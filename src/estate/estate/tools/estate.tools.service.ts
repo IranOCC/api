@@ -31,66 +31,128 @@ export class EstateToolsService {
     return await listAutoComplete(this.estateModel, query, searchFields, displayPath)
   }
 
-  async totalPriceRange() {
-    return (await this.estateModel.aggregate([
+
+
+
+  async autoCompleteTotalPrice() {
+    return this.estateModel.aggregate([
       {
-        "$group": {
-          "_id": null,
-          "max": { "$max": "$totalPrice" },
-          "min": { "$min": "$totalPrice" }
-        }
+        $project: { val: "$totalPrice" }
+      },
+      {
+        $group: {
+          "_id": {
+            $switch: {
+              branches: [
+                { case: { $and: [{ $gte: ["$val", 0] }, { $lt: ["$val", 1000000] }] }, then: { title: "0 تا 100 متر", value: "0_100", s: 0 } },
+                { case: { $and: [{ $gte: ["$val", 1000000] }, { $lt: ["$val", 200] }] }, then: { title: "100 تا 200 متر", value: "100_200", s: 100 } },
+                { case: { $and: [{ $gte: ["$val", 200] }, { $lt: ["$val", 300] }] }, then: { title: "200 تا 300 متر", value: "200_300", s: 200 } },
+                { case: { $and: [{ $gte: ["$val", 300] }, { $lt: ["$val", 500] }] }, then: { title: "300 تا 500 متر", value: "300_500", s: 300 } },
+                { case: { $and: [{ $gte: ["$val", 500] }, { $lt: ["$val", 1000] }] }, then: { title: "500 تا 1000 متر", value: "500_1000", s: 500 } },
+                { case: { $and: [{ $gte: ["$val", 1000] }, { $lt: ["$val", 2000] }] }, then: { title: "1000 تا 2000 متر", value: "1000_2000", s: 1000 } },
+                { case: { $and: [{ $gte: ["$val", 2000] }, { $lt: ["$val", 5000] }] }, then: { title: "2000 تا 5000 متر", value: "2000_5000", s: 2000 } },
+                { case: { $and: [{ $gte: ["$val", 5000] }, { $lt: ["$val", 10000] }] }, then: { title: "5000 تا 10000 متر", value: "5000_10000", s: 5000 } },
+                { case: { $and: [{ $gte: ["$val", 10000] }, { $lt: ["$val", 50000] }] }, then: { title: "10000 تا 50000 متر", value: "10000_50000", s: 10000 } },
+                { case: { $and: [{ $gte: ["$val", 50000] }, { $lt: ["$val", 100000] }] }, then: { title: "50000 تا 100000 متر", value: "50000_100000", s: 50000 } },
+              ],
+              default: { title: "100000 متر به بالا", value: "100000_1000000", s: 100000 }
+            },
+          },
+        },
+      },
+      {
+        $sort: { "_id.s": 1 }
       },
       {
         "$project": {
-          "_id": false,
-          "max": "$max",
-          "step": 10000000,
-          "min": "$min",
-        }
-      }
-    ]))[0];
+          "_id": 0,
+          "value": "$_id.value",
+          "title": "$_id.title",
+        },
+      },
+    ]);
   }
 
-  async priceRange() {
-    return (await this.estateModel.aggregate([
+  async autoCompletePrice() {
+    return this.estateModel.aggregate([
       {
-        "$group": {
-          "_id": null,
-          "max": { "$max": "$price" },
-          "min": { "$min": "$price" }
-        }
+        $project: { val: "$price" }
+      },
+      {
+        $group: {
+          "_id": {
+            $switch: {
+              branches: [
+                { case: { $and: [{ $gte: ["$val", 0] }, { $lt: ["$val", 1000000] }] }, then: { title: "0 تا 100 متر", value: "0_100", s: 0 } },
+                { case: { $and: [{ $gte: ["$val", 1000000] }, { $lt: ["$val", 200] }] }, then: { title: "100 تا 200 متر", value: "100_200", s: 100 } },
+                { case: { $and: [{ $gte: ["$val", 200] }, { $lt: ["$val", 300] }] }, then: { title: "200 تا 300 متر", value: "200_300", s: 200 } },
+                { case: { $and: [{ $gte: ["$val", 300] }, { $lt: ["$val", 500] }] }, then: { title: "300 تا 500 متر", value: "300_500", s: 300 } },
+                { case: { $and: [{ $gte: ["$val", 500] }, { $lt: ["$val", 1000] }] }, then: { title: "500 تا 1000 متر", value: "500_1000", s: 500 } },
+                { case: { $and: [{ $gte: ["$val", 1000] }, { $lt: ["$val", 2000] }] }, then: { title: "1000 تا 2000 متر", value: "1000_2000", s: 1000 } },
+                { case: { $and: [{ $gte: ["$val", 2000] }, { $lt: ["$val", 5000] }] }, then: { title: "2000 تا 5000 متر", value: "2000_5000", s: 2000 } },
+                { case: { $and: [{ $gte: ["$val", 5000] }, { $lt: ["$val", 10000] }] }, then: { title: "5000 تا 10000 متر", value: "5000_10000", s: 5000 } },
+                { case: { $and: [{ $gte: ["$val", 10000] }, { $lt: ["$val", 50000] }] }, then: { title: "10000 تا 50000 متر", value: "10000_50000", s: 10000 } },
+                { case: { $and: [{ $gte: ["$val", 50000] }, { $lt: ["$val", 100000] }] }, then: { title: "50000 تا 100000 متر", value: "50000_100000", s: 50000 } },
+              ],
+              default: { title: "100000 متر به بالا", value: "100000_1000000", s: 100000 }
+            },
+          },
+        },
+      },
+      {
+        $sort: { "_id.s": 1 }
       },
       {
         "$project": {
-          "_id": false,
-          "max": "$max",
-          "step": 10000000,
-          "min": "$min",
-        }
-      }
-    ]))[0];
+          "_id": 0,
+          "value": "$_id.value",
+          "title": "$_id.title",
+        },
+      },
+    ]);
   }
 
-
-  async areaRange() {
-    return (await this.estateModel.aggregate([
+  async autoCompleteArea() {
+    return this.estateModel.aggregate([
       {
-        "$group": {
-          "_id": null,
-          "max": { "$max": "$area" },
-          "min": { "$min": "$area" }
-        }
+        $project: { val: "$area" }
+      },
+      {
+        $group: {
+          "_id": {
+            $switch: {
+              branches: [
+                { case: { $and: [{ $gte: ["$val", 0] }, { $lt: ["$val", 100] }] }, then: { title: "0 تا 100 متر", value: "0_100", s: 0 } },
+                { case: { $and: [{ $gte: ["$val", 100] }, { $lt: ["$val", 200] }] }, then: { title: "100 تا 200 متر", value: "100_200", s: 100 } },
+                { case: { $and: [{ $gte: ["$val", 200] }, { $lt: ["$val", 300] }] }, then: { title: "200 تا 300 متر", value: "200_300", s: 200 } },
+                { case: { $and: [{ $gte: ["$val", 300] }, { $lt: ["$val", 500] }] }, then: { title: "300 تا 500 متر", value: "300_500", s: 300 } },
+                { case: { $and: [{ $gte: ["$val", 500] }, { $lt: ["$val", 1000] }] }, then: { title: "500 تا 1000 متر", value: "500_1000", s: 500 } },
+                { case: { $and: [{ $gte: ["$val", 1000] }, { $lt: ["$val", 2000] }] }, then: { title: "1000 تا 2000 متر", value: "1000_2000", s: 1000 } },
+                { case: { $and: [{ $gte: ["$val", 2000] }, { $lt: ["$val", 5000] }] }, then: { title: "2000 تا 5000 متر", value: "2000_5000", s: 2000 } },
+                { case: { $and: [{ $gte: ["$val", 5000] }, { $lt: ["$val", 10000] }] }, then: { title: "5000 تا 10000 متر", value: "5000_10000", s: 5000 } },
+                { case: { $and: [{ $gte: ["$val", 10000] }, { $lt: ["$val", 50000] }] }, then: { title: "10000 تا 50000 متر", value: "10000_50000", s: 10000 } },
+                { case: { $and: [{ $gte: ["$val", 50000] }, { $lt: ["$val", 100000] }] }, then: { title: "50000 تا 100000 متر", value: "50000_100000", s: 50000 } },
+              ],
+              default: { title: "100000 متر به بالا", value: "100000_1000000", s: 100000 }
+            },
+          },
+        },
+      },
+      {
+        $sort: { "_id.s": 1 }
       },
       {
         "$project": {
-          "_id": false,
-          "max": "$max",
-          "step": 10,
-          "min": "$min",
-        }
-      }
-    ]))[0];
+          "_id": 0,
+          "value": "$_id.value",
+          "title": "$_id.title",
+        },
+      },
+    ]);
   }
+
+
+
 
 
   async autoCompleteProvince() {
@@ -131,7 +193,6 @@ export class EstateToolsService {
       }
     ]);
   }
-
 
   async autoCompleteDistrict(province?: string, city?: string) {
     return await this.estateModel.aggregate([

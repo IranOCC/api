@@ -25,27 +25,27 @@ export class EstateToolsController {
   }
 
   // ==================================================================================================> totalPriceRange
-  @Get('range/totalPrice')
-  @ApiOperation({ summary: "Get Range of totalPrices", description: "No Description" })
+  @Get('autoComplete/totalPrice')
+  @ApiOperation({ summary: "Get totalPrice list in autoComplete structure", description: "No Description" })
   @ApiResponse({ status: 200 })
   totalPriceRange() {
-    return this.estateToolsService.totalPriceRange();
+    return this.estateToolsService.autoCompleteTotalPrice();
   }
 
   // ==================================================================================================> priceRange
-  @Get('range/price')
-  @ApiOperation({ summary: "Get Range of prices", description: "No Description" })
+  @Get('autoComplete/price')
+  @ApiOperation({ summary: "Get price list in autoComplete structure", description: "No Description" })
   @ApiResponse({ status: 200 })
   priceRange() {
-    return this.estateToolsService.priceRange();
+    return this.estateToolsService.autoCompletePrice();
   }
 
   // ==================================================================================================> areaRange
-  @Get('range/area')
-  @ApiOperation({ summary: "Get Range of areas", description: "No Description" })
+  @Get('autoComplete/area')
+  @ApiOperation({ summary: "Get area list in autoComplete structure", description: "No Description" })
   @ApiResponse({ status: 200 })
   areaRange() {
-    return this.estateToolsService.areaRange();
+    return this.estateToolsService.autoCompleteArea();
   }
 
 
