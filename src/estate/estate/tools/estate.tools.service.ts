@@ -37,25 +37,31 @@ export class EstateToolsService {
   async autoCompleteTotalPrice() {
     return this.estateModel.aggregate([
       {
-        $project: { val: "$totalPrice" }
+        $project: { val: "$price" }
       },
       {
         $group: {
           "_id": {
             $switch: {
               branches: [
-                { case: { $and: [{ $gte: ["$val", 0] }, { $lt: ["$val", 1000000] }] }, then: { title: "0 تا 100 متر", value: "0_100", s: 0 } },
-                { case: { $and: [{ $gte: ["$val", 1000000] }, { $lt: ["$val", 200] }] }, then: { title: "100 تا 200 متر", value: "100_200", s: 100 } },
-                { case: { $and: [{ $gte: ["$val", 200] }, { $lt: ["$val", 300] }] }, then: { title: "200 تا 300 متر", value: "200_300", s: 200 } },
-                { case: { $and: [{ $gte: ["$val", 300] }, { $lt: ["$val", 500] }] }, then: { title: "300 تا 500 متر", value: "300_500", s: 300 } },
-                { case: { $and: [{ $gte: ["$val", 500] }, { $lt: ["$val", 1000] }] }, then: { title: "500 تا 1000 متر", value: "500_1000", s: 500 } },
-                { case: { $and: [{ $gte: ["$val", 1000] }, { $lt: ["$val", 2000] }] }, then: { title: "1000 تا 2000 متر", value: "1000_2000", s: 1000 } },
-                { case: { $and: [{ $gte: ["$val", 2000] }, { $lt: ["$val", 5000] }] }, then: { title: "2000 تا 5000 متر", value: "2000_5000", s: 2000 } },
-                { case: { $and: [{ $gte: ["$val", 5000] }, { $lt: ["$val", 10000] }] }, then: { title: "5000 تا 10000 متر", value: "5000_10000", s: 5000 } },
-                { case: { $and: [{ $gte: ["$val", 10000] }, { $lt: ["$val", 50000] }] }, then: { title: "10000 تا 50000 متر", value: "10000_50000", s: 10000 } },
-                { case: { $and: [{ $gte: ["$val", 50000] }, { $lt: ["$val", 100000] }] }, then: { title: "50000 تا 100000 متر", value: "50000_100000", s: 50000 } },
+                { case: { $and: [{ $gte: ["$val", 0] }, { $lt: ["$val", 500e6] }] }, then: { title: "0 تا 10 میلیون", value: 0 + "_" + 10e6, s: 0 } },
+                { case: { $and: [{ $gte: ["$val", 500e6] }, { $lt: ["$val", 1000e6] }] }, then: { title: "10 تا 20 میلیون", value: 10e6 + "_" + 20e6, s: 10e6 } },
+                { case: { $and: [{ $gte: ["$val", 1000e6] }, { $lt: ["$val", 2000e6] }] }, then: { title: "20 تا 40 میلیون", value: 20e6 + "_" + 40e6, s: 20e6 } },
+                { case: { $and: [{ $gte: ["$val", 2000e6] }, { $lt: ["$val", 4000e6] }] }, then: { title: "40 تا 70 میلیون", value: 40e6 + "_" + 70e6, s: 2000e6 } },
+                { case: { $and: [{ $gte: ["$val", 4000e6] }, { $lt: ["$val", 6000e6] }] }, then: { title: "70 تا 100 میلیون", value: 70e6 + "_" + 100e6, s: 4000e6 } },
+                { case: { $and: [{ $gte: ["$val", 6000e6] }, { $lt: ["$val", 8000e6] }] }, then: { title: "100 تا 200 میلیون", value: 100e6 + "_" + 200e6, s: 6000e6 } },
+                { case: { $and: [{ $gte: ["$val", 8000e6] }, { $lt: ["$val", 10000e6] }] }, then: { title: "100 تا 200 میلیون", value: 100e6 + "_" + 200e6, s: 8000e6 } },
+                { case: { $and: [{ $gte: ["$val", 10000e6] }, { $lt: ["$val", 12500e6] }] }, then: { title: "100 تا 200 میلیون", value: 100e6 + "_" + 200e6, s: 10000e6 } },
+                { case: { $and: [{ $gte: ["$val", 12500e6] }, { $lt: ["$val", 15000e6] }] }, then: { title: "100 تا 200 میلیون", value: 100e6 + "_" + 200e6, s: 12500e6 } },
+                { case: { $and: [{ $gte: ["$val", 15000e6] }, { $lt: ["$val", 20000e6] }] }, then: { title: "100 تا 200 میلیون", value: 100e6 + "_" + 200e6, s: 15000e6 } },
+                { case: { $and: [{ $gte: ["$val", 20000e6] }, { $lt: ["$val", 30000e6] }] }, then: { title: "100 تا 200 میلیون", value: 100e6 + "_" + 200e6, s: 20000e6 } },
+                { case: { $and: [{ $gte: ["$val", 30000e6] }, { $lt: ["$val", 40000e6] }] }, then: { title: "100 تا 200 میلیون", value: 100e6 + "_" + 200e6, s: 30000e6 } },
+                { case: { $and: [{ $gte: ["$val", 40000e6] }, { $lt: ["$val", 50000e6] }] }, then: { title: "100 تا 200 میلیون", value: 100e6 + "_" + 200e6, s: 40000e6 } },
+                { case: { $and: [{ $gte: ["$val", 50000e6] }, { $lt: ["$val", 100000e6] }] }, then: { title: "100 تا 200 میلیون", value: 100e6 + "_" + 200e6, s: 50000e6 } },
+                { case: { $and: [{ $gte: ["$val", 100000e6] }, { $lt: ["$val", 200000e6] }] }, then: { title: "100 تا 200 میلیون", value: 100000e6 + "_" + 200000e6, s: 100000e6 } },
+                { case: { $and: [{ $gte: ["$val", 200000e6] }, { $lt: ["$val", 500000e6] }] }, then: { title: "100 تا 200 میلیون", value: 200000e6 + "_" + 200000e6, s: 200000e6 } },
               ],
-              default: { title: "100000 متر به بالا", value: "100000_1000000", s: 100000 }
+              default: { title: "200 میلیون به بالا", value: 500000e6 + "_" + 1000000e6, s: 200000e6 }
             },
           },
         },
@@ -83,18 +89,14 @@ export class EstateToolsService {
           "_id": {
             $switch: {
               branches: [
-                { case: { $and: [{ $gte: ["$val", 0] }, { $lt: ["$val", 1000000] }] }, then: { title: "0 تا 100 متر", value: "0_100", s: 0 } },
-                { case: { $and: [{ $gte: ["$val", 1000000] }, { $lt: ["$val", 200] }] }, then: { title: "100 تا 200 متر", value: "100_200", s: 100 } },
-                { case: { $and: [{ $gte: ["$val", 200] }, { $lt: ["$val", 300] }] }, then: { title: "200 تا 300 متر", value: "200_300", s: 200 } },
-                { case: { $and: [{ $gte: ["$val", 300] }, { $lt: ["$val", 500] }] }, then: { title: "300 تا 500 متر", value: "300_500", s: 300 } },
-                { case: { $and: [{ $gte: ["$val", 500] }, { $lt: ["$val", 1000] }] }, then: { title: "500 تا 1000 متر", value: "500_1000", s: 500 } },
-                { case: { $and: [{ $gte: ["$val", 1000] }, { $lt: ["$val", 2000] }] }, then: { title: "1000 تا 2000 متر", value: "1000_2000", s: 1000 } },
-                { case: { $and: [{ $gte: ["$val", 2000] }, { $lt: ["$val", 5000] }] }, then: { title: "2000 تا 5000 متر", value: "2000_5000", s: 2000 } },
-                { case: { $and: [{ $gte: ["$val", 5000] }, { $lt: ["$val", 10000] }] }, then: { title: "5000 تا 10000 متر", value: "5000_10000", s: 5000 } },
-                { case: { $and: [{ $gte: ["$val", 10000] }, { $lt: ["$val", 50000] }] }, then: { title: "10000 تا 50000 متر", value: "10000_50000", s: 10000 } },
-                { case: { $and: [{ $gte: ["$val", 50000] }, { $lt: ["$val", 100000] }] }, then: { title: "50000 تا 100000 متر", value: "50000_100000", s: 50000 } },
+                { case: { $and: [{ $gte: ["$val", 0] }, { $lt: ["$val", 10e6] }] }, then: { title: "0 تا 10 میلیون", value: 0 + "_" + 10e6, s: 0 } },
+                { case: { $and: [{ $gte: ["$val", 10e6] }, { $lt: ["$val", 20e6] }] }, then: { title: "10 تا 20 میلیون", value: 10e6 + "_" + 20e6, s: 10e6 } },
+                { case: { $and: [{ $gte: ["$val", 20e6] }, { $lt: ["$val", 40e6] }] }, then: { title: "20 تا 40 میلیون", value: 20e6 + "_" + 40e6, s: 20e6 } },
+                { case: { $and: [{ $gte: ["$val", 40e6] }, { $lt: ["$val", 70e6] }] }, then: { title: "40 تا 70 میلیون", value: 40e6 + "_" + 70e6, s: 40e6 } },
+                { case: { $and: [{ $gte: ["$val", 70e6] }, { $lt: ["$val", 100e6] }] }, then: { title: "70 تا 100 میلیون", value: 70e6 + "_" + 100e6, s: 70e6 } },
+                { case: { $and: [{ $gte: ["$val", 100e6] }, { $lt: ["$val", 200e6] }] }, then: { title: "100 تا 200 میلیون", value: 100e6 + "_" + 200e6, s: 100e6 } },
               ],
-              default: { title: "100000 متر به بالا", value: "100000_1000000", s: 100000 }
+              default: { title: "200 میلیون به بالا", value: 200e6 + "_" + 1000e6, s: 200e6 }
             },
           },
         },
