@@ -217,6 +217,18 @@ export class DashboardService {
   }
 
 
+  visitorsRealtime() {
+    const analyticsDataClient = new BetaAnalyticsDataClient();
+
+    return analyticsDataClient.runRealtimeReport({
+      property: `properties/${405205490}`,
+      metrics: [
+        { name: "activeUsers" }
+      ]
+    }).then((v) => ({ onlineUsers: parseInt(v?.[0]?.rows?.[0]?.metricValues?.[0]?.value || "0") }))
+  }
+
+
   async firstSight() {
     return this.estateModel.aggregate([
       {

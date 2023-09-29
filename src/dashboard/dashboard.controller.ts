@@ -33,6 +33,17 @@ export class DashboardController {
     return this.dashboardService.firstSight();
   }
 
+
+
+
+  // ==================================================================================================> province autoComplete
+  @Get('visitors/realtime')
+  // @Roles(RoleEnum.SuperAdmin)
+  @Public()
+  visitorsRealtime() {
+    return this.dashboardService.visitorsRealtime();
+  }
+
   // ==================================================================================================> province autoComplete
   @Get('visitors/:report')
   @Roles(RoleEnum.SuperAdmin)
