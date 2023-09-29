@@ -132,18 +132,18 @@ export class EstatePublicService {
       filter["district"] = { $in: filter.district.map((v: string) => (v)) }
     }
 
-    // if (filter.area) {
-    //   if (typeof filter.area === "string") filter.area = [filter.area]
-    //   filter["area"] = !!filter.area[1] ? { $gte: parseFloat(filter.area[0]), $lte: parseFloat(filter.area[1]) } : { $gte: parseFloat(filter.area[0]) }
-    // }
-    // if (filter.price) {
-    //   if (typeof filter.price === "string") filter.price = [filter.price]
-    //   filter["price"] = !!filter.price[1] ? { $gte: parseFloat(filter.price[0]), $lte: parseFloat(filter.price[1]) } : { $gte: parseFloat(filter.price[0]) }
-    // }
-    // if (filter.totalPrice) {
-    //   if (typeof filter.totalPrice === "string") filter.totalPrice = [filter.totalPrice]
-    //   filter["totalPrice"] = !!filter.totalPrice[1] ? { $gte: parseFloat(filter.totalPrice[0]), $lte: parseFloat(filter.totalPrice[1]) } : { $gte: parseFloat(filter.totalPrice[0]) }
-    // }
+    if (filter.area) {
+      if (typeof filter.area === "string") filter.area = filter.area.split("_")
+      filter["area"] = !!filter.area[1] ? { $gte: parseFloat(filter.area[0]), $lte: parseFloat(filter.area[1]) } : { $gte: parseFloat(filter.area[0]) }
+    }
+    if (filter.price) {
+      if (typeof filter.price === "string") filter.price = filter.price.split("_")
+      filter["price"] = !!filter.price[1] ? { $gte: parseFloat(filter.price[0]), $lte: parseFloat(filter.price[1]) } : { $gte: parseFloat(filter.price[0]) }
+    }
+    if (filter.totalPrice) {
+      if (typeof filter.totalPrice === "string") filter.totalPrice = filter.totalPrice.split("_")
+      filter["totalPrice"] = !!filter.totalPrice[1] ? { $gte: parseFloat(filter.totalPrice[0]), $lte: parseFloat(filter.totalPrice[1]) } : { $gte: parseFloat(filter.totalPrice[0]) }
+    }
 
     if (filter.barter !== undefined && filter.barter !== null) {
       filter["canBarter"] = filter.barter ? true : false
