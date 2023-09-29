@@ -59,8 +59,7 @@ const listAggregation =
         })
         select?.split(" ").map((path) => { $project[path] = `$${path}` })
 
-        // project
-        if (!!Object.keys($project)?.length) $pipelines.push({ $project })
+
 
         // virtualFields
         if (!!Object.keys(virtualFields)?.length) $pipelines.push({ $addFields: virtualFields })
@@ -100,16 +99,13 @@ const listAggregation =
         if (!!sort && !!Object.keys(sort)?.length) $pipelines.push({ $sort: sort })
         else $pipelines.push({ $sort: { createdAt: -1 } })
 
+        // project
+        $pipelines.push({ $project })
 
 
 
-
-
-
-
-        // search & filtering when new root
-        $and = []
-        if (!!newRoot) {
+        // change root
+        if (newRoot) {
             $pipelines.push({
                 $unwind: "$" + newRoot
             })
@@ -119,6 +115,12 @@ const listAggregation =
                     "newRoot": "$" + newRoot
                 }
             })
+        }
+
+
+        // search & filtering when new root
+        $and = []
+        if (!!newRoot) {
             if (!!filter && !!Object.keys(filter).length) $and.push(filter)
             if (!!searchFields && !!search) {
                 $and.push({
@@ -152,6 +154,9 @@ const listAggregation =
                 items: { $slice: ["$items", (current - 1) * size, size] },
             }
         })
+
+
+        console.log($pipelines);
 
 
         return (await model.aggregate($pipelines))[0] || {}

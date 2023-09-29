@@ -63,15 +63,18 @@ class WebEstateFilteringDto {
 
     @ApiPropertyOptional({ name: "filter[area]" })
     @IsOptional()
-    readonly area?: number[] | number;
+    @IsString()
+    readonly area?: string;
 
     @ApiPropertyOptional({ name: "filter[price]" })
     @IsOptional()
-    readonly price?: number[] | number;
+    @IsString()
+    readonly price?: string;
 
     @ApiPropertyOptional({ name: "filter[totalPrice]" })
     @IsOptional()
-    readonly totalPrice?: number[] | number;
+    @IsString()
+    readonly totalPrice?: string;
 
     // 
 
