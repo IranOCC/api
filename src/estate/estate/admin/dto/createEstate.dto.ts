@@ -157,6 +157,17 @@ export class CreateEstateDto {
     @IsBoolean()
     canBarter?: boolean;
 
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsBoolean()
+    canSwap?: boolean;
+
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsBoolean()
+    special?: boolean;
+
 
 
 
@@ -254,6 +265,22 @@ export class CreateEstateDto {
     @ApiPropertyOptional()
     @IsOptional()
     dailyRent?: boolean;
+
+
+    @ApiProperty()
+    @Transform(({ value }) => (parseInt(value) || 0))
+    @IsPositive()
+    rentPricePerDay?: number;
+
+    @ApiProperty()
+    @Transform(({ value }) => (parseInt(value) || 0))
+    @IsPositive()
+    rentPricePerMonth?: number;
+
+    @ApiProperty()
+    @Transform(({ value }) => (parseInt(value) || 0))
+    @IsPositive()
+    mortgagePrice?: number;
 
 
     @ApiPropertyOptional()
