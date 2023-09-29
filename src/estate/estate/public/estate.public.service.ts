@@ -150,7 +150,8 @@ export class EstatePublicService {
       delete filter.barter
     }
     if (!!filter.swap) {
-      filter["swap"] = true
+      filter["canSwap"] = true
+      delete filter.swap
     }
     if (!!filter.special) {
       filter["special"] = true
