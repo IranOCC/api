@@ -263,19 +263,19 @@ export class Estate extends Document {
   @Prop({ type: Boolean, default: null })
   withOldBuilding: boolean;
 
-  @Prop({ type: Boolean, })
+  @Prop({ type: Boolean, default: false })
   dailyRent: boolean;
 
-  @Prop({ type: Number })
+  @Prop({ type: Number, default: 0 })
   rentPricePerDay: number;
 
-  @Prop({ type: Boolean, })
+  @Prop({ type: Boolean, default: false })
   annualRent: boolean;
 
-  @Prop({ type: Number })
+  @Prop({ type: Number, default: 0 })
   rentPricePerMonth: number;
 
-  @Prop({ type: Number })
+  @Prop({ type: Number, default: 0 })
   mortgagePrice: number;
 }
 
