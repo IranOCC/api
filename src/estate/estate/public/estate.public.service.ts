@@ -104,33 +104,33 @@ export class EstatePublicService {
     filter["isConfirmed"] = true
     filter["publishedAt"] = { $lte: new Date() }
 
-    // // convert
-    // if (filter.category) {
-    //   filter["category._id"] = { $eq: new ObjectId(filter.category) }
-    //   delete filter.category
-    // }
-    // if (filter.type) {
-    //   if (typeof filter.type === "string") filter.type = [filter.type]
-    //   filter["type"] = { $in: filter.type.map((v: string) => new ObjectId(v)) }
-    //   // delete filter.type
-    // }
-    // if (filter.documentType) {
-    //   if (typeof filter.documentType === "string") filter.documentType = [filter.documentType]
-    //   filter["documentType"] = { $in: filter.documentType.map((v: string) => new ObjectId(v)) }
-    //   // delete filter.documentType
-    // }
-    // if (filter.features) {
-    //   if (typeof filter.features === "string") filter.features = [filter.features]
-    //   filter["features"] = { $in: filter.features.map((v: string) => new ObjectId(v)) }
-    //   // delete filter.features
-    // }
+    // convert
+    if (filter.category) {
+      filter["category._id"] = { $eq: new ObjectId(filter.category) }
+      delete filter.category
+    }
+    if (filter.type) {
+      if (typeof filter.type === "string") filter.type = [filter.type]
+      filter["type"] = { $in: filter.type.map((v: string) => new ObjectId(v)) }
+      // delete filter.type
+    }
+    if (filter.documentType) {
+      if (typeof filter.documentType === "string") filter.documentType = [filter.documentType]
+      filter["documentType"] = { $in: filter.documentType.map((v: string) => new ObjectId(v)) }
+      // delete filter.documentType
+    }
+    if (filter.features) {
+      if (typeof filter.features === "string") filter.features = [filter.features]
+      filter["features"] = { $in: filter.features.map((v: string) => new ObjectId(v)) }
+      // delete filter.features
+    }
 
     // =>ok province
     // =>ok city
-    // if (filter.district) {
-    //   if (typeof filter.district === "string") filter.district = [filter.district]
-    //   filter["district"] = { $in: filter.district.map((v: string) => (v)) }
-    // }
+    if (filter.district) {
+      if (typeof filter.district === "string") filter.district = [filter.district]
+      filter["district"] = { $in: filter.district.map((v: string) => (v)) }
+    }
 
     // if (filter.area) {
     //   if (typeof filter.area === "string") filter.area = [filter.area]
@@ -145,22 +145,22 @@ export class EstatePublicService {
     //   filter["totalPrice"] = !!filter.totalPrice[1] ? { $gte: parseFloat(filter.totalPrice[0]), $lte: parseFloat(filter.totalPrice[1]) } : { $gte: parseFloat(filter.totalPrice[0]) }
     // }
 
-    // if (filter.barter !== undefined && filter.barter !== null) {
-    //   filter["canBarter"] = filter.barter ? true : false
-    //   delete filter.barter
-    // }
-    // if (filter.swap !== undefined && filter.swap !== null) {
-    //   filter["swap"] = filter.swap ? true : false
-    // }
-    // if (filter.special !== undefined && filter.special !== null) {
-    //   filter["special"] = filter.special ? true : false
-    // }
-    // if (filter.dailyRent !== undefined && filter.dailyRent !== null) {
-    //   filter["dailyRent"] = filter.dailyRent ? true : false
-    // }
-    // if (filter.annualRent !== undefined && filter.annualRent !== null) {
-    //   filter["annualRent"] = filter.annualRent ? true : false
-    // }
+    if (filter.barter !== undefined && filter.barter !== null) {
+      filter["canBarter"] = filter.barter ? true : false
+      delete filter.barter
+    }
+    if (filter.swap !== undefined && filter.swap !== null) {
+      filter["swap"] = filter.swap ? true : false
+    }
+    if (filter.special !== undefined && filter.special !== null) {
+      filter["special"] = filter.special ? true : false
+    }
+    if (filter.dailyRent !== undefined && filter.dailyRent !== null) {
+      filter["dailyRent"] = filter.dailyRent ? true : false
+    }
+    if (filter.annualRent !== undefined && filter.annualRent !== null) {
+      filter["annualRent"] = filter.annualRent ? true : false
+    }
 
     // ===
     return listAggregation(this.estateModel, pagination, filter, sort, populate, project, virtualFields, searchFields, undefined, undefined, undefined)
