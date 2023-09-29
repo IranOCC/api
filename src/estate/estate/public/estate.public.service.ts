@@ -145,21 +145,21 @@ export class EstatePublicService {
       filter["totalPrice"] = !!filter.totalPrice[1] ? { $gte: parseFloat(filter.totalPrice[0]), $lte: parseFloat(filter.totalPrice[1]) } : { $gte: parseFloat(filter.totalPrice[0]) }
     }
 
-    if (filter.barter !== undefined && filter.barter !== null) {
-      filter["canBarter"] = filter.barter ? true : false
+    if (!!filter.barter) {
+      filter["canBarter"] = true
       delete filter.barter
     }
-    if (filter.swap !== undefined && filter.swap !== null) {
-      filter["swap"] = filter.swap ? true : false
+    if (!!filter.swap) {
+      filter["swap"] = true
     }
-    if (filter.special !== undefined && filter.special !== null) {
-      filter["special"] = filter.special ? true : false
+    if (!!filter.special) {
+      filter["special"] = true
     }
-    if (filter.dailyRent !== undefined && filter.dailyRent !== null) {
-      filter["dailyRent"] = filter.dailyRent ? true : false
+    if (!!filter.dailyRent) {
+      filter["dailyRent"] = true
     }
-    if (filter.annualRent !== undefined && filter.annualRent !== null) {
-      filter["annualRent"] = filter.annualRent ? true : false
+    if (!!filter.annualRent) {
+      filter["annualRent"] = true
     }
 
     // ===
