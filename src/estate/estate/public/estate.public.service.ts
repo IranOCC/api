@@ -80,21 +80,21 @@ export class EstatePublicService {
   // List Estate
   findAll(pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
-      [
-        "users", "createdBy", "firstName lastName fullName avatar phone", false,
-        [
-          { $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } },
-          { $lookup: { from: "storages", localField: "avatar", foreignField: "_id", as: "avatar" } },
-          { $lookup: { from: "phonenumbers", localField: "phone", foreignField: "_id", as: "phone" } },
-          { $project: { "avatar": { $first: `$avatar` }, "phone": { $first: `$phone` }, "fullName": `$fullName`, "firstName": `$firstName`, "lastName": `$lastName`, } }
-        ]
-      ],
-      ["offices", "office", "name verified", false],
+      // [
+      //   "users", "createdBy", "firstName lastName fullName avatar phone", false,
+      //   [
+      //     { $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } },
+      //     { $lookup: { from: "storages", localField: "avatar", foreignField: "_id", as: "avatar" } },
+      //     { $lookup: { from: "phonenumbers", localField: "phone", foreignField: "_id", as: "phone" } },
+      //     { $project: { "avatar": { $first: `$avatar` }, "phone": { $first: `$phone` }, "fullName": `$fullName`, "firstName": `$firstName`, "lastName": `$lastName`, } }
+      //   ]
+      // ],
+      // ["offices", "office", "name verified", false],
       // 
       ["estatecategories", "category", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
       ["storages", "image", "path alt title", false],
     ]
-    const project = "title slug excerpt area canBarter buildingArea roomsCount mastersCount constructionYear buildingArea floorsCount unitsCount floor withOldBuilding publishedAt createdAt code province city district"
+    const project = "title slug excerpt area canBarter canSwap annualRent dailyRent special buildingArea roomsCount mastersCount constructionYear buildingArea floorsCount unitsCount floor withOldBuilding publishedAt createdAt code province city district"
     const virtualFields = {}
     const searchFields = "title slug excerpt content code province city district quarter alley address"
     if (!filter) filter = {}

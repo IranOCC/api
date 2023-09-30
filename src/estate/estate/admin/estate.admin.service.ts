@@ -129,7 +129,7 @@ export class EstateAdminService {
       ["offices", "office", "name", false],
       ["estatecategories", "category", "title"],
     ]
-    const project = "title slug status visibility isConfirmed confirmedAt isRejected rejectedAt rejectedReason publishedAt createdAt code"
+    const project = "title slug status visibility canBarter canSwap annualRent dailyRent special isConfirmed confirmedAt isRejected rejectedAt rejectedReason publishedAt createdAt code"
     const virtualFields = {}
     const searchFields = "title slug excerpt content code province city district quarter alley address description"
 
