@@ -152,6 +152,7 @@ export class EstatePublicService {
       delete filter.barter
     }
 
+    console.log(filter.swap)
     if (filter.swap === true) {
       filter["canSwap"] = { $eq: true }
       delete filter.swap
@@ -178,6 +179,9 @@ export class EstatePublicService {
     } else if (filter.annualRent === false) {
       filter["annualRent"] = { $ne: true }
     }
+
+    console.log(filter.swap, filter.canSwap);
+
 
     // ===
     return listAggregation(this.estateModel, pagination, filter, sort, populate, project, virtualFields, searchFields, undefined, undefined, undefined)

@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsEnum, IsOptional } from "class-validator";
+import { IsBoolean, IsEnum, IsOptional } from "class-validator";
 import { RoleEnum } from "src/user/enum/role.enum";
 
 class UserSortingDto {
@@ -23,17 +23,19 @@ export { UserSortingDto }
 
 
 class UserFilteringDto {
-    @ApiPropertyOptional({ name: "filter[verified]", enum: ["True", "False"] })
-    @Transform(({ value }) => {
-        return ([1, true, 'True'].includes(value)) ? true : false
+    @ApiPropertyOptional({ name: "filter[verified]", type: Boolean })
+    @Transform(({ obj, key }) => {
+        return obj[key] === 'true' ? true : obj[key] === 'false' ? false : obj[key];
     })
+    @IsBoolean()
     @IsOptional()
     readonly verified?: boolean;
 
-    @ApiPropertyOptional({ name: "filter[active]", enum: ["True", "False"] })
-    @Transform(({ value }) => {
-        return ([1, true, 'True'].includes(value)) ? true : false
+    @ApiPropertyOptional({ name: "filter[active]", type: Boolean })
+    @Transform(({ obj, key }) => {
+        return obj[key] === 'true' ? true : obj[key] === 'false' ? false : obj[key];
     })
+    @IsBoolean()
     @IsOptional()
     readonly active?: boolean;
 

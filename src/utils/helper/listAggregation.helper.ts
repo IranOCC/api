@@ -55,7 +55,7 @@ const listAggregation =
                 if (!isArray) $project[path[2]] = { $first: `$${path[2]}` }
                 else $project[path[2]] = `$${path[2]}`
             }
-            console.log(path, db, isArray);
+            // console.log(path, db, isArray);
         })
         select?.split(" ").map((path) => { $project[path] = `$${path}` })
 
@@ -83,7 +83,7 @@ const listAggregation =
                     $or: searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } }))
                 })
             }
-            console.log(filter);
+            // console.log(filter);
 
             if ($and.length) {
                 $pipelines.push({
@@ -156,7 +156,7 @@ const listAggregation =
         })
 
 
-        console.log($pipelines);
+        // console.log($pipelines);
 
 
         return (await model.aggregate($pipelines))[0] || {}

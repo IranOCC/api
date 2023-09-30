@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsMongoId, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsMongoId, IsOptional, IsString } from "class-validator";
 
 
 
@@ -78,39 +78,40 @@ class WebEstateFilteringDto {
 
     // 
 
-    @ApiPropertyOptional({ name: "filter[barter]", enum: ["True", "False"] })
-    @Transform(({ value }) => {
-        return ([1, true, 'True'].includes(value)) ? true : false
+    @ApiPropertyOptional({ name: "filter[barter]", type: Boolean })
+    @Transform(({ obj, key }) => {
+        return obj[key] === 'true' ? true : obj[key] === 'false' ? false : obj[key];
     })
     @IsOptional()
     readonly barter?: boolean;
 
-    @ApiPropertyOptional({ name: "filter[swap]", enum: ["True", "False"] })
-    @Transform(({ value }) => {
-        return ([1, true, 'True'].includes(value)) ? true : false
+    @ApiPropertyOptional({ name: "filter[swap]", type: Boolean })
+    @Transform(({ obj, key }) => {
+        return obj[key] === 'true' ? true : obj[key] === 'false' ? false : obj[key];
     })
+    @IsBoolean()
     @IsOptional()
     readonly swap?: boolean;
 
-    @ApiPropertyOptional({ name: "filter[special]", enum: ["True", "False"] })
-    @Transform(({ value }) => {
-        return ([1, true, 'True'].includes(value)) ? true : false
+    @ApiPropertyOptional({ name: "filter[special]", type: Boolean })
+    @Transform(({ obj, key }) => {
+        return obj[key] === 'true' ? true : obj[key] === 'false' ? false : obj[key];
     })
     @IsOptional()
     readonly special?: boolean;
 
 
 
-    @ApiPropertyOptional({ name: "filter[dailyRent]", enum: ["True", "False"] })
-    @Transform(({ value }) => {
-        return ([1, true, 'True'].includes(value)) ? true : false
+    @ApiPropertyOptional({ name: "filter[dailyRent]", type: Boolean })
+    @Transform(({ obj, key }) => {
+        return obj[key] === 'true' ? true : obj[key] === 'false' ? false : obj[key];
     })
     @IsOptional()
     readonly dailyRent?: boolean;
 
-    @ApiPropertyOptional({ name: "filter[annualRent]", enum: ["True", "False"] })
-    @Transform(({ value }) => {
-        return ([1, true, 'True'].includes(value)) ? true : false
+    @ApiPropertyOptional({ name: "filter[annualRent]", type: Boolean })
+    @Transform(({ obj, key }) => {
+        return obj[key] === 'true' ? true : obj[key] === 'false' ? false : obj[key];
     })
     @IsOptional()
     readonly annualRent?: boolean;
