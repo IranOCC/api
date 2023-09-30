@@ -93,7 +93,6 @@ export class EstatePublicService {
       // 
       ["estatecategories", "category", "title slug icon", false, [{ $lookup: { from: "icons", localField: "_id", foreignField: "icon", as: "icon" } }]],
       ["storages", "image", "path alt title", false],
-      // ["storages", "gallery", "path alt title", true],
     ]
     const project = "title slug excerpt area canBarter buildingArea roomsCount mastersCount constructionYear buildingArea floorsCount unitsCount floor withOldBuilding publishedAt createdAt code province city district"
     const virtualFields = {}
@@ -145,22 +144,39 @@ export class EstatePublicService {
       filter["totalPrice"] = !!filter.totalPrice[1] ? { $gte: parseFloat(filter.totalPrice[0]), $lte: parseFloat(filter.totalPrice[1]) } : { $gte: parseFloat(filter.totalPrice[0]) }
     }
 
-    if (!!filter.barter) {
-      filter["canBarter"] = true
+    if (filter.barter === true) {
+      filter["canBarter"] = { $eq: true }
+      delete filter.barter
+    } else if (filter.barter === false) {
+      filter["canBarter"] = { $ne: true }
       delete filter.barter
     }
-    if (!!filter.swap) {
-      filter["canSwap"] = true
+
+    if (filter.swap === true) {
+      filter["canSwap"] = { $eq: true }
+      delete filter.swap
+    } else if (filter.swap === false) {
+      filter["canSwap"] = { $ne: true }
       delete filter.swap
     }
-    if (!!filter.special) {
-      filter["special"] = true
+
+
+    if (filter.special === true) {
+      filter["special"] = { $eq: true }
+    } else if (filter.special === false) {
+      filter["special"] = { $ne: true }
     }
-    if (!!filter.dailyRent) {
-      filter["dailyRent"] = true
+
+    if (filter.dailyRent === true) {
+      filter["dailyRent"] = { $eq: true }
+    } else if (filter.dailyRent === false) {
+      filter["dailyRent"] = { $ne: true }
     }
-    if (!!filter.annualRent) {
-      filter["annualRent"] = true
+
+    if (filter.annualRent === true) {
+      filter["annualRent"] = { $eq: true }
+    } else if (filter.annualRent === false) {
+      filter["annualRent"] = { $ne: true }
     }
 
     // ===
