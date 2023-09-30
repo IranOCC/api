@@ -277,6 +277,13 @@ export class Estate extends Document {
 
   @Prop({ type: Number, default: 0 })
   mortgagePrice: number;
+
+
+  @Prop({
+    type: [String],
+    default: []
+  })
+  nearPlaces: string[];
 }
 
 export const EstateSchema = SchemaFactory.createForClass(Estate);

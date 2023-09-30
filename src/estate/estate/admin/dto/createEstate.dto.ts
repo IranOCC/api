@@ -289,4 +289,10 @@ export class CreateEstateDto {
     @ApiPropertyOptional()
     @IsOptional()
     annualRent?: boolean;
+
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString({ each: true })
+    nearPlaces?: string[];
 }
