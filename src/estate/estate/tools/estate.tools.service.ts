@@ -287,6 +287,17 @@ export class EstateToolsService {
         totalPrice: { disabled: false },
         description: { disabled: false },
         canBarter: { disabled: false },
+
+        canSwap: { disabled: false },
+        special: { disabled: !user.roles.includes(RoleEnum.SuperAdmin) },
+        nearPlaces: { disabled: false },
+        dailyRent: { disabled: false },
+        rentPricePerDay: { disabled: false },
+        annualRent: { disabled: false },
+        rentPricePerMonth: { disabled: false },
+        mortgagePrice: { disabled: false },
+
+
         area: { disabled: false },
 
         type: { disabled: false },
@@ -347,6 +358,16 @@ export class EstateToolsService {
           totalPrice: { disabled: false },
           description: { disabled: false },
           canBarter: { disabled: false },
+
+          canSwap: { disabled: false },
+          special: { disabled: !user.roles.includes(RoleEnum.SuperAdmin) },
+          nearPlaces: { disabled: false },
+          dailyRent: { disabled: false },
+          rentPricePerDay: { disabled: false },
+          annualRent: { disabled: false },
+          rentPricePerMonth: { disabled: false },
+          mortgagePrice: { disabled: false },
+
           area: { disabled: false },
 
           type: { disabled: false },
