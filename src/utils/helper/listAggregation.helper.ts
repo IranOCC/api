@@ -81,8 +81,9 @@ const listAggregation =
             if (!!searchFields && !!search) {
                 let $or = []
                 for (let i = 0; i < search.split(" ").length; i++) {
-                    $or.push(searchFields.split(" ").map((path) => ({ [path]: { $regex: search.split(" ")[i], $options: "i" } })))
+                    $or.push(...searchFields.split(" ").map((path) => ({ [path]: { $regex: search.split(" ")[i], $options: "i" } })))
                 }
+
                 $and.push({ $or })
             }
 
