@@ -79,11 +79,12 @@ const listAggregation =
         else {
             if (!!filter && !!Object.keys(filter).length) $and.push(filter)
             if (!!searchFields && !!search) {
-                $and.push({
-                    $or: searchFields.split(" ").map((path) => ({ [path]: { $regex: search, $options: "i" } }))
-                })
+                let $or = []
+                for (let i = 0; i < search.split(" ").length; i++) {
+                    $or.push(searchFields.split(" ").map((path) => ({ [path]: { $regex: search.split(" ")[i], $options: "i" } })))
+                }
+                $and.push({ $or })
             }
-            // console.log(filter);
 
             if ($and.length) {
                 $pipelines.push({
