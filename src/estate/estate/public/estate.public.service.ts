@@ -24,7 +24,7 @@ export class EstatePublicService {
     @InjectModel(Estate.name) private estateModel: Model<EstateDocument>,
     @InjectModel(EstateFavorite.name)
     private estateFavoriteModel: Model<EstateFavoriteDocument>
-  ) { }
+  ) {}
 
   // Create Property
   async create(data: CreatePropertyDto, user: User) {
@@ -106,15 +106,13 @@ export class EstatePublicService {
 
     const isFavorite = user?._id
       ? await this.estateFavoriteModel.findOne({
-        user: new ObjectId(user?._id),
-        estate: new ObjectId(estate._id)
-      })
+          user: new ObjectId(user?._id),
+          estate: new ObjectId(estate._id)
+        })
       : false;
 
     return { ...estate, isFavorite };
   }
-
-
 
   // List Estate
   findAll(pagination: PaginationDto, filter: any, sort: any) {
@@ -134,7 +132,7 @@ export class EstatePublicService {
       ['storages', 'image', 'path alt title', false]
     ];
     const project =
-      'title slug excerpt area canBarter canSwap annualRent dailyRent special buildingArea roomsCount mastersCount constructionYear buildingArea floorsCount unitsCount floor withOldBuilding publishedAt createdAt code province city district';
+      'title slug excerpt area canBarter canSwap annualRent dailyRent special sold buildingArea roomsCount mastersCount constructionYear buildingArea floorsCount unitsCount floor withOldBuilding publishedAt createdAt code province city district';
     const virtualFields = {};
     const searchFields =
       'title slug excerpt content code province city district quarter alley address';
@@ -190,9 +188,9 @@ export class EstatePublicService {
         filter.price = filter.price.split('_');
       filter['price'] = !!filter.price[1]
         ? {
-          $gte: parseFloat(filter.price[0]),
-          $lte: parseFloat(filter.price[1])
-        }
+            $gte: parseFloat(filter.price[0]),
+            $lte: parseFloat(filter.price[1])
+          }
         : { $gte: parseFloat(filter.price[0]) };
     }
     if (filter.totalPrice) {
@@ -200,9 +198,9 @@ export class EstatePublicService {
         filter.totalPrice = filter.totalPrice.split('_');
       filter['totalPrice'] = !!filter.totalPrice[1]
         ? {
-          $gte: parseFloat(filter.totalPrice[0]),
-          $lte: parseFloat(filter.totalPrice[1])
-        }
+            $gte: parseFloat(filter.totalPrice[0]),
+            $lte: parseFloat(filter.totalPrice[1])
+          }
         : { $gte: parseFloat(filter.totalPrice[0]) };
     }
 
@@ -243,7 +241,12 @@ export class EstatePublicService {
 
     console.log(filter.swap, filter.canSwap);
 
-    sort.special = 1
+    sort.special = -1
+    // sort.createdAt = -1
+    // sort = {
+    //   // createdAt: -1,
+    //   special: -1
+    // };
 
     // ===
     return listAggregation(

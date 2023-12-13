@@ -291,6 +291,9 @@ export class CreateEstateDto {
     @IsOptional()
     annualRent?: boolean;
 
+    @ApiPropertyOptional()
+    @IsOptional()
+    sold?: boolean;
 
     @ApiPropertyOptional()
     @IsOptional()

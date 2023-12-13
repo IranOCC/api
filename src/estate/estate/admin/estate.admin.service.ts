@@ -123,14 +123,14 @@ export class EstateAdminService {
   // List Estate
   findAll(pagination: PaginationDto, filter: any, sort: any) {
     const populate: PopulatedType[] = [
-      ["users", "owner", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
+      // ["users", "owner", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["users", "confirmedBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["users", "rejectedBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       ["offices", "office", "name", false],
       ["estatecategories", "category", "title"],
     ]
-    const project = "title slug status visibility canBarter canSwap annualRent dailyRent special isConfirmed confirmedAt isRejected rejectedAt rejectedReason publishedAt createdAt code"
+    const project = "title slug status visibility canBarter canSwap annualRent dailyRent special sold isConfirmed confirmedAt isRejected rejectedAt rejectedReason publishedAt createdAt code"
     const virtualFields = {}
     const searchFields = "title slug excerpt content code province city district quarter alley address description"
 

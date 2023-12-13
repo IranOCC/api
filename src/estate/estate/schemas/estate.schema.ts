@@ -278,6 +278,8 @@ export class Estate extends Document {
   @Prop({ type: Number, default: 0 })
   mortgagePrice: number;
 
+  @Prop({ type: Boolean, default: false })
+  sold: boolean;
 
   @Prop({
     type: [String],

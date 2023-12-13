@@ -273,6 +273,8 @@ export class EstateToolsService {
           default: user.offices[0]._id,
         },
 
+        sold: { hidden: true, default: false },
+
         code: { disabled: false },
         province: { disabled: false, default: "مازندران" },
         city: { disabled: false, default: "چالوس" },
@@ -358,17 +360,17 @@ export class EstateToolsService {
           totalPrice: { disabled: false },
           description: { disabled: false },
           canBarter: { disabled: false },
+          area: { disabled: false },
 
           canSwap: { disabled: false },
           special: { disabled: !user.roles.includes(RoleEnum.SuperAdmin) },
+          sold: { disabled: !user.roles.includes(RoleEnum.SuperAdmin) },
           nearPlaces: { disabled: false },
           dailyRent: { disabled: false },
           rentPricePerDay: { disabled: false },
           annualRent: { disabled: false },
           rentPricePerMonth: { disabled: false },
           mortgagePrice: { disabled: false },
-
-          area: { disabled: false },
 
           type: { disabled: false },
           documentType: { disabled: false },
@@ -418,6 +420,16 @@ export class EstateToolsService {
         description: { disabled: true },
         canBarter: { disabled: true },
         area: { disabled: true },
+
+        canSwap: { disabled: true },
+        special: { disabled: true },
+        sold: { disabled: true },
+        nearPlaces: { disabled: true },
+        dailyRent: { disabled: true },
+        rentPricePerDay: { disabled: true },
+        annualRent: { disabled: true },
+        rentPricePerMonth: { disabled: true },
+        mortgagePrice: { disabled: true },
 
         type: { disabled: true },
         documentType: { disabled: true },
