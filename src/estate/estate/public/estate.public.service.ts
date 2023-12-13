@@ -243,6 +243,8 @@ export class EstatePublicService {
 
     console.log(filter.swap, filter.canSwap);
 
+    sort.special = 1
+
     // ===
     return listAggregation(
       this.estateModel,
