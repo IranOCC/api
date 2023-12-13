@@ -99,7 +99,8 @@ export class CreateEstateDto {
     @IsMongoId()
     office: string;
 
-    @ApiProperty()
+    @ApiPropertyOptional()
+    @IsOptional()
     @IsMongoId()
     owner: string;
 

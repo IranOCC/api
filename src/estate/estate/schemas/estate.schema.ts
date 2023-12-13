@@ -93,7 +93,7 @@ export class Estate extends Document {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: false,
     index: true
   })
   owner: any;

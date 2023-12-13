@@ -28,16 +28,17 @@ export class EstateAdminService {
 
     // is SuperAdmin
     if (user.roles.includes(RoleEnum.SuperAdmin)) {
-      return this.estateModel.create({ ...data, createdBy: user._id });
+      return this.estateModel.create({ ...data, createdBy: user._id, owner: data?.owner || "64e08fd8de9b0246b1f52dc5" });
     }
     // is Admin & management of office
     if (user.roles.includes(RoleEnum.Admin) && ((_office.management as User)._id.equals(user._id))) {
-      return this.estateModel.create({ ...data, createdBy: user._id });
+      return this.estateModel.create({ ...data, createdBy: user._id, owner: data?.owner || "64e08fd8de9b0246b1f52dc5" });
     }
     // is Agent & member of office
     if (user.roles.includes(RoleEnum.Agent) && (_office.members.includes(user._id))) {
-      return this.estateModel.create({ ...data, createdBy: user._id });
+      return this.estateModel.create({ ...data, createdBy: user._id, owner: data?.owner || "64e08fd8de9b0246b1f52dc5" });
     }
+
 
     // throw
     throw new ForbiddenException("You don't have access to create estate for this office", "NoAccessCreateEstate")
