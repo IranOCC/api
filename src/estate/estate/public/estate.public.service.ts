@@ -112,6 +112,7 @@ export class EstatePublicService {
       );
     }
 
+
     const isFavorite = user?._id
       ? await this.estateFavoriteModel.findOne({
           user: new ObjectId(user?._id),
