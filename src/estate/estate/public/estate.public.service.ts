@@ -25,7 +25,7 @@ export class EstatePublicService {
     @InjectModel(Estate.name) private estateModel: Model<EstateDocument>,
     @InjectModel(EstateFavorite.name)
     private estateFavoriteModel: Model<EstateFavoriteDocument>,
-    private userService: UserService,
+    private userService: UserService
   ) {}
 
   // Create Property
@@ -111,7 +111,6 @@ export class EstatePublicService {
         '64e08fd8de9b0246b1f52dc5'
       );
     }
-
 
     const isFavorite = user?._id
       ? await this.estateFavoriteModel.findOne({
@@ -250,8 +249,8 @@ export class EstatePublicService {
 
     console.log(filter.swap, filter.canSwap);
 
-    sort.createdAt = -1
-    sort.special = -1
+    sort.special = -1;
+    sort.createdAt = -1;
 
     // sort = {
     //   // createdAt: -1,
@@ -274,12 +273,9 @@ export class EstatePublicService {
     );
   }
 
-
   // myEstates
   myEstates(pagination: PaginationDto, filter: any, sort: any, user: User) {
     const populate: PopulatedType[] = [
-      // ["users", "owner", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
-      // ["users", "createdBy", "firstName lastName fullName", false, [{ $addFields: { fullName: { $concat: ["$firstName", " ", "$lastName"] } } }]],
       //
       [
         'estatecategories',
@@ -317,6 +313,37 @@ export class EstatePublicService {
     //   filter["category._id"] = { $eq: new ObjectId(filter.category) }
     //   delete filter.category
     // }
+    return listAggregation(
+      this.estateModel,
+      pagination,
+      filter,
+      sort,
+      populate,
+      project,
+      virtualFields,
+      searchFields,
+      undefined,
+      undefined,
+      undefined
+    );
+  }
+
+  relatedEstates(id_or_slug: string, user: User) {
+    const project = 'location _id';
+    const virtualFields = {};
+    const searchFields = '';
+    const filter = {};
+    filter['status'] = EstateStatusEnum.Publish;
+    filter['visibility'] = EstateVisibilityEnum.Public;
+    filter['isConfirmed'] = true;
+    filter['publishedAt'] = { $lte: new Date() };
+
+    const sort = {};
+
+    const populate = [];
+
+    const pagination = { search: '', current: 1, size: 10 };
+
     return listAggregation(
       this.estateModel,
       pagination,

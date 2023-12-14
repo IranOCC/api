@@ -75,6 +75,17 @@ export class EstatePublicController {
   }
 
   @Public()
+  @Get('related/:id_or_slug')
+  @ApiOperation({
+    summary: 'Get related items Model by id or slug',
+    description: 'No Description'
+  })
+  @ApiResponse({ status: 200 })
+  relatedEstates(@Param('id_or_slug') id_or_slug: string, @Request() { user }) {
+    return this.estatePublicService.relatedEstates(id_or_slug, user);
+  }
+
+  @Public()
   @Get(':id_or_slug')
   @ApiOperation({
     summary: 'Get single Model by id or slug',
@@ -82,9 +93,10 @@ export class EstatePublicController {
   })
   @ApiResponse({ status: 200 })
   findOneBySlugOrID(
-    @Param('id_or_slug') id_or_slug: string,
-    @Request() { user }
+      @Param('id_or_slug') id_or_slug: string,
+      @Request() { user }
   ) {
     return this.estatePublicService.findOneBySlugOrID(id_or_slug, user);
   }
+
 }
