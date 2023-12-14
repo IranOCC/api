@@ -43,6 +43,7 @@ import { EstateFavoritePublicService } from './favorite/public/estateFavorite.pu
 import { EstatePublicController } from './estate/public/estate.public.controller';
 import { EstatePublicService } from './estate/public/estate.public.service';
 import { OfficeModule } from 'src/office/office.module';
+import {UserModule} from "../user/user.module";
 
 
 
@@ -50,6 +51,7 @@ import { OfficeModule } from 'src/office/office.module';
 @Module({
   exports: [EstateAdminService],
   imports: [
+    UserModule,
     OfficeModule,
     MongooseModule.forFeature([{ name: Estate.name, schema: EstateSchema }]),
     MongooseModule.forFeature([{ name: EstateCategory.name, schema: EstateCategorySchema }]),

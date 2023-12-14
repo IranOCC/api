@@ -17,13 +17,15 @@ import {
 } from 'src/estate/favorite/schemas/estateFavorite.schema';
 import { CreatePropertyDto } from './dto/createProperty.dto';
 import slugify from 'slugify';
+import { UserService } from '../../../user/user.service';
 
 @Injectable()
 export class EstatePublicService {
   constructor(
     @InjectModel(Estate.name) private estateModel: Model<EstateDocument>,
     @InjectModel(EstateFavorite.name)
-    private estateFavoriteModel: Model<EstateFavoriteDocument>
+    private estateFavoriteModel: Model<EstateFavoriteDocument>,
+    private userService: UserService,
   ) {}
 
   // Create Property
@@ -100,9 +102,15 @@ export class EstatePublicService {
       })
 
       .select(
-        '-status -visibility -id -isConfirmed -confirmedAt -confirmedBy -createdAt -updatedAt -__v'
+        '-status -visibility -id -isConfirmed -confirmedBy -isRejected -rejectedBy -rejectedAt -rejectedReason -createdAt -updatedAt -__v'
       )
       .lean();
+
+    if (estate.createdBy?.dontShowPhoneNumber) {
+      estate.createdBy = await this.userService.getUserById(
+        '64e08fd8de9b0246b1f52dc5'
+      );
+    }
 
     const isFavorite = user?._id
       ? await this.estateFavoriteModel.findOne({
@@ -241,8 +249,9 @@ export class EstatePublicService {
 
     console.log(filter.swap, filter.canSwap);
 
+    sort.createdAt = -1
     sort.special = -1
-    // sort.createdAt = -1
+
     // sort = {
     //   // createdAt: -1,
     //   special: -1
@@ -263,6 +272,7 @@ export class EstatePublicService {
       undefined
     );
   }
+
 
   // myEstates
   myEstates(pagination: PaginationDto, filter: any, sort: any, user: User) {

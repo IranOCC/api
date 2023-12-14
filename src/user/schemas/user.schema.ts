@@ -54,13 +54,14 @@ export class User extends Document {
 
 
 
-  @Prop({ default: false, select: true, })
+  @Prop({ default: false, select: true })
   verified: boolean;
 
-  @Prop({ default: true, select: true, })
+  @Prop({ default: true, select: true })
   active: boolean;
 
-
+  @Prop({ default: false, select: true })
+  dontShowPhoneNumber: boolean;
 
   @Prop({
     default: () => speakeasy.generateSecret({ length: 10 }).base32,

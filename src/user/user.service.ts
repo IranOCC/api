@@ -155,7 +155,7 @@ export class UserService {
     async getUserPayload(id: string) {
         const user = await this.userModel
             .findById(id)
-            .select("_id roles firstName lastName fullName verified active phone email avatar accountToken province city address location birthday nationalCode")
+            .select("_id roles firstName lastName fullName verified active dontShowPhoneNumber phone email avatar accountToken province city address location birthday nationalCode")
             .exec()
 
         if (!user) throw new UnauthorizedException("User not found", "UserNotFound")

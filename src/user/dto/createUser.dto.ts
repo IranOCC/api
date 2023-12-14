@@ -82,5 +82,9 @@ export class CreateUserDto {
 
   @ApiPropertyOptional({ default: true })
   @IsOptional()
-  active: boolean = true;
+  active = true;
+
+  @ApiPropertyOptional({ default: false })
+  @IsOptional()
+  dontShowPhoneNumber = false;
 }

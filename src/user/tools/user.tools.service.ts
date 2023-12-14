@@ -60,6 +60,7 @@ export class UserServiceTools {
         location: { disabled: true },
         verified: { disabled: true },
         active: { disabled: true },
+        dontShowPhoneNumber: { disabled: true }
       }
     }
     if (action === "create") {
@@ -94,6 +95,7 @@ export class UserServiceTools {
         location: { disabled: false, default: "36.699735, 51.196246" },
         verified: { disabled: false, default: false },
         active: { disabled: false, default: true },
+        dontShowPhoneNumber: { disabled: false, default: false }
       }
     }
     if (action === "update") {
@@ -132,6 +134,7 @@ export class UserServiceTools {
         location: { disabled: deny, default: "36.699735, 51.196246" },
         verified: { disabled: deny },
         active: { disabled: deny },
+        dontShowPhoneNumber: { disabled: deny }
       }
 
     }
