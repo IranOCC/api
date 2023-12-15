@@ -271,19 +271,19 @@ export class CreateEstateDto {
     @ApiPropertyOptional()
     @IsOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
-    @IsPositive()
+    @IsNumber()
     rentPricePerDay?: number;
 
     @ApiPropertyOptional()
     @IsOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
-    @IsPositive()
+    @IsNumber()
     rentPricePerMonth?: number;
 
     @ApiPropertyOptional()
     @IsOptional()
     @Transform(({ value }) => (parseInt(value) || 0))
-    @IsPositive()
+    @IsNumber()
     mortgagePrice?: number;
 
 
